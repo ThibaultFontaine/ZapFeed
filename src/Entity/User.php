@@ -38,10 +38,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     /**
-     * @var Collection<int, Feed>
+     * @var Collection<int, UserFeed>
      */
-    #[ORM\ManyToMany(targetEntity: Feed::class, inversedBy: 'users')]
-    private Collection $feeds;
+    #[ORM\OneToMany(targetEntity: UserFeed::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userFeeds;
 
     /**
      * @var Collection<int, Item>
@@ -51,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->feeds = new ArrayCollection();
+        $this->userFeeds = new ArrayCollection();
         $this->items = new ArrayCollection();
     }
 
@@ -130,29 +130,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, Feed>
-     */
-    public function getFeeds(): Collection
-    {
-        return $this->feeds;
-    }
-
-    public function addFeed(Feed $feed): static
-    {
-        if (!$this->feeds->contains($feed)) {
-            $this->feeds->add($feed);
-        }
-
-        return $this;
-    }
-
-    public function removeFeed(Feed $feed): static
-    {
-        $this->feeds->removeElement($feed);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Item>
@@ -174,6 +151,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeItem(Item $item): static
     {
         $this->items->removeElement($item);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFeed>
+     */
+    public function getUserFeeds(): Collection
+    {
+        return $this->userFeeds;
+    }
+
+    public function addUserFeed(UserFeed $userFeed): static
+    {
+        if (!$this->userFeeds->contains($userFeed)) {
+            $this->userFeeds->add($userFeed);
+            $userFeed->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFeed(UserFeed $userFeed): static
+    {
+        if ($this->userFeeds->removeElement($userFeed)) {
+            // set the owning side to null (unless already changed)
+            if ($userFeed->getUser() === $this) {
+                $userFeed->setUser(null);
+            }
+        }
 
         return $this;
     }
