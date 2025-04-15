@@ -24,8 +24,8 @@ class Feed
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'feed', orphanRemoval: true)]
-    private Collection $tags;
+    // #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'feed', orphanRemoval: true)]
+    // private Collection $tags;
 
     /**
      * @var Collection<int, User>
@@ -41,7 +41,7 @@ class Feed
 
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
+        // $this->tags = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->feedItems = new ArrayCollection();
     }
@@ -85,32 +85,32 @@ class Feed
     /**
      * @return Collection<int, Tag>
      */
-    public function getTags(): Collection
-    {
-        return $this->tags;
-    }
+    // public function getTags(): Collection
+    // {
+    //     return $this->tags;
+    // }
 
-    public function addTag(Tag $tag): static
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
-            $tag->setFeedId($this);
-        }
+    // public function addTag(Tag $tag): static
+    // {
+    //     if (!$this->tags->contains($tag)) {
+    //         $this->tags->add($tag);
+    //         $tag->setFeedId($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeTag(Tag $tag): static
-    {
-        if ($this->tags->removeElement($tag)) {
-            // set the owning side to null (unless already changed)
-            if ($tag->getFeedId() === $this) {
-                $tag->setFeedId(null);
-            }
-        }
+    // public function removeTag(Tag $tag): static
+    // {
+    //     if ($this->tags->removeElement($tag)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($tag->getFeedId() === $this) {
+    //             $tag->setFeedId(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, User>

@@ -43,8 +43,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $tags;
+    // #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'user', orphanRemoval: true)]
+    // private Collection $tags;
 
     /**
      * @var Collection<int, Feed>
@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
+        // $this->tags = new ArrayCollection();
         $this->feeds = new ArrayCollection();
         $this->feedItems = new ArrayCollection();
     }
@@ -155,32 +155,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Tag>
      */
-    public function getTags(): Collection
-    {
-        return $this->tags;
-    }
+    // public function getTags(): Collection
+    // {
+    //     return $this->tags;
+    // }
 
-    public function addTag(Tag $tag): static
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
-            $tag->setUserId($this);
-        }
+    // public function addTag(Tag $tag): static
+    // {
+    //     if (!$this->tags->contains($tag)) {
+    //         $this->tags->add($tag);
+    //         $tag->setUserId($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeTag(Tag $tag): static
-    {
-        if ($this->tags->removeElement($tag)) {
-            // set the owning side to null (unless already changed)
-            if ($tag->getUserId() === $this) {
-                $tag->setUserId(null);
-            }
-        }
+    // public function removeTag(Tag $tag): static
+    // {
+    //     if ($this->tags->removeElement($tag)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($tag->getUserId() === $this) {
+    //             $tag->setUserId(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Feed>
