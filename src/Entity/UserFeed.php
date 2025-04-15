@@ -12,12 +12,12 @@ class UserFeed
 {
     // PROPERTIES
     #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'userFeeds')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userFeeds')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'userFeeds')]
+    #[ORM\ManyToOne(targetEntity: Feed::class, inversedBy: 'userFeeds')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Feed $feed = null;
 
