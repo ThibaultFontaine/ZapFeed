@@ -11,15 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: FeedRepository::class)]
 class Feed
 {
+    // PROPERTIES
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, unique: true)]
     private ?string $url = null;
 
     /**
@@ -34,27 +32,18 @@ class Feed
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'feeds')]
     private Collection $users;
 
+    // CONSTRUCTOR
     public function __construct()
     {
         $this->items = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
+
+    // GETTERS AND SETTERS
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getUrl(): ?string
