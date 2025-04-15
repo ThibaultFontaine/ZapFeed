@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -33,6 +35,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Feed>
+     */
+    #[ORM\ManyToMany(targetEntity: Feed::class, inversedBy: 'users')]
+    private Collection $feeds;
+
+    /**
+     * @var Collection<int, Item>
+     */
+    #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'users')]
+    private Collection $items;
+
+    public function __construct()
+    {
+        $this->feeds = new ArrayCollection();
+        $this->items = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,5 +127,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Feed>
+     */
+    public function getFeeds(): Collection
+    {
+        return $this->feeds;
+    }
+
+    public function addFeed(Feed $feed): static
+    {
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds->add($feed);
+        }
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed): static
+    {
+        $this->feeds->removeElement($feed);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Item>
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(Item $item): static
+    {
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(Item $item): static
+    {
+        $this->items->removeElement($item);
+
+        return $this;
     }
 }
