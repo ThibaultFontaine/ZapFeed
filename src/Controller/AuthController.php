@@ -10,7 +10,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AuthController extends AbstractController{
     #[Route("/login", methods:['GET'])]
-    public function home(): Response{
+    public function login(): Response{
         return $this->render('auth/login.html.twig');
+    }
+    #[Route("/register", methods:['GET'])]
+    public function register(): Response{
+        return $this->render('auth/register.html.twig');
     }
 }
