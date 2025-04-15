@@ -27,16 +27,17 @@ class Feed
     private Collection $items;
 
     /**
-     * @var Collection<int, User>
+     * @var Collection<int, UserFeed>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'feeds')]
-    private Collection $users;
+    #[ORM\OneToMany(targetEntity: UserFeed::class, mappedBy: 'feed', orphanRemoval: true)]
+    private Collection $userFeeds;
+
 
     // CONSTRUCTOR
     public function __construct()
     {
         $this->items = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->userFeeds = new ArrayCollection();
     }
 
 
@@ -89,27 +90,30 @@ class Feed
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, UserFeed>
      */
-    public function getUsers(): Collection
+    public function getUserFeeds(): Collection
     {
-        return $this->users;
+        return $this->userFeeds;
     }
 
-    public function addUser(User $user): static
+    public function addUserFeed(UserFeed $userFeed): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addFeed($this);
+        if (!$this->userFeeds->contains($userFeed)) {
+            $this->userFeeds->add($userFeed);
+            $userFeed->setFeed($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeUserFeed(UserFeed $userFeed): static
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeFeed($this);
+        if ($this->userFeeds->removeElement($userFeed)) {
+            // set the owning side to null (unless already changed)
+            if ($userFeed->getFeed() === $this) {
+                $userFeed->setFeed(null);
+            }
         }
 
         return $this;
