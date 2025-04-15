@@ -18,11 +18,11 @@ class Tag
 
     #[ORM\ManyToOne(inversedBy: 'tags')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'tags')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Feed $feed_id = null;
+    private ?Feed $feed = null;
 
     public function getId(): ?int
     {
@@ -43,24 +43,24 @@ class Tag
 
     public function getUserId(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUserId(?User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
     public function getFeedId(): ?Feed
     {
-        return $this->feed_id;
+        return $this->feed;
     }
 
     public function setFeedId(?Feed $feed_id): static
     {
-        $this->feed_id = $feed_id;
+        $this->feed = $feed_id;
 
         return $this;
     }

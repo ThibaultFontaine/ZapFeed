@@ -43,12 +43,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'user_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $tags;
+
+    /**
+     * @var Collection<int, Feed>
+     */
+    #[ORM\ManyToMany(targetEntity: Feed::class, inversedBy: 'users')]
+    private Collection $feeds;
+
+    /**
+     * @var Collection<int, FeedItem>
+     */
+    #[ORM\ManyToMany(targetEntity: FeedItem::class, inversedBy: 'users')]
+    private Collection $feedItems;
 
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
+        $this->feedItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +178,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $tag->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feed>
+     */
+    public function getFeeds(): Collection
+    {
+        return $this->feeds;
+    }
+
+    public function addFeed(Feed $feed): static
+    {
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds->add($feed);
+        }
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed): static
+    {
+        $this->feeds->removeElement($feed);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedItem>
+     */
+    public function getFeedItems(): Collection
+    {
+        return $this->feedItems;
+    }
+
+    public function addFeedItem(FeedItem $feedItem): static
+    {
+        if (!$this->feedItems->contains($feedItem)) {
+            $this->feedItems->add($feedItem);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedItem(FeedItem $feedItem): static
+    {
+        $this->feedItems->removeElement($feedItem);
 
         return $this;
     }

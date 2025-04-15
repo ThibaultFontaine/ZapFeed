@@ -16,20 +16,34 @@ class Feed
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $name;
 
     #[ORM\Column(length: 255)]
-    private ?string $url = null;
+    private ?string $url;
 
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'feed_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'feed', orphanRemoval: true)]
     private Collection $tags;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'feeds')]
+    private Collection $users;
+
+    /**
+     * @var Collection<int, FeedItem>
+     */
+    #[ORM\OneToMany(targetEntity: FeedItem::class, mappedBy: 'feed', orphanRemoval: true)]
+    private Collection $feedItems;
 
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->feedItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +106,63 @@ class Feed
             // set the owning side to null (unless already changed)
             if ($tag->getFeedId() === $this) {
                 $tag->setFeedId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addFeed($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeFeed($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedItem>
+     */
+    public function getFeedItems(): Collection
+    {
+        return $this->feedItems;
+    }
+
+    public function addFeedItem(FeedItem $feedItem): static
+    {
+        if (!$this->feedItems->contains($feedItem)) {
+            $this->feedItems->add($feedItem);
+            $feedItem->setFeed($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedItem(FeedItem $feedItem): static
+    {
+        if ($this->feedItems->removeElement($feedItem)) {
+            // set the owning side to null (unless already changed)
+            if ($feedItem->getFeed() === $this) {
+                $feedItem->setFeed(null);
             }
         }
 
