@@ -14,13 +14,13 @@ class FeedItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $title;
 
-    #[ORM\Column(length: 255)]
-    private ?string $url = null;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $url;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -30,7 +30,7 @@ class FeedItem
 
     #[ORM\ManyToOne(inversedBy: 'feedItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Feed $feed = null;
+    private Feed $feed = null;
 
     /**
      * @var Collection<int, User>
