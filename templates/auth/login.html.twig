@@ -18,25 +18,30 @@
 <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #cce7ff; padding: 20px;">
   <form class="p-4 rounded shadow w-100" style="max-width: 90%; background-color: #f8f9fa;">
     <!-- Email input -->
-    <div data-mdb-input-init class="form-outline mb-4">
+    <div class="mb-4">
+      <label for="EmailInputLogin" class="form-label" style="font-weight: 600;">Email</label>
       <input type="email" name="EmailInputLogin" id="EmailInputLogin" class="form-control" style="padding: 15px; font-size: 1rem;" />
-      <label class="form-label" for="EmailInputLogin" style="font-weight: 600;">Email</label>
     </div>
 
     <!-- Password input -->
-    <div data-mdb-input-init class="form-outline mb-4">
+    <div class="mb-4">
+      <label for="PasswordInputLogin" class="form-label" style="font-weight: 600;">Mot de passe</label>
       <input type="password" name="PasswordInputLogin" id="PasswordInputLogin" class="form-control" style="padding: 15px; font-size: 1rem;" />
-      <label class="form-label" for="PasswordInputLogin" style="font-weight: 600;">Mot de passe</label>
     </div>
 
     <!-- Row for checkbox and link -->
     <div class="row mb-4">
+      <!-- Checkbox -->
       <div class="col d-flex align-items-center">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" name="CheckInputLogin" id="CheckInputLogin" checked />
-          <label class="form-check-label" for="CheckInputLogin" style="font-size: 0.9rem;"> Se souvenir de moi</label>
+          <label class="form-check-label" for="CheckInputLogin" style="font-size: 0.9rem;">
+            Se souvenir de moi
+          </label>
         </div>
       </div>
+
+      <!-- Forgotten password link -->
       <div class="col text-end">
         <a href="#!" style="text-decoration: none; font-weight: 500; color: #0d6efd;">Mot de passe oublié ?</a>
       </div>
@@ -53,7 +58,6 @@
     </div>
   </form>
 </div>
-
 {% endblock %}
     </body>
 </html>
