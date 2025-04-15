@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\FeedRepository;
+use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: FeedRepository::class)]
-class Feed
+#[ORM\Entity(repositoryClass: ItemRepository::class)]
+class Item
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,26 +17,29 @@ class Feed
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $url = null;
 
-    /**
-     * @var Collection<int, Item>
-     */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'feed', orphanRemoval: true)]
-    private Collection $items;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $mediaLink = null;
+
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Feed $feed = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'feeds')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'items')]
     private Collection $users;
 
     public function __construct()
     {
-        $this->items = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -45,14 +48,14 @@ class Feed
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): static
+    public function setTitle(string $title): static
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
@@ -69,32 +72,38 @@ class Feed
         return $this;
     }
 
-    /**
-     * @return Collection<int, Item>
-     */
-    public function getItems(): Collection
+    public function getDescription(): ?string
     {
-        return $this->items;
+        return $this->description;
     }
 
-    public function addItem(Item $item): static
+    public function setDescription(?string $description): static
     {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setFeed($this);
-        }
+        $this->description = $description;
 
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function getMediaLink(): ?string
     {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getFeed() === $this) {
-                $item->setFeed(null);
-            }
-        }
+        return $this->mediaLink;
+    }
+
+    public function setMediaLink(?string $mediaLink): static
+    {
+        $this->mediaLink = $mediaLink;
+
+        return $this;
+    }
+
+    public function getFeed(): ?Feed
+    {
+        return $this->feed;
+    }
+
+    public function setFeed(?Feed $feed): static
+    {
+        $this->feed = $feed;
 
         return $this;
     }
@@ -111,7 +120,7 @@ class Feed
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->addFeed($this);
+            $user->addItem($this);
         }
 
         return $this;
@@ -120,7 +129,7 @@ class Feed
     public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
-            $user->removeFeed($this);
+            $user->removeItem($this);
         }
 
         return $this;

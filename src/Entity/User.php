@@ -7,36 +7,35 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: 'user')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[ORM\Table(name: '`user`')]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int $id;
+    private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
-    private string $username;
-
-    #[ORM\Column(type: Types::STRING, length: 255)]
-    private string $password;
-
-    #[ORM\Column(type: Types::JSON)]
-    private array $roles = [];
-
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    private ?string $bio;
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
 
     /**
-     * @var Collection<int, Tag>
+     * @var list<string> The user roles
      */
-    // #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'user', orphanRemoval: true)]
-    // private Collection $tags;
+    #[ORM\Column]
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
 
     /**
      * @var Collection<int, Feed>
@@ -45,31 +44,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $feeds;
 
     /**
-     * @var Collection<int, FeedItem>
+     * @var Collection<int, Item>
      */
-    #[ORM\ManyToMany(targetEntity: FeedItem::class, inversedBy: 'users')]
-    private Collection $feedItems;
+    #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'users')]
+    private Collection $items;
 
     public function __construct()
     {
-        // $this->tags = new ArrayCollection();
         $this->feeds = new ArrayCollection();
-        $this->feedItems = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername(): string
+    public function getEmail(): ?string
     {
-        return $this->username;
+        return $this->email;
     }
 
-    public function setUsername(string $username): static
+    public function setEmail(string $email): static
     {
-        $this->username = $username;
+        $this->email = $email;
 
         return $this;
     }
@@ -81,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 
     /**
@@ -96,7 +94,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
-        // return $this->role;
     }
 
     /**
@@ -124,18 +121,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBio(): ?string
-    {
-        return $this->bio;
-    }
-
-    public function setBio(string $bio): static
-    {
-        $this->bio = $bio;
-
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */
@@ -144,36 +129,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-    /**
-     * @return Collection<int, Tag>
-     */
-    // public function getTags(): Collection
-    // {
-    //     return $this->tags;
-    // }
-
-    // public function addTag(Tag $tag): static
-    // {
-    //     if (!$this->tags->contains($tag)) {
-    //         $this->tags->add($tag);
-    //         $tag->setUserId($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeTag(Tag $tag): static
-    // {
-    //     if ($this->tags->removeElement($tag)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($tag->getUserId() === $this) {
-    //             $tag->setUserId(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 
     /**
      * @return Collection<int, Feed>
@@ -200,25 +155,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, FeedItem>
+     * @return Collection<int, Item>
      */
-    public function getFeedItems(): Collection
+    public function getItems(): Collection
     {
-        return $this->feedItems;
+        return $this->items;
     }
 
-    public function addFeedItem(FeedItem $feedItem): static
+    public function addItem(Item $item): static
     {
-        if (!$this->feedItems->contains($feedItem)) {
-            $this->feedItems->add($feedItem);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
         }
 
         return $this;
     }
 
-    public function removeFeedItem(FeedItem $feedItem): static
+    public function removeItem(Item $item): static
     {
-        $this->feedItems->removeElement($feedItem);
+        $this->items->removeElement($item);
 
         return $this;
     }
