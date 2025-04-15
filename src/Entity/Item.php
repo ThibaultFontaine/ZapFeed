@@ -3,20 +3,21 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+// use Doctrine\Common\Collections\ArrayCollection;
+// use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
 {
+    // PROPERTIES
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -28,7 +29,7 @@ class Item
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $mediaLink = null;
 
-    #[ORM\ManyToOne(inversedBy: 'items')]
+    #[ORM\ManyToOne(targetEntity: Feed::class, inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Feed $feed = null;
 
@@ -38,11 +39,15 @@ class Item
     // #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'items')]
     // private Collection $users;
 
+
+    // CONSTRUCTOR
     public function __construct()
     {
         // $this->users = new ArrayCollection();
     }
 
+
+    // GETTERS & SETTERS
     public function getId(): ?int
     {
         return $this->id;
@@ -52,7 +57,6 @@ class Item
     {
         return $this->title;
     }
-
     public function setTitle(string $title): static
     {
         $this->title = $title;
@@ -64,7 +68,6 @@ class Item
     {
         return $this->url;
     }
-
     public function setUrl(string $url): static
     {
         $this->url = $url;
@@ -76,7 +79,6 @@ class Item
     {
         return $this->description;
     }
-
     public function setDescription(?string $description): static
     {
         $this->description = $description;
@@ -88,7 +90,6 @@ class Item
     {
         return $this->mediaLink;
     }
-
     public function setMediaLink(?string $mediaLink): static
     {
         $this->mediaLink = $mediaLink;
@@ -100,7 +101,6 @@ class Item
     {
         return $this->feed;
     }
-
     public function setFeed(?Feed $feed): static
     {
         $this->feed = $feed;
