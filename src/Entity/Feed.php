@@ -51,7 +51,6 @@ class Feed
     {
         return $this->url;
     }
-
     public function setUrl(string $url): static
     {
         $this->url = $url;
@@ -66,7 +65,6 @@ class Feed
     {
         return $this->items;
     }
-
     public function addItem(Item $item): static
     {
         if (!$this->items->contains($item)) {
@@ -76,7 +74,6 @@ class Feed
 
         return $this;
     }
-
     public function removeItem(Item $item): static
     {
         if ($this->items->removeElement($item)) {
@@ -96,7 +93,6 @@ class Feed
     {
         return $this->userFeeds;
     }
-
     public function addUserFeed(UserFeed $userFeed): static
     {
         if (!$this->userFeeds->contains($userFeed)) {
@@ -106,7 +102,6 @@ class Feed
 
         return $this;
     }
-
     public function removeUserFeed(UserFeed $userFeed): static
     {
         if ($this->userFeeds->removeElement($userFeed)) {
