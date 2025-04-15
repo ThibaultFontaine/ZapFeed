@@ -1,13 +1,13 @@
 <?php
 
-// namespace App\Entity;
+namespace App\Entity;
 
-// use App\Repository\TagRepository;
-// use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TagRepository;
+use Doctrine\ORM\Mapping as ORM;
 
-// #[ORM\Entity(repositoryClass: TagRepository::class)]
-// class Tag
-// {
+#[ORM\Entity(repositoryClass: TagRepository::class)]
+class Tag
+{
 //     #[ORM\Id]
 //     #[ORM\GeneratedValue]
 //     #[ORM\Column]
@@ -64,4 +64,4 @@
 
 //         return $this;
 //     }
-// }
+}
