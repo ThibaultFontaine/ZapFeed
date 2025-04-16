@@ -2,69 +2,88 @@
 
 namespace App\Controller;
 
+use App\Entity\Item;
 use App\Entity\UserItem;
-use App\Form\UserItemType;
-use App\Repository\UserItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/user/item')]
+// #[Route('/feed/{feedId}/item')]
 final class UserItemController extends AbstractController
 {
-    #[Route(name: 'app_user_item_index', methods: ['GET'])]
-    public function index(UserItemRepository $userItemRepository): Response
+    public function __construct(private EntityManagerInterface $entityManager) {}
+
+
+    #[Route('/feed/{feedId}/item/{itemId}', name: 'app_user_item_show', methods: ['GET'])]
+    public function show(int $feedId, int $itemId): Response
     {
-        return $this->render('user_item/index.html.twig', [
-            'user_items' => $userItemRepository->findAll(),
-        ]);
-    }
+        $user = $this->getUser();
+        $item = $this->entityManager->getRepository(Item::class)->find($itemId);
+        $userItem = $this->entityManager->getRepository(UserItem::class)->findOneBy(['item' => $item, 'user' => $user]);
 
-    #[Route('/new', name: 'app_user_item_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $userItem = new UserItem();
-        $form = $this->createForm(UserItemType::class, $userItem);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($userItem);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_user_item_index', [], Response::HTTP_SEE_OTHER);
+        if (!$user) {
+            throw $this->createAccessDeniedException('User not logged in');
         }
 
-        return $this->render('user_item/new.html.twig', [
-            'user_item' => $userItem,
-            'form' => $form,
-        ]);
-    }
+        if (!$item) {
+            throw $this->createNotFoundException('Item not found');
+        }
 
-    #[Route('/{user}', name: 'app_user_item_show', methods: ['GET'])]
-    public function show(UserItem $userItem): Response
-    {
+        if (!$userItem) {
+            throw $this->createNotFoundException('UserItem not found');
+        }
+
+        if (!$userItem->hasBeenRead()) {
+            // throw $this->createAccessDeniedException('UserItem already read');
+            $userItem->setHasBeenRead(true);
+            $userItem->setUpdatedAt(new \DateTimeImmutable());
+            $this->entityManager->persist($userItem);
+            $this->entityManager->flush();
+        }
+
         return $this->render('user_item/show.html.twig', [
             'user_item' => $userItem,
+            'item' => $userItem->getItem(),
         ]);
     }
 
-    #[Route('/{user}/edit', name: 'app_user_item_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, UserItem $userItem, EntityManagerInterface $entityManager): Response
+    #[Route('/feed/{feedId}/item/{itemId}/like', name: 'app_user_item_set_like', methods: ['POST'])]
+    public function setAsLiked(Request $request, int $feedId, int $itemId): Response
     {
-        $form = $this->createForm(UserItemType::class, $userItem);
-        $form->handleRequest($request);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+        $user = $this->getUser();
+        $item = $this->entityManager->getRepository(Item::class)->find($itemId);
 
-            return $this->redirectToRoute('app_user_item_index', [], Response::HTTP_SEE_OTHER);
+        // if (!$item) {
+        //     throw $this->createNotFoundException();
+        // }
+        if (!$user || !$item) {
+            // throw $this->createNotFoundException();
+            return $this->json(['error' => 'Not found'], 404);
         }
 
-        return $this->render('user_item/edit.html.twig', [
-            'user_item' => $userItem,
-            'form' => $form,
+        $userItem = $this->entityManager->getRepository(UserItem::class)->findOneBy([
+            'user' => $user,
+            'item' => $item,
+        ]);
+
+        if (!$userItem) {
+            // $userItem = new UserItem();
+            // $userItem->setUser($user);
+            // $userItem->setItem($item);
+            throw $this->createNotFoundException();
+        }
+
+        $userItem->setHasBeenLiked(!$userItem->hasBeenLiked());
+        $userItem->setUpdatedAt(new \DateTimeImmutable());
+        $this->entityManager->persist($userItem);
+        $this->entityManager->flush();
+
+        return $this->json([
+            'liked' => $userItem->hasBeenLiked()
         ]);
     }
 
