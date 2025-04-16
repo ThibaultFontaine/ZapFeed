@@ -68,14 +68,19 @@ final class UserItemController extends AbstractController
         ]);
     }
 
-    #[Route('/{user}', name: 'app_user_item_delete', methods: ['POST'])]
-    public function delete(Request $request, UserItem $userItem, EntityManagerInterface $entityManager): Response
+    #[Route('/liked', name: 'app_user_item_liked', methods: ['GET'])]
+    public function showLiked(): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $userItem->getUser(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($userItem);
-            $entityManager->flush();
-        }
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
 
-        return $this->redirectToRoute('app_user_item_index', [], Response::HTTP_SEE_OTHER);
+        $userItems = $this->entityManager->getRepository(UserItem::class)->findBy([
+            'user' => $user,
+            'hasBeenLiked' => true,
+        ], ['updatedAt' => 'DESC']);
+
+        return $this->render('user_item/like.html.twig', [
+            'user_items' => $userItems,
+        ]);
     }
 }
