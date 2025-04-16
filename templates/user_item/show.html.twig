@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserItem{% endblock %}
+
+{% block body %}
+    <h1>UserItem</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>HasBeenRead</th>
+                <td>{{ user_item.hasBeenRead ? 'Yes' : 'No' }}</td>
+                {# TODO: indiquer que déjà lu #}
+            </tr>
+            <tr>
+                <th>HasBeenLiked</th>
+                <td>
+                    {{ user_item.hasBeenLiked ? 'Yes' : 'No' }}
+                
+                 <button
+                        class="btn btn-primary"
+                        id="like-button"
+                        data-liked="{{ user_item.hasBeenLiked ? '1' : '0' }}"
+                        data-feed-id="{{ item.feed.id }}"
+                        data-item-id="{{ item.id }}"
+                        data-token="{{ csrf_token('like' ~ item.id) }}"
+                    >
+                        {{ user_item.hasBeenLiked ? '❤️ Liked' : '🤍 Like' }}
+                    </button>
+                    {# <div id="like-status" class="text-muted mt-1"></div> #}
+                </td>
+            </tr>
+            {# <tr>
+                <th>CreatedAt</th>
+                <td>{{ user_item.createdAt ? user_item.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr> #}
+            {# <tr>
+                <th>UpdatedAt</th>
+                <td>{{ user_item.updatedAt ? user_item.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr> #}
+
+            {# <tr>
+                <th>Id</th>
+                <td>{{ item.id }}</td>
+            </tr> #}
+            <tr>
+                <th>Title</th>
+                <td>{{ item.title }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ item.url }}</td>
+                {# TODO: Ajouter un lien cliquable vers l'URL #}
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ item.description }}</td>
+            </tr>
+            {# <tr>
+                <th>MediaLink</th>
+                <td>{{ item.mediaLink }}</td>
+            </tr> #}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script lang="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const likeBtn = document.getElementById('like-button');
+            // const likeStatus = document.getElementById('like-status');
+
+            likeBtn.addEventListener('click', async function () {
+                const feedId = likeBtn.dataset.feedId;
+                const itemId = likeBtn.dataset.itemId;
+                const token = likeBtn.dataset.token;
+
+                const response = await fetch(`/feed/${feedId}/item/${itemId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: `_token=${token}`,
+                });
+
+                if (!response.ok) {
+                    // likeStatus.textContent = 'Erreur lors du like.';
+                    return;
+                }
+
+                const data = await response.json();
+                const liked = data.liked;
+
+                likeBtn.textContent = liked ? '❤️ Liked' : '🤍 Like';
+                likeBtn.dataset.liked = liked ? '1' : '0';
+
+                // likeStatus.textContent = 'Mise à jour à ' + data.updatedAt;
+                // likeBtn.style.color = liked ? 'green' : 'red';
+            });
+        });
+    </script>
+{% endblock %}
+
