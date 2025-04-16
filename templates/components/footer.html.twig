@@ -73,6 +73,49 @@
         position: relative;
         overflow: hidden;
     }
+    .footer {
+    background: linear-gradient(135deg, #2b2d42 0%, #121420 100%);
+    color: #f8f9fa;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    /* Modifications importantes pour la position par rapport à la sidebar */
+    margin-left: 0; /* Pour éviter le décalage avec la sidebar */
+    width: 100%; /* Prendre toute la largeur disponible */
+    z-index: 1000; /* S'assurer que le footer passe au-dessus de la sidebar */
+    clear: both; /* Forcer le footer à apparaître sous tous les éléments flottants */
+}
+
+/* Ajustement pour l'affichage desktop avec la sidebar déployée */
+@media (min-width: 992px) {
+    .footer .footer-content {
+        margin-left: 250px; /* Même valeur que la largeur de votre sidebar */
+        width: calc(100% - 250px); /* Ajuster la largeur pour tenir compte de la sidebar */
+        transition: margin-left 0.3s ease, width 0.3s ease;
+    }
+    
+    /* Ajustement quand la sidebar est réduite */
+    body.sidebar-collapsed .footer .footer-content {
+        margin-left: 80px; /* Largeur de la sidebar en mode réduit */
+        width: calc(100% - 80px);
+    }
+}
+
+/* Réinitialisation pour les appareils mobiles */
+@media (max-width: 991.98px) {
+    .footer .footer-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Correction des liens du footer pour éviter les superpositions */
+.footer-links-column a,
+.footer-app-links a,
+.social-icon {
+    position: relative;
+    z-index: 1010; /* Supérieur à la sidebar */
+}
     
     .footer::before {
         content: "";
