@@ -1,0 +1,1000 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue de Flux RSS{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .catalogue-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .catalogue-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #5e2ca5, #7953d2);
+        }
+
+        .page-title {
+            color: #1E152A;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .page-title-icon {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(94, 44, 165, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .page-title:hover .page-title-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            border-radius: 30px;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid #ced4da;
+            width: 100%;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            padding-left: 3rem;
+            background-color: #f8f9fa;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 6px 15px rgba(94, 44, 165, 0.1);
+            border-color: #7953d2;
+            background-color: #fff;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus + .search-icon {
+            color: #5e2ca5;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .category-filter {
+            background: #f8f9fa;
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #495057;
+            border: 1px solid #ced4da;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-filter:hover, .category-filter.active {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(94, 44, 165, 0.2);
+        }
+
+        .category-filter i {
+            margin-right: 0.5rem;
+        }
+
+        .feeds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feed-card {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .feed-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feed-header {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+        }
+
+        .feed-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .feed-card:hover .feed-image {
+            transform: scale(1.05);
+        }
+
+        .feed-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(94, 44, 165, 0.9);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .feed-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .feed-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #1E152A;
+        }
+
+        .feed-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .feed-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .feed-subscribers {
+            display: flex;
+            align-items: center;
+        }
+
+        .feed-subscribers i {
+            margin-right: 0.4rem;
+            color: #5e2ca5;
+        }
+
+        .feed-date {
+            display: flex;
+            align-items: center;
+        }
+
+        .feed-date i {
+            margin-right: 0.4rem;
+            color: #5e2ca5;
+        }
+
+        .feed-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .btn-subscribe {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 30px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-subscribe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(94, 44, 165, 0.3);
+        }
+
+        .btn-preview {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 1px solid #ced4da;
+            padding: 0.5rem 1.25rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-preview:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .pagination-container {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+
+        .page-item {
+            margin: 0 0.25rem;
+        }
+
+        .page-link {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px) rotateX(5deg);
+            z-index: 1;
+        }
+
+        .page-item.active .page-link {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
+        }
+
+        .feed-card .badge {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            padding: 0.35rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .feed-card .badge-new {
+            background: linear-gradient(45deg, #2ca58d, #53d2a1);
+            color: white;
+            box-shadow: 0 4px 8px rgba(44, 165, 141, 0.3);
+        }
+
+        .feed-card .badge-popular {
+            background: linear-gradient(45deg, #e5556e, #f88e8e);
+            color: white;
+            box-shadow: 0 4px 8px rgba(229, 85, 110, 0.3);
+        }
+
+        .loader {
+            margin: 2rem auto;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(94, 44, 165, 0.1);
+            border-radius: 50%;
+            border-top-color: #5e2ca5;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            border: 1px dashed #dee2e6;
+            border-radius: 10px;
+            margin: 1rem 0;
+            color: #6c757d;
+        }
+
+        .tooltip-custom {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="catalogue-container" id="tiltContainer">
+        <div class="page-title">
+            <div class="page-title-icon" id="titleIcon">
+                <i class="bi bi-collection-fill fs-4"></i>
+            </div>
+            <span>Catalogue de Flux RSS</span>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" id="search-feeds" placeholder="Rechercher des flux par nom, catégorie ou description...">
+            <i class="bi bi-search search-icon"></i>
+        </div>
+
+        <div class="category-filters">
+            <div class="category-filter active" data-category="all">
+                <i class="bi bi-grid-fill"></i> Tous
+            </div>
+            <div class="category-filter" data-category="actualites">
+                <i class="bi bi-newspaper"></i> Actualités
+            </div>
+            <div class="category-filter" data-category="technologie">
+                <i class="bi bi-cpu-fill"></i> Technologie
+            </div>
+            <div class="category-filter" data-category="sports">
+                <i class="bi bi-trophy-fill"></i> Sports
+            </div>
+            <div class="category-filter" data-category="culture">
+                <i class="bi bi-book-fill"></i> Culture
+            </div>
+            <div class="category-filter" data-category="sciences">
+                <i class="bi bi-lightbulb-fill"></i> Sciences
+            </div>
+            <div class="category-filter" data-category="economie">
+                <i class="bi bi-graph-up"></i> Économie
+            </div>
+            <div class="category-filter" data-category="sante">
+                <i class="bi bi-heart-pulse-fill"></i> Santé
+            </div>
+        </div>
+
+        <div id="feeds-container">
+            <div class="feeds-grid">
+                {% for feed in feeds %}
+                    {# <div class="feed-card" data-category="{{ feed.category|lower }}">
+                        {% if feed.isNew %}
+                            <span class="badge badge-new">Nouveau</span>
+                        {% elseif feed.isPopular %}
+                            <span class="badge badge-popular">Populaire</span>
+                        {% endif %}
+
+                        <div class="feed-header">
+                            <img class="feed-image" src="{{ feed.imageUrl|default('/images/feed_default.jpg') }}" alt="{{ feed.title }}">
+                            <span class="feed-category">{{ feed.category }}</span>
+                        </div>
+                        <div class="feed-body">
+                            <h3 class="feed-title">{{ feed.title }}</h3>
+                            <p class="feed-description">{{ feed.description|length > 100 ? feed.description|slice(0, 100) ~ '...' : feed.description }}</p>
+
+                            <div class="feed-meta">
+                                <div class="feed-subscribers">
+                                    <i class="bi bi-people-fill"></i>
+                                    <span>{{ feed.subscribersCount }} abonnés</span>
+                                </div>
+                                <div class="feed-date">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>Mis à jour {{ feed.lastUpdate|date('d/m/Y') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="feed-actions">
+                                {% if feed.isSubscribed %}
+                                    <button class="btn btn-secondary btn-sm disabled">
+                                        <i class="bi bi-check-circle-fill"></i> Abonné
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-subscribe btn-subscribe-action" data-feed-id="{{ feed.id }}">
+                                        <i class="bi bi-plus-circle"></i> S'abonner
+                                    </button>
+                                {% endif %}
+
+                                <button class="btn btn-preview btn-preview-action" data-feed-id="{{ feed.id }}" data-feed-url="{{ feed.url }}">
+                                    <i class="bi bi-eye"></i> Aperçu
+                                </button>
+                            </div>
+                        </div>
+                    </div> #}
+                {% else %}
+                    <div class="no-results col-12">
+                        <i class="bi bi-emoji-neutral fs-3 mb-3 d-block"></i>
+                        <h4>Aucun flux disponible</h4>
+                        <p>Il n'y a actuellement aucun flux dans notre catalogue. Revenez bientôt ou contactez l'administrateur.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if feeds|length > 0 %}
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        {% if currentPage > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ path('app_feed_catalog', {page: currentPage - 1}) }}" aria-label="Précédent">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in max(1, currentPage - 2)..min(totalPages, currentPage + 2) %}
+                            <li class="page-item {{ currentPage == i ? 'active' : '' }}">
+                                {# <a class="page-link" href="{{ path('app_feed_catalog', {page: i}) }}">{{ i }}</a> #}
+                            </li>
+                        {% endfor %}
+
+                        {% if currentPage < totalPages %}
+                            <li class="page-item">
+                               {#  <a class="page-link" href="{{ path('app_feed_catalog', {page: currentPage + 1}) }}" aria-label="Suivant">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a> #}
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Pour l'animation de chargement si nécessaire -->
+            <div id="loading-indicator" class="loader d-none"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour l'aperçu du flux -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border-bottom: none;">
+                <h5 class="modal-title" id="previewModalLabel">Aperçu du Flux</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="feed-info p-4" style="background-color: #f8f9fa; border-bottom: 1px solid #eeeeee;">
+                    <h3 id="preview-title" class="mb-2">Titre du flux</h3>
+                    <p id="preview-description" class="text-muted mb-3">Description du flux...</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge" style="background: linear-gradient(45deg, #5e2ca5, #7953d2);" id="preview-category">Catégorie</span>
+                        <small class="text-muted" id="preview-count">10 articles</small>
+                    </div>
+                </div>
+                <div class="feed-articles p-4" id="preview-articles">
+                    <div class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mt-3">Chargement des articles...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between" style="border-top: 1px solid #eeeeee;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-subscribe" id="modal-subscribe-btn">
+                    <i class="bi bi-plus-circle"></i> S'abonner
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Effet de tilt 3D sur le container principal
+        const tiltContainer = document.getElementById('tiltContainer');
+        const titleIcon = document.getElementById('titleIcon');
+
+        if (tiltContainer) {
+            tiltContainer.addEventListener('mousemove', function(e) {
+                const containerRect = tiltContainer.getBoundingClientRect();
+                const containerCenterX = containerRect.left + containerRect.width / 2;
+                const containerCenterY = containerRect.top + containerRect.height / 2;
+
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                const angleX = (mouseY - containerCenterY) / 30;
+                const angleY = (mouseX - containerCenterX) / 30;
+
+                tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.1}deg) rotateY(${angleY * 0.1}deg) scale(1.01)`;
+
+                if (titleIcon) {
+                    titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.3}deg) rotateY(${angleY * 0.3}deg) scale(1.1)`;
+                }
+            });
+
+            tiltContainer.addEventListener('mouseleave', function() {
+                tiltContainer.style.transition = 'transform 0.5s ease';
+                tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+
+                if (titleIcon) {
+                    titleIcon.style.transition = 'transform 0.5s ease';
+                    titleIcon.style.transform = 'rotate(0) scale(1)';
+                }
+
+                setTimeout(() => {
+                    tiltContainer.style.transition = '';
+                    if (titleIcon) titleIcon.style.transition = '';
+                }, 500);
+            });
+        }
+
+        // Filtrage par catégorie
+        const categoryFilters = document.querySelectorAll('.category-filter');
+        const feedCards = document.querySelectorAll('.feed-card');
+
+        categoryFilters.forEach(filter => {
+            filter.addEventListener('click', function() {
+                const category = this.dataset.category;
+
+                // Mettre à jour les classes active
+                categoryFilters.forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+
+                // Filtrer les cartes
+                feedCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'flex';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Recherche de flux
+        const searchInput = document.getElementById('search-feeds');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const allFeedCards = document.querySelectorAll('.feed-card');
+
+                allFeedCards.forEach(card => {
+                    const title = card.querySelector('.feed-title').textContent.toLowerCase();
+                    const description = card.querySelector('.feed-description').textContent.toLowerCase();
+                    const category = card.dataset.category.toLowerCase();
+
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        }
+
+        // Effet 3D sur les cartes de flux
+        feedCards.forEach(card => {
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const tiltX = (y - centerY) / 15;
+                const tiltY = (x - centerX) / 15;
+
+                this.style.transform = `perspective(1000px) rotateX(${-tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+
+                const image = this.querySelector('.feed-image');
+                if (image) {
+                    image.style.transform = 'scale(1.05) translateZ(20px)';
+                }
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+
+                const image = this.querySelector('.feed-image');
+                if (image) {
+                    image.style.transform = '';
+                }
+            });
+        });
+
+        // Gestion des tooltips personnalisés
+        const createTooltip = () => {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-custom';
+            document.body.appendChild(tooltip);
+            return tooltip;
+        };
+
+        const tooltip = createTooltip();
+
+        document.querySelectorAll('[data-tooltip]').forEach(element => {
+            element.addEventListener('mouseenter', function(e) {
+                tooltip.textContent = this.dataset.tooltip;
+                tooltip.style.opacity = '1';
+
+                const rect = this.getBoundingClientRect();
+                const tooltipWidth = tooltip.offsetWidth;
+                const left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                const top = rect.top - tooltip.offsetHeight - 10;
+
+                tooltip.style.left = `${left}px`;
+                tooltip.style.top = `${top}px`;
+            });
+
+            element.addEventListener('mouseleave', function() {
+                tooltip.style.opacity = '0';
+            });
+        });
+
+        // Prévisualisation des flux
+        const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+        const previewButtons = document.querySelectorAll('.btn-preview-action');
+        let currentFeedId = null;
+
+        previewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const feedId = this.dataset.feedId;
+                const feedUrl = this.dataset.feedUrl;
+                currentFeedId = feedId;
+
+                // Mettre à jour le titre du modal et d'autres informations de base
+                const feedCard = this.closest('.feed-card');
+                const feedTitle = feedCard.querySelector('.feed-title').textContent;
+                const feedDescription = feedCard.querySelector('.feed-description').textContent;
+                const feedCategory = feedCard.querySelector('.feed-category').textContent;
+
+                document.getElementById('preview-title').textContent = feedTitle;
+                document.getElementById('preview-description').textContent = feedDescription;
+                document.getElementById('preview-category').textContent = feedCategory;
+                document.getElementById('preview-count').textContent = 'Chargement...';
+
+                // Mettre à jour le bouton d'abonnement dans le modal
+                const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
+                const isSubscribed = feedCard.querySelector('.btn-subscribe') ? false : true;
+
+                if (isSubscribed) {
+                    modalSubscribeBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
+                    modalSubscribeBtn.classList.add('disabled', 'btn-secondary');
+                    modalSubscribeBtn.classList.remove('btn-subscribe');
+                } else {
+                    modalSubscribeBtn.innerHTML = '<i class="bi bi-plus-circle"></i> S\'abonner';
+                    modalSubscribeBtn.classList.remove('disabled', 'btn-secondary');
+                    modalSubscribeBtn.classList.add('btn-subscribe');
+                    modalSubscribeBtn.dataset.feedId = feedId;
+                }
+
+                // Afficher le modal
+                previewModal.show();
+
+                // Charger les articles du flux
+                const articlesContainer = document.getElementById('preview-articles');
+                articlesContainer.innerHTML = `
+                    <div class="text-center p-5">
+                        <div class="spinner-border" style="color: #5e2ca5;" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mt-3">Chargement des articles...</p>
+                    </div>
+                `;
+
+                // Ici, nous utilisons l'API pour charger les articles
+                fetch(`/api/feeds/${feedId}/preview`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mettre à jour le compteur d'articles
+                        document.getElementById('preview-count').textContent = `${data.length} articles`;
+
+                        if (data.length > 0) {
+                            // Construire la liste des articles
+                            let articlesHTML = '';
+                            data.forEach(article => {
+                                const date = new Date(article.pubDate);
+                                const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} à ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+
+                                articlesHTML += `
+                                    <div class="article-card mb-3" style="border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                                        <div class="article-header p-3" style="background-color: #f8f9fa;">
+                                            <h5 class="mb-0">${article.title}</h5>
+                                            <small class="text-muted d-block mt-1">${formattedDate}</small>
+                                        </div>
+                                        <div class="article-body p-3">
+                                                                                        <p>${article.description || 'Aucune description disponible.'}</p>
+                                            <div class="text-end">
+                                                <a href="${article.link}" target="_blank" class="btn btn-sm" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border-radius: 20px;">
+                                                    <i class="bi bi-box-arrow-up-right me-1"></i> Lire l'article
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+
+                            articlesContainer.innerHTML = articlesHTML;
+                        } else {
+                            articlesContainer.innerHTML = `
+                                <div class="text-center p-5">
+                                    <i class="bi bi-emoji-neutral fs-3 mb-3 d-block"></i>
+                                    <h4>Aucun article disponible</h4>
+                                    <p>Ce flux ne contient actuellement aucun article. Il pourrait être temporairement indisponible ou vide.</p>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        articlesContainer.innerHTML = `
+                            <div class="text-center p-5 text-danger">
+                                <i class="bi bi-exclamation-triangle fs-3 mb-3 d-block"></i>
+                                <h4>Erreur de chargement</h4>
+                                <p>Impossible de charger les articles de ce flux. Veuillez réessayer ultérieurement.</p>
+                            </div>
+                        `;
+                        console.error('Erreur lors du chargement des articles:', error);
+                    });
+            });
+        });
+
+        // Gestion des abonnements
+        const subscribeButtons = document.querySelectorAll('.btn-subscribe-action');
+
+        subscribeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const feedId = this.dataset.feedId;
+                const buttonEl = this;
+
+                // Animation de chargement
+                const originalHTML = buttonEl.innerHTML;
+                buttonEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Abonnement...';
+                buttonEl.disabled = true;
+
+                // Appel AJAX pour s'abonner
+                fetch(`/api/feeds/${feedId}/subscribe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'abonnement');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Mettre à jour le bouton
+                    buttonEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
+                    buttonEl.classList.add('disabled', 'btn-secondary');
+                    buttonEl.classList.remove('btn-subscribe');
+
+                    // Afficher une notification de succès
+                    showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
+                })
+                .catch(error => {
+                    // Restaurer le bouton
+                    buttonEl.innerHTML = originalHTML;
+                    buttonEl.disabled = false;
+
+                    // Afficher une notification d'erreur
+                    showNotification('Erreur d\'abonnement', 'Impossible de s\'abonner à ce flux. Veuillez réessayer.', 'danger');
+                    console.error('Erreur:', error);
+                });
+            });
+        });
+
+        // Gestion du bouton d'abonnement dans le modal
+        const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
+
+        if (modalSubscribeBtn) {
+            modalSubscribeBtn.addEventListener('click', function() {
+                if (this.classList.contains('disabled')) return;
+
+                const feedId = currentFeedId;
+                const buttonEl = this;
+
+                // Animation de chargement
+                const originalHTML = buttonEl.innerHTML;
+                buttonEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Abonnement...';
+                buttonEl.disabled = true;
+
+                // Appel AJAX pour s'abonner
+                fetch(`/api/feeds/${feedId}/subscribe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'abonnement');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Mettre à jour le bouton dans le modal
+                    buttonEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
+                    buttonEl.classList.add('disabled', 'btn-secondary');
+                    buttonEl.classList.remove('btn-subscribe');
+
+                    // Mettre à jour le bouton dans la carte
+                    const cardButton = document.querySelector(`.btn-subscribe-action[data-feed-id="${feedId}"]`);
+                    if (cardButton) {
+                        cardButton.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
+                        cardButton.classList.add('disabled', 'btn-secondary');
+                        cardButton.classList.remove('btn-subscribe');
+                    }
+
+                    // Afficher une notification de succès
+                    showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
+                })
+                .catch(error => {
+                    // Restaurer le bouton
+                    buttonEl.innerHTML = originalHTML;
+                    buttonEl.disabled = false;
+
+                    // Afficher une notification d'erreur
+                    showNotification('Erreur d\'abonnement', 'Impossible de s\'abonner à ce flux. Veuillez réessayer.', 'danger');
+                    console.error('Erreur:', error);
+                });
+            });
+        }
+
+        // Système de notification
+        function showNotification(title, message, type = 'info') {
+            // Créer un élément toast
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center border-0 show`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.id = toastId;
+
+            // Définir le style en fonction du type
+            let bgClass, iconClass;
+            switch (type) {
+                case 'success':
+                    bgClass = 'bg-success';
+                    iconClass = 'bi-check-circle-fill';
+                    break;
+                case 'danger':
+                    bgClass = 'bg-danger';
+                    iconClass = 'bi-exclamation-triangle-fill';
+                    break;
+                case 'warning':
+                    bgClass = 'bg-warning';
+                    iconClass = 'bi-exclamation-circle-fill';
+                    break;
+                default:
+                    bgClass = 'bg-info';
+                    iconClass = 'bi-info-circle-fill';
+            }
+
+            // Ajouter le contenu HTML
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body ${bgClass} text-white">
+                        <div class="d-flex align-items-center">
+                            <i class="bi ${iconClass} me-2"></i>
+                            <div>
+                                <strong>${title}</strong>
+                                <div>${message}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
+                </div>
+            `;
+
+            // Créer un conteneur de toast s'il n'existe pas
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                toastContainer.style.zIndex = '1050';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Ajouter le toast au conteneur
+            toastContainer.appendChild(toast);
+
+            // Créer un objet Toast Bootstrap
+            const toastObject = new bootstrap.Toast(toast, {
+                autohide: true,
+                delay: 5000
+            });
+
+            // Afficher le toast
+            toastObject.show();
+
+            // Nettoyer le DOM après la fermeture
+            toast.addEventListener('hidden.bs.toast', function() {
+                toast.remove();
+                if (toastContainer.children.length === 0) {
+                    toastContainer.remove();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+
