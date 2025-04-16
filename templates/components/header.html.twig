@@ -16,7 +16,12 @@
 					</form>
 				</ul>
 			</div>
-			<a class="nav-link ms-3" href="/login">Se connecter</a>
+
+			{% if app.user %}
+				<a class="nav-link ms-3" href="{{ path('app_logout') }}">Logout</a>
+        	{% else %}
+				<a class="nav-link ms-3" href="{{ path('app_login') }}">Se connecter</a>
+        	{% endif %}
 		</div>
 	</nav>
 </header>
