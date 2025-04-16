@@ -43,9 +43,35 @@ final class UserItemController extends AbstractController
             $this->entityManager->flush();
         }
 
+        // 🔁 Pagination logique
+        $userItems = $this->entityManager->getRepository(UserItem::class)->findBy([
+            'user' => $user,
+        ]);
+
+        // On filtre ceux liés au bon feed
+        $userItems = array_filter($userItems, fn($ui) => $ui->getItem()->getFeed()->getId() === $feedId);
+
+        // On les trie par ID (ou autre logique)
+        usort($userItems, fn($a, $b) => $a->getItem()->getId() <=> $b->getItem()->getId());
+
+        // Trouver la position de l’item courant
+        $currentIndex = array_search($userItem, $userItems);
+
+        $prev = [
+            'isDisabled' => $currentIndex <= 0,
+            'itemId' => $currentIndex > 0 ? $userItems[$currentIndex - 1]->getItem()->getId() : null,
+        ];
+
+        $next = [
+            'isDisabled' => $currentIndex >= count($userItems) - 1,
+            'itemId' => $currentIndex < count($userItems) - 1 ? $userItems[$currentIndex + 1]->getItem()->getId() : null,
+        ];
+
         return $this->render('user_item/show.html.twig', [
             'user_item' => $userItem,
             'item' => $userItem->getItem(),
+            'prev' => $prev,
+            'next' => $next,
         ]);
     }
 

@@ -7,6 +7,20 @@
 
     <table class="table">
         <tbody>
+            <div class="pagination my-4 d-flex justify-content-between">
+                {% if not prev.isDisabled %}
+                    <a class="btn btn-outline-primary" href="{{ path('app_user_item_show', {feedId: item.feed.id, itemId: prev.itemId}) }}">← Précédent</a>
+                {% else %}
+                    <span class="btn btn-outline-secondary disabled">← Précédent</span>
+                {% endif %}
+
+                {% if not next.isDisabled %}
+                    <a class="btn btn-outline-primary" href="{{ path('app_user_item_show', {feedId: item.feed.id, itemId: next.itemId}) }}">Suivant →</a>
+                {% else %}
+                    <span class="btn btn-outline-secondary disabled">Suivant →</span>
+                {% endif %}
+            </div>
+
             <tr>
                 <th>HasBeenRead</th>
                 <td>{{ user_item.hasBeenRead ? 'Yes' : 'No' }}</td>
