@@ -1,4 +1,0 @@
-<form method="post" action="{{ path('app_feed_delete', {'id': feed.id}) }}" onsubmit="return confirm('Etes-vous sur de vouloir supprimer cet element ?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ feed.id) }}">
-    <button class="btn">Supprimer</button>
-</form>
