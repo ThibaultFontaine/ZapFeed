@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Feed;
 use App\Entity\UserFeed;
 use App\Entity\Item;
+use App\Entity\UserItem;
 use App\Form\FeedType;
 use App\Repository\FeedRepository;
 use App\Repository\UserFeedRepository;
@@ -92,6 +93,16 @@ final class UserFeedController extends AbstractController
 
                     // Persist the feed item
                     $entityManager->persist($item);
+                    $entityManager->flush();
+
+                    $userItem = new UserItem();
+                    $userItem->setUser($user);
+                    $userItem->setItem($item);
+                    $userItem->setHasBeenRead(false);
+                    $userItem->setHasBeenLiked(false);
+                    $userItem->setCreatedAt(new \DateTimeImmutable());
+                    $userItem->setUpdatedAt(new \DateTime());
+                    $entityManager->persist($userItem);
                     $entityManager->flush();
                 }
             }
