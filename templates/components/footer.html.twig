@@ -10,8 +10,8 @@
                 <div class="footer-links-column">
                     <h4>Navigation</h4>
                     <ul>
-                        <li><a href="/">Accueil</a></li>
-                        <li><a href="/feed">Mes flux</a></li>
+                        <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li><a href="{{ path('app_user_feed_index') }}">Mes flux</a></li>
                         <li><a href="">Mon profil</a></li>
                         <li><a href="">Explorer</a></li>
                     </ul>
@@ -20,7 +20,7 @@
                 <div class="footer-links-column">
                     <h4>Assistance</h4>
                     <ul>
-                        <li><a href="/about">A propos</a></li>
+                        <li><a href="{{ path('app_about') }}">A propos</a></li>
                         <li><a href="">Contact</a></li>
                         <li><a href="">Support</a></li>
                     </ul>
