@@ -40,30 +40,27 @@ final class FeedController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $formData = $form->getData();
-
             // Get feed data from the form
-            $url = $formData['url'];
-            $name = $formData['name'];
+            $url = $form->get('url')->getData();;
+            $name = $form->get('name')->getData();;
 
-            // Vérifier si un flux avec cette URL existe déjà
+            // Check if a feed with this URL already exists
             $feed = $feedRepository->findOneBy(['url' => $url]);
 
-            // Si le flux n'existe pas, le créer
+            // If the feed does not exist, create it
             if (!$feed) {
                 $feed = new Feed();
                 $feed->setUrl($url);
                 $entityManager->persist($feed);
-                $entityManager->flush(); // Flush pour obtenir l'ID du feed
+                $entityManager->flush(); // Flush to save the new feed
             }
 
-            // Créer une association UserFeed
-            $user = $this->getUser(); // L'utilisateur connecté
-
+            $user = $this->getUser();
             if (!$user) {
                 throw $this->createAccessDeniedException('User not logged in');
             }
 
+            // Create a new UserFeed entity
             $userFeed = new UserFeed();
             $userFeed->setUser($user);
             $userFeed->setFeed($feed);
