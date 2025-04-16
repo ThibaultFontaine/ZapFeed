@@ -11,15 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: FeedRepository::class)]
 class Feed
 {
+    // PROPERTIES
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, unique: true)]
     private ?string $url = null;
 
     /**
@@ -29,39 +27,30 @@ class Feed
     private Collection $items;
 
     /**
-     * @var Collection<int, User>
+     * @var Collection<int, UserFeed>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'feeds')]
-    private Collection $users;
+    #[ORM\OneToMany(targetEntity: UserFeed::class, mappedBy: 'feed', orphanRemoval: true)]
+    private Collection $userFeeds;
 
+
+    // CONSTRUCTOR
     public function __construct()
     {
         $this->items = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->userFeeds = new ArrayCollection();
     }
 
+
+    // GETTERS AND SETTERS
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getUrl(): ?string
     {
         return $this->url;
     }
-
     public function setUrl(string $url): static
     {
         $this->url = $url;
@@ -76,7 +65,6 @@ class Feed
     {
         return $this->items;
     }
-
     public function addItem(Item $item): static
     {
         if (!$this->items->contains($item)) {
@@ -86,7 +74,6 @@ class Feed
 
         return $this;
     }
-
     public function removeItem(Item $item): static
     {
         if ($this->items->removeElement($item)) {
@@ -100,27 +87,28 @@ class Feed
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, UserFeed>
      */
-    public function getUsers(): Collection
+    public function getUserFeeds(): Collection
     {
-        return $this->users;
+        return $this->userFeeds;
     }
-
-    public function addUser(User $user): static
+    public function addUserFeed(UserFeed $userFeed): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addFeed($this);
+        if (!$this->userFeeds->contains($userFeed)) {
+            $this->userFeeds->add($userFeed);
+            $userFeed->setFeed($this);
         }
 
         return $this;
     }
-
-    public function removeUser(User $user): static
+    public function removeUserFeed(UserFeed $userFeed): static
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeFeed($this);
+        if ($this->userFeeds->removeElement($userFeed)) {
+            // set the owning side to null (unless already changed)
+            if ($userFeed->getFeed() === $this) {
+                $userFeed->setFeed(null);
+            }
         }
 
         return $this;

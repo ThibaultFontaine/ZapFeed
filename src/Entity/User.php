@@ -17,44 +17,49 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    // PROPERTIES
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private ?string $email = null;
-
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $password = null;
 
     /**
-     * @var Collection<int, Feed>
+     * @var list<string> The user roles
      */
-    #[ORM\ManyToMany(targetEntity: Feed::class, inversedBy: 'users')]
-    private Collection $feeds;
+    #[ORM\Column(type: Types::JSON)]
+    private array $roles = [];
 
     /**
-     * @var Collection<int, Item>
+     * @var Collection<int, UserFeed>
      */
-    #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'users')]
-    private Collection $items;
+    #[ORM\OneToMany(targetEntity: UserFeed::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userFeeds;
 
+    // /**
+    //  * @var Collection<int, Item>
+    //  */
+    // #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'users')]
+    // private Collection $items;
+
+
+    // CONSTRUCTOR
     public function __construct()
     {
-        $this->feeds = new ArrayCollection();
-        $this->items = new ArrayCollection();
+        $this->userFeeds = new ArrayCollection();
+        // $this->items = new ArrayCollection();
     }
 
+
+    // GETTERS AND SETTERS
     public function getId(): ?int
     {
         return $this->id;
@@ -64,7 +69,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
-
     public function setEmail(string $email): static
     {
         $this->email = $email;
@@ -83,6 +87,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
      * @see UserInterface
      *
      * @return list<string>
@@ -95,28 +113,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return array_unique($roles);
     }
-
     /**
      * @param list<string> $roles
      */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
 
         return $this;
     }
@@ -130,50 +132,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, Feed>
-     */
-    public function getFeeds(): Collection
-    {
-        return $this->feeds;
-    }
+    // /**
+    //  * @return Collection<int, Item>
+    //  */
+    // public function getItems(): Collection
+    // {
+    //     return $this->items;
+    // }
+    // public function addItem(Item $item): static
+    // {
+    //     if (!$this->items->contains($item)) {
+    //         $this->items->add($item);
+    //     }
 
-    public function addFeed(Feed $feed): static
+    //     return $this;
+    // }
+    // public function removeItem(Item $item): static
+    // {
+    //     $this->items->removeElement($item);
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection<int, UserFeed>
+     */
+    public function getUserFeeds(): Collection
     {
-        if (!$this->feeds->contains($feed)) {
-            $this->feeds->add($feed);
+        return $this->userFeeds;
+    }
+    public function addUserFeed(UserFeed $userFeed): static
+    {
+        if (!$this->userFeeds->contains($userFeed)) {
+            $this->userFeeds->add($userFeed);
+            $userFeed->setUser($this);
         }
 
         return $this;
     }
-
-    public function removeFeed(Feed $feed): static
+    public function removeUserFeed(UserFeed $userFeed): static
     {
-        $this->feeds->removeElement($feed);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Item>
-     */
-    public function getItems(): Collection
-    {
-        return $this->items;
-    }
-
-    public function addItem(Item $item): static
-    {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
+        if ($this->userFeeds->removeElement($userFeed)) {
+            // set the owning side to null (unless already changed)
+            if ($userFeed->getUser() === $this) {
+                $userFeed->setUser(null);
+            }
         }
-
-        return $this;
-    }
-
-    public function removeItem(Item $item): static
-    {
-        $this->items->removeElement($item);
 
         return $this;
     }

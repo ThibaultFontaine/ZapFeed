@@ -12,9 +12,8 @@ class FeedType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('url')
-        ;
+            // ->add('name')
+            ->add('url');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
