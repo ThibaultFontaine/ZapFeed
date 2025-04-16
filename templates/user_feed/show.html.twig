@@ -250,11 +250,14 @@
             <div class="page-title-icon" id="titleIcon">
                 <i class="bi bi-rss fs-3"></i>
             </div>
-            <div>
+            <div class="d-flex flex-row justify-content-between align-items-center w-100">
                 <span>{{ user_feed.title }}</span>
-                <div class="d-flex align-items-center mt-1">
-                    <span class="status-indicator status-active"></span>
-                    <span class="text-success small">Actif</span>
+
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center">
+                        <span class="status-indicator status-active"></span>
+                        <span class="text-success small">Actif</span>
+                    </div>
                     <span class="badge badge-primary ms-2">RSS</span>
                 </div>
             </div>
@@ -288,7 +291,18 @@
             </div>
         </div>
 
-        <div class="feed-preview">
+        {% if first_unread %}
+            <div class="mb-4 text-end">
+                <a href="{{ path('app_user_item_show', {
+                    feedId: first_unread.item.feed.id,
+                    itemId: first_unread.item.id
+                }) }}" class="btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-book"></i> Commencer la lecture
+                </a>
+            </div>
+        {% endif %}
+
+        {# <div class="feed-preview">
             <h3 class="preview-title">
                 <i class="bi bi-eye-fill"></i> Aperçu du flux
             </h3>
@@ -301,7 +315,7 @@
                     <p class="text-muted">Chargement du contenu du flux...</p>
                 </div>
             </div>
-        </div>
+        </div> #}
 
         <div class="action-buttons">
             <a href="{{ path('app_user_feed_index') }}" class="btn btn-outline">
@@ -321,44 +335,44 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const tiltContainer = document.getElementById('tiltContainer');
-        const titleIcon = document.getElementById('titleIcon');
+        // const tiltContainer = document.getElementById('tiltContainer');
+        // const titleIcon = document.getElementById('titleIcon');
 
-        // 3D tilt effect on container
-        function handleMouseMove(e) {
-            const containerRect = tiltContainer.getBoundingClientRect();
-            const containerCenterX = containerRect.left + containerRect.width / 2;
-            const containerCenterY = containerRect.top + containerRect.height / 2;
+        // // 3D tilt effect on container
+        // function handleMouseMove(e) {
+        //     const containerRect = tiltContainer.getBoundingClientRect();
+        //     const containerCenterX = containerRect.left + containerRect.width / 2;
+        //     const containerCenterY = containerRect.top + containerRect.height / 2;
 
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
+        //     const mouseX = e.clientX;
+        //     const mouseY = e.clientY;
 
-            const angleX = (mouseY - containerCenterY) / 30;
-            const angleY = (mouseX - containerCenterX) / 30;
+        //     const angleX = (mouseY - containerCenterY) / 30;
+        //     const angleY = (mouseX - containerCenterX) / 30;
 
-            tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.2}deg) rotateY(${angleY * 0.2}deg) scale(1.01)`;
+        //     tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.2}deg) rotateY(${angleY * 0.2}deg) scale(1.01)`;
 
-            if (titleIcon) {
-                titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) scale(1.1)`;
-            }
-        }
+        //     if (titleIcon) {
+        //         titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) scale(1.1)`;
+        //     }
+        // }
 
-        tiltContainer.addEventListener('mousemove', handleMouseMove);
+        // tiltContainer.addEventListener('mousemove', handleMouseMove);
 
-        tiltContainer.addEventListener('mouseleave', function() {
-            tiltContainer.style.transition = 'transform 0.5s ease';
-            tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        // tiltContainer.addEventListener('mouseleave', function() {
+        //     tiltContainer.style.transition = 'transform 0.5s ease';
+        //     tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
 
-            if (titleIcon) {
-                titleIcon.style.transition = 'transform 0.5s ease';
-                titleIcon.style.transform = 'rotate(0) scale(1)';
-            }
+        //     if (titleIcon) {
+        //         titleIcon.style.transition = 'transform 0.5s ease';
+        //         titleIcon.style.transform = 'rotate(0) scale(1)';
+        //     }
 
-            setTimeout(() => {
-                tiltContainer.style.transition = '';
-                if (titleIcon) titleIcon.style.transition = '';
-            }, 500);
-        });
+        //     setTimeout(() => {
+        //         tiltContainer.style.transition = '';
+        //         if (titleIcon) titleIcon.style.transition = '';
+        //     }, 500);
+        // });
 
         // Copy URL button functionality
         const copyUrlBtn = document.querySelector('.copy-url-btn');
@@ -380,17 +394,17 @@
         }
 
         // Simulate loading feed preview (replace with actual feed fetching)
-        setTimeout(() => {
-            const previewContent = document.querySelector('.preview-content');
+        // setTimeout(() => {
+        //     const previewContent = document.querySelector('.preview-content');
 
-            // Replace with actual feed content or a message if no items available
-            previewContent.innerHTML = `
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Pour visualiser le contenu de ce flux, veuillez aller à la page d'accueil.
-                </div>
-            `;
-        }, 1500);
+        //     // Replace with actual feed content or a message if no items available
+        //     previewContent.innerHTML = `
+        //         <div class="alert alert-info">
+        //             <i class="bi bi-info-circle me-2"></i>
+        //             Pour visualiser le contenu de ce flux, veuillez aller à la page d'accueil.
+        //         </div>
+        //     `;
+        // }, 1500);
 
         // Style delete form button
         const deleteForm = document.querySelector('form[name="delete_form"]');

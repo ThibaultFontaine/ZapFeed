@@ -130,8 +130,33 @@ final class UserFeedController extends AbstractController
         $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed]);
         $this->checkUserFeedOwnership($userFeed);
 
+
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('User not logged in');
+        }
+
+        $userItems = $this->entityManager->getRepository(UserItem::class)->findBy([
+            'user' => $user,
+        ]);
+
+        // Filtrer sur les items de CE feed + non lus
+        $unreadItems = array_filter(
+            $userItems,
+            fn($ui) =>
+            $ui->getItem()->getFeed()->getId() === $userFeed->getFeed()->getId()
+                && !$ui->hasBeenRead()
+        );
+
+        // Trier par ID (ou autre critère comme pubDate ou createdAt)
+        usort($unreadItems, fn($a, $b) => $a->getItem()->getId() <=> $b->getItem()->getId());
+
+        $firstUnread = $unreadItems[0] ?? null;
+
+
         return $this->render('user_feed/show.html.twig', [
             'user_feed' => $userFeed,
+            'first_unread' => $firstUnread,
         ]);
     }
 
