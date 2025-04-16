@@ -8,13 +8,36 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserItemRepository::class)]
 class UserItem
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    // PROPERTIES
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
-    public function getId(): ?int
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'userItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Item $item = null;
+
+
+    // GETTER AND SETTER
+    public function getUser(): ?User
     {
-        return $this->id;
+        return $this->user;
+    }
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getItem(): ?Item
+    {
+        return $this->item;
+    }
+    public function setItem(?Item $item): static
+    {
+        $this->item = $item;
+
+        return $this;
     }
 }

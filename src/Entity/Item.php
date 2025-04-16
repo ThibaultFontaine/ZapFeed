@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 // use Doctrine\Common\Collections\ArrayCollection;
 // use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -33,9 +35,18 @@ class Item
     #[ORM\JoinColumn(nullable: false)]
     private ?Feed $feed = null;
 
+    /**
+     * @var Collection<int, UserItem>
+     */
+    #[ORM\OneToMany(targetEntity: UserItem::class, mappedBy: 'item', orphanRemoval: true)]
+    private Collection $userItems;
+
 
     // CONSTRUCTOR
-    public function __construct() {}
+    public function __construct()
+    {
+        $this->userItems = new ArrayCollection();
+    }
 
 
     // GETTERS & SETTERS
@@ -95,6 +106,34 @@ class Item
     public function setFeed(?Feed $feed): static
     {
         $this->feed = $feed;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserItem>
+     */
+    public function getUserItems(): Collection
+    {
+        return $this->userItems;
+    }
+    public function addUserItem(UserItem $userItem): static
+    {
+        if (!$this->userItems->contains($userItem)) {
+            $this->userItems->add($userItem);
+            $userItem->setItem($this);
+        }
+
+        return $this;
+    }
+    public function removeUserItem(UserItem $userItem): static
+    {
+        if ($this->userItems->removeElement($userItem)) {
+            // set the owning side to null (unless already changed)
+            if ($userItem->getItem() === $this) {
+                $userItem->setItem(null);
+            }
+        }
 
         return $this;
     }
