@@ -55,11 +55,11 @@
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ item.title }}</h6>
-                                <small>{{ item.pubDate|date('d/m/Y') }}</small>
+                                {# <small>{{ item.pubDate|date('d/m/Y') }}</small> #}
                             </div>
                             {# <p class="mb-1 text-muted">{{ item.description|u.truncate(100, '...') }}</p> #}
                             <p class="mb-1 text-muted">{{ item.description }}</p>
-                            <a href="{{ item.link }}" target="_blank" class="btn btn-sm btn-link">Lire l'article</a>
+                            <a href="{{ item.url }}" target="_blank" class="btn btn-sm btn-link">Lire l'article</a>
                         </div>
                     {% endfor %}
                 </div>

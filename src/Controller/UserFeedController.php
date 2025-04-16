@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Feed;
 use App\Entity\UserFeed;
+use App\Entity\Item;
 use App\Form\FeedType;
 use App\Repository\FeedRepository;
 use App\Repository\UserFeedRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use SimplePie\SimplePie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,6 +66,35 @@ final class UserFeedController extends AbstractController
             $userFeed->setTitle($name);
             $userFeed->setCreatedAt(new \DateTimeImmutable());
             $userFeed->setUpdatedAt(new \DateTime());
+
+            $pie = new SimplePie;
+            $pie->enable_cache(false);
+            $pie->set_feed_url($feed->getUrl());
+
+            if ($pie->init()) {
+                dump($pie->get_title());
+                dump($pie->get_description());
+
+                foreach ($pie->get_items() as $_item) {
+                    $item = new Item();
+                    $item->setFeed($feed);
+                    $item->setTitle($_item->get_title());
+                    $item->setUrl($_item->get_link());
+                    $item->setDescription($_item->get_description());
+                    /* if ($_item->get_thumbnail()) {
+                        $item->setMediaLink($_item->get_thumbnail()->get_link());
+                    } elseif ($_item->get_enclosure()) {
+                        $item->setMediaLink($_item->get_enclosure()->get_link());
+                    } else {
+                        $item->setMediaLink(null);
+                    } */
+
+
+                    // Persist the feed item
+                    $entityManager->persist($item);
+                    $entityManager->flush();
+                }
+            }
 
             $entityManager->persist($userFeed);
             $entityManager->flush();
