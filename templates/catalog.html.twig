@@ -477,7 +477,7 @@
                     <ul class="pagination">
                         {% if currentPage > 1 %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ path('app_feed_catalogue', {page: currentPage - 1}) }}" aria-label="Précédent">
+                                <a class="page-link" href="{{ path('app_feed_catalog', {page: currentPage - 1}) }}" aria-label="Précédent">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             </li>
@@ -485,13 +485,13 @@
 
                         {% for i in max(1, currentPage - 2)..min(totalPages, currentPage + 2) %}
                             <li class="page-item {{ currentPage == i ? 'active' : '' }}">
-                                {# <a class="page-link" href="{{ path('app_feed_catalogue', {page: i}) }}">{{ i }}</a> #}
+                                {# <a class="page-link" href="{{ path('app_feed_catalog', {page: i}) }}">{{ i }}</a> #}
                             </li>
                         {% endfor %}
 
                         {% if currentPage < totalPages %}
                             <li class="page-item">
-                               {#  <a class="page-link" href="{{ path('app_feed_catalogue', {page: currentPage + 1}) }}" aria-label="Suivant">
+                               {#  <a class="page-link" href="{{ path('app_feed_catalog', {page: currentPage + 1}) }}" aria-label="Suivant">
                                     <i class="bi bi-chevron-right"></i>
                                 </a> #}
                             </li>

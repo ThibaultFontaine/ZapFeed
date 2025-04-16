@@ -44,18 +44,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserFeed::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $userFeeds;
 
-    // /**
-    //  * @var Collection<int, Item>
-    //  */
-    // #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'users')]
-    // private Collection $items;
+    /**
+     * @var Collection<int, UserItem>
+     */
+    #[ORM\OneToMany(targetEntity: UserItem::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userItems;
 
 
     // CONSTRUCTOR
     public function __construct()
     {
         $this->userFeeds = new ArrayCollection();
-        // $this->items = new ArrayCollection();
+        $this->userItems = new ArrayCollection();
     }
 
 
@@ -132,28 +132,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    // /**
-    //  * @return Collection<int, Item>
-    //  */
-    // public function getItems(): Collection
-    // {
-    //     return $this->items;
-    // }
-    // public function addItem(Item $item): static
-    // {
-    //     if (!$this->items->contains($item)) {
-    //         $this->items->add($item);
-    //     }
-
-    //     return $this;
-    // }
-    // public function removeItem(Item $item): static
-    // {
-    //     $this->items->removeElement($item);
-
-    //     return $this;
-    // }
-
     /**
      * @return Collection<int, UserFeed>
      */
@@ -176,6 +154,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($userFeed->getUser() === $this) {
                 $userFeed->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserItem>
+     */
+    public function getUserItems(): Collection
+    {
+        return $this->userItems;
+    }
+    public function addUserItem(UserItem $userItem): static
+    {
+        if (!$this->userItems->contains($userItem)) {
+            $this->userItems->add($userItem);
+            $userItem->setUser($this);
+        }
+
+        return $this;
+    }
+    public function removeUserItem(UserItem $userItem): static
+    {
+        if ($this->userItems->removeElement($userItem)) {
+            // set the owning side to null (unless already changed)
+            if ($userItem->getUser() === $this) {
+                $userItem->setUser(null);
             }
         }
 
