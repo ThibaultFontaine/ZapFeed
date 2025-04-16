@@ -1,91 +1,498 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter un nouveau flux{% endblock %}
+{% block title %}Nouveau flux RSS{% endblock %}
 
-{% block body %}
-    <div class="container mt-4">
-        <h1>Ajouter un nouveau flux</h1>
-        
-        <div class="card shadow-sm">
-            <div class="card-body">
-                {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        <div class="form-text">
-                            Donnez un nom à ce flux pour l'identifier facilement
-                        </div>
-                        {{ form_errors(form.name) }}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form_label(form.url) }}
-                        {{ form_widget(form.url) }}
-                        <div class="form-text">
-                            L'URL du flux RSS ou Atom (ex: https://exemple.com/feed)
-                        </div>
-                        {{ form_errors(form.url) }}
-                    </div>
-                    
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('app_user_feed_index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Ajouter
-                        </button>
-                    </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .new-feed-container {
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+        max-width: 800px;
+        margin: 2rem auto;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .new-feed-container:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .new-feed-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(to right, #5e2ca5, #7953d2);
+    }
+
+    .page-title {
+        color: #1E152A;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .page-title-icon {
+        background: linear-gradient(45deg, #5e2ca5, #7953d2);
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: white;
+        box-shadow: 0 5px 15px rgba(94, 44, 165, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .page-title:hover .page-title-icon {
+        transform: rotate(10deg) scale(1.1);
+    }
+
+    .form-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .form-section-title {
+        color: #5e2ca5;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        font-size: 1.2rem;
+        border-left: 4px solid #5e2ca5;
+        padding-left: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.6rem;
+        font-weight: 500;
+        color: #212529;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #7953d2;
+        box-shadow: 0 0 0 3px rgba(94, 44, 165, 0.1);
+        outline: none;
+    }
+
+    .form-text {
+        display: block;
+        margin-top: 0.4rem;
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #5e2ca5, #7953d2);
+        border: none;
+        color: white;
+        box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(94, 44, 165, 0.3);
+        background: linear-gradient(45deg, #7953d2, #5e2ca5);
+    }
+
+    .btn-secondary {
+        background-color: #f8f9fa;
+        color: #495057;
+        border: 1px solid #ced4da;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        align-items: center;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        color: #5e2ca5;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .back-link .icon {
+        margin-right: 6px;
+    }
+
+    .back-link:hover {
+        color: #7953d2;
+        transform: translateX(-4px);
+    }
+
+    /* Form validation styles */
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 0.4rem;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+    }
+
+    /* Animated helper */
+    .helper-tips {
+        background-color: rgba(94, 44, 165, 0.05);
+        border-left: 4px solid #5e2ca5;
+        padding: 1.2rem;
+        border-radius: 0 8px 8px 0;
+        margin-top: 2rem;
+    }
+
+    .helper-tips .title {
+        font-weight: 600;
+        color: #5e2ca5;
+        margin-bottom: 0.6rem;
+    }
+
+    .helper-tips ul {
+        padding-left: 1.5rem;
+        margin-bottom: 0;
+    }
+
+    .helper-tips li {
+        margin-bottom: 0.4rem;
+    }
+
+    /* Style moderne pour les textarea */
+textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 15px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #212529;
+    background-color: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #7953d2;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(94, 44, 165, 0.15);
+    transform: translateY(-2px);
+}
+
+textarea:hover:not(:focus) {
+    border-color: #ced4da;
+}
+
+/* Scrollbar personnalisée */
+textarea::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f8f9fa;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: #ced4da;
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background-color: #adb5bd;
+}
+
+/* Placeholder personnalisé */
+textarea::placeholder {
+    color: #adb5bd;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+textarea:focus::placeholder {
+    opacity: 0.5;
+    transform: translateX(10px);
+}
+
+/* Animation lors de la frappe */
+textarea.is-typing {
+    background-color: #fff;
+    border-color: #7953d2;
+    box-shadow: 0 0 0 2px rgba(94, 44, 165, 0.1);
+}
+
+/* État d'erreur */
+textarea.is-invalid {
+    border-color: #dc3545;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
+}
+
+/* Effet de compteur de caractères (si utilisé) */
+.textarea-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: 0.8rem;
+    color: #adb5bd;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.textarea-wrapper {
+    position: relative;
+}
+
+    /* Animation for icon pulse */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+</style>
 {% endblock %}
 
-
-
-
-
-{# 
-{% extends 'base.html.twig' %}
-
-{% block title %}Ajouter un nouveau flux{% endblock %}
-
 {% block body %}
-    <div class="container mt-4">
-        <h1>Ajouter un nouveau flux</h1>
-        
-        <div class="card shadow-sm">
-            <div class="card-body">
-                {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        <div class="form-text">
-                            Donnez un nom à ce flux pour l'identifier facilement
-                        </div>
-                        {{ form_errors(form.name) }}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form_label(form.url) }}
-                        {{ form_widget(form.url) }}
-                        <div class="form-text">
-                            {{ form_help(form.url) }}
-                            L'URL du flux RSS ou Atom (ex: https://exemple.com/feed)
-                        </div>
-                        {{ form_errors(form.url) }}
-                    </div>
-                    
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('app_feed_index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Ajouter
-                        </button>
-                    </div>
-                {{ form_end(form) }}
+<div class="container mt-4">
+    <div class="new-feed-container" id="tiltContainer">
+        <div class="page-title">
+            <div class="page-title-icon" id="titleIcon">
+                <i class="bi bi-rss-fill fs-4"></i>
             </div>
+            <span>Ajouter un nouveau flux RSS</span>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Informations du flux</h3>
+
+            {{ include('feed/_form.html.twig', {
+                'button_label': 'Créer le flux',
+                'button_icon': '<i class="bi bi-plus-circle me-2"></i>'
+            }) }}
+        </div>
+
+        <div class="helper-tips">
+            <div class="title">
+                <i class="bi bi-lightbulb-fill me-2"></i> Conseils utiles
+            </div>
+            <ul>
+                <li>Choisissez un nom descriptif pour facilement reconnaître la source.</li>
+                <li>Assurez-vous que l'URL du flux est valide et commence par <code>http://</code> ou <code>https://</code>.</li>
+                <li>La plupart des sites d'actualités et blogs proposent des flux RSS que vous pouvez trouver dans leur pied de page.</li>
+            </ul>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ path('app_user_feed_index') }}" class="back-link">
+                <i class="bi bi-arrow-left icon"></i> Retour à la liste
+            </a>
         </div>
     </div>
-{% endblock %} #}
+</div>
+
+<script>
+document.querySelectorAll('textarea').forEach(textarea => {
+    textarea.addEventListener('input', function() {
+        this.classList.add('is-typing');
+    });
+
+    textarea.addEventListener('blur', function() {
+        this.classList.remove('is-typing');
+    });
+});
+
+// Amélioration des textarea
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('textarea').forEach(textarea => {
+        // Wrapper pour le compteur de caractères (facultatif)
+        const parent = textarea.parentElement;
+        if (!parent.classList.contains('textarea-wrapper')) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'textarea-wrapper';
+            textarea.parentNode.insertBefore(wrapper, textarea);
+            wrapper.appendChild(textarea);
+
+            // Ajouter un compteur de caractères (facultatif)
+            const counter = document.createElement('div');
+            counter.className = 'textarea-counter';
+            counter.textContent = '0';
+            wrapper.appendChild(counter);
+
+            // Mettre à jour le compteur lors de la saisie
+            textarea.addEventListener('input', function() {
+                counter.textContent = this.value.length;
+
+                if (this.getAttribute('maxlength')) {
+                    const maxLength = parseInt(this.getAttribute('maxlength'));
+                    const remaining = maxLength - this.value.length;
+
+                    if (remaining < 20) {
+                        counter.style.color = '#dc3545';
+                    } else if (remaining < 50) {
+                        counter.style.color = '#ffc107';
+                    } else {
+                        counter.style.color = '#adb5bd';
+                    }
+
+                    counter.textContent = `${this.value.length} / ${maxLength}`;
+                }
+            });
+        }
+
+        // Animation lors de la frappe
+        textarea.addEventListener('input', function() {
+            this.classList.add('is-typing');
+        });
+
+        // Retirer l'animation après la perte de focus
+        textarea.addEventListener('blur', function() {
+            this.classList.remove('is-typing');
+        });
+
+        // Auto-resize (optionnel)
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    });
+});
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const tiltContainer = document.getElementById('tiltContainer');
+        const titleIcon = document.getElementById('titleIcon');
+
+        // Tilt effect on container
+        function handleMouseMove(e) {
+            const containerRect = tiltContainer.getBoundingClientRect();
+            const containerCenterX = containerRect.left + containerRect.width / 2;
+            const containerCenterY = containerRect.top + containerRect.height / 2;
+
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            const angleX = (mouseY - containerCenterY) / 25;
+            const angleY = (mouseX - containerCenterX) / 25;
+
+            tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.3}deg) rotateY(${angleY * 0.3}deg) translateZ(10px)`;
+
+            if (titleIcon) {
+                titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) translateZ(20px)`;
+            }
+        }
+
+        tiltContainer.addEventListener('mousemove', handleMouseMove);
+
+        tiltContainer.addEventListener('mouseleave', function() {
+            tiltContainer.style.transition = 'transform 0.5s ease';
+            tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+
+            if (titleIcon) {
+                titleIcon.style.transition = 'transform 0.5s ease';
+                titleIcon.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            }
+
+            setTimeout(() => {
+                tiltContainer.style.transition = '';
+                if (titleIcon) titleIcon.style.transition = '';
+            }, 500);
+        });
+
+        // Enhance form elements
+        const formControls = document.querySelectorAll('.form-control');
+        formControls.forEach(control => {
+            control.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+
+            control.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+
+            // If using HTML5 validation
+            control.addEventListener('invalid', function() {
+                this.classList.add('is-invalid');
+            });
+        });
+
+        // Button effects
+        const submitBtn = document.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.classList.add('btn', 'btn-primary');
+
+            submitBtn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+
+            submitBtn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        }
+
+        // Back link animation
+        const backLink = document.querySelector('.back-link');
+        backLink.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(-4px)';
+        });
+
+        backLink.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+</script>
+{% endblock %}

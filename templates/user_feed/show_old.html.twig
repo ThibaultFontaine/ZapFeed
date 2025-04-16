@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user_feed.title }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>{{ user_feed.title }}</h1>
+            <div class="btn-group">
+                <a href="{{ path('app_user_feed_index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                </a>
+                <a href="{{ path('app_user_feed_edit', {'id': user_feed.feed.id}) }}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit me-1"></i> Modifier
+                </a>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash-alt me-1"></i> Supprimer
+                </button>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Informations du flux</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th style="width: 150px;">URL du flux</th>
+                            <td><a href="{{ user_feed.feed.url }}" target="_blank">{{ user_feed.feed.url }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Date d'ajout</th>
+                            <td>{{ user_feed.createdAt|date('d/m/Y H:i') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dernière MàJ</th>
+                            <td>{{ user_feed.updatedAt|date('d/m/Y H:i') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Si vous avez des articles liés à ce flux, vous pouvez les afficher ici #}
+        {% if user_feed.feed.items is not empty %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Articles récents</h5>
+                    <span class="badge bg-primary">{{ user_feed.feed.items|length }}</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for item in user_feed.feed.items %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ item.title }}</h6>
+                                {# <small>{{ item.pubDate|date('d/m/Y') }}</small> #}
+                            </div>
+                            {# <p class="mb-1 text-muted">{{ item.description|u.truncate(100, '...') }}</p> #}
+                            <p class="mb-1 text-muted">{{ item.description }}</p>
+                            <a href="{{ item.url }}" target="_blank" class="btn btn-sm btn-link">Lire l'article</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i> Aucun article n'a encore été récupéré pour ce flux.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Êtes-vous sûr de vouloir supprimer le flux "{{ user_feed.title }}" ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form method="post" action="{{ path('app_user_feed_delete', {'id': user_feed.feed.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user_feed.feed.id) }}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Feed{% endblock %}
+
+{% block body %}
+    <h1>Feed</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ feed.id }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ feed.url }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_feed_index') }}">back to list</a>
+
+    <a href="{{ path('app_feed_edit', {'id': feed.id}) }}">edit</a>
+
+    {{ include('feed/_delete_form.html.twig') }}
+{% endblock %} #}
