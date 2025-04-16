@@ -1,12 +1,12 @@
 <aside id="mySidebar" class="sidebar shadow-lg" style="width: 250px; transition: all 0.3s ease; background: linear-gradient(180deg, #f8f9fa 0%, #eeeeee 100%);">
     <div class="sidebar-content p-3">
-        <!-- New Feeds Section -->
+        <!-- Catalogue Section -->
         <div class="menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
             <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
                  style="width: 40px; height: 40px; background: linear-gradient(135deg, #5e2ca5, #7953d2); color: white;">
                 <i class="bi bi-lightning-fill fs-5"></i>
             </div>
-            <a href="#" class="text-decoration-none fw-bold text-dark sidebar-text position-relative">
+            <a href="{{ path('catalogue') }}" class="text-decoration-none fw-bold text-dark sidebar-text position-relative">
                 Catalogue
                 <span class="menu-highlight"></span>
             </a>
@@ -20,43 +20,77 @@
         </h5>
         
         <div class="feeds-container">
-            <!-- Example feed items (commented out in your original code) -->
-            <div class="menu-item d-flex align-items-center p-2 rounded mb-2" data-tilt>
-                <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
-                     style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
-                    <i class="bi bi-folder fs-5"></i>
+            {% if app.user %}
+                {% if app.user.userFeeds is defined and app.user.userFeeds|length > 0 %}
+                    {% for userFeed in app.user.userFeeds %}
+                        <div class="menu-item d-flex align-items-center p-2 rounded mb-2" data-tilt 
+                             data-feed-id="{{ userFeed.id }}">
+                            <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
+                                 style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
+                                <i class="bi bi-folder fs-5"></i>
+                            </div>
+                            <a href="{{ path('app_user_feed_show', {'id': userFeed.id}) }}" class="text-decoration-none text-dark sidebar-text feed-title">
+                                {{ userFeed.title|length > 20 ? userFeed.title|slice(0, 20) ~ '...' : userFeed.title }}
+                            </a>
+                            <div class="ms-auto feed-actions">
+                                <button class="btn btn-sm text-muted feed-action-btn p-1" title="Marquer tous comme lus">
+                                    <i class="bi bi-check-all"></i>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-light text-center py-3" style="background: rgba(94, 44, 165, 0.05); border: 1px dashed rgba(94, 44, 165, 0.2); border-radius: 12px;">
+                        <i class="bi bi-info-circle text-primary mb-2" style="font-size: 1.5rem;"></i>
+                        <p class="mb-0 small">Vous n'avez pas encore ajouté de flux.</p>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-light text-center py-3" style="background: rgba(94, 44, 165, 0.05); border: 1px dashed rgba(94, 44, 165, 0.2); border-radius: 12px;">
+                    <i class="bi bi-lock text-primary mb-2" style="font-size: 1.5rem;"></i>
+                    <p class="mb-0 small">Connectez-vous pour voir vos flux personnalisés.</p>
+                    <a href="{{ path('app_login') }}" class="btn btn-sm btn-primary mt-2" 
+                       style="background: linear-gradient(45deg, #5e2ca5, #7953d2); border: none;">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+                    </a>
                 </div>
-                <a href="#flux1" class="text-decoration-none text-dark sidebar-text">
-                    Actualités
-                </a>
-            </div>
-
-            <div class="menu-item d-flex align-items-center p-2 rounded mb-2" data-tilt>
-                <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
-                     style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
-                    <i class="bi bi-folder fs-5"></i>
-                </div>
-                <a href="#flux2" class="text-decoration-none text-dark sidebar-text">
-                    Technologie
-                </a>
-            </div>
-
-            <div class="menu-item d-flex align-items-center p-2 rounded mb-2" data-tilt>
-                <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
-                     style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
-                    <i class="bi bi-folder fs-5"></i>
-                </div>
-                <a href="#flux3" class="text-decoration-none text-dark sidebar-text">
-                    Sports
-                </a>
-            </div>
+            {% endif %}
         </div>
         
-        <div class="mt-4 text-center">
-            <button onclick="location.href='./feed/new'" class="btn btn-sm w-100 add-feed-btn" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border: none; border-radius: 25px; padding: 8px 15px;">
-                <i class="bi bi-plus-circle-fill me-1"></i> Ajouter un flux
-            </button>
-        </div>
+        {% if app.user %}
+            <div class="mt-4 text-center">
+                <button onclick="location.href='{{ path('app_user_feed_new') }}'" class="btn btn-sm w-100 add-feed-btn" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border: none; border-radius: 25px; padding: 8px 15px;">
+                    <i class="bi bi-plus-circle-fill me-1"></i> Ajouter un flux
+                </button>
+            </div>
+        {% endif %}
+
+        {% if app.user and app.user.userFeeds is defined and app.user.userFeeds|length > 0 %}
+            <hr class="border-dark opacity-25 w-100 my-3"/>
+            
+            <!-- Feed management options -->
+            <div class="feed-management">
+                <div class="menu-item d-flex align-items-center p-2 rounded mb-2">
+                    <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
+                         style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
+                        <i class="bi bi-gear fs-5"></i>
+                    </div>
+                    <a href="{{ path('app_user_feed_index') }}" class="text-decoration-none text-dark sidebar-text">
+                        Gérer mes flux
+                    </a>
+                </div>
+                
+                <div class="menu-item d-flex align-items-center p-2 rounded mb-2">
+                    <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
+                         style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
+                        <i class="bi bi-arrow-repeat fs-5"></i>
+                    </div>
+                    <a href="#" class="text-decoration-none text-dark sidebar-text" id="refreshAllFeeds">
+                        Actualiser tous
+                    </a>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     <style>
@@ -76,6 +110,19 @@
         .menu-item:hover {
             background-color: rgba(94, 44, 165, 0.05);
             transform: translateY(-2px);
+        }
+        
+        .feed-actions {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .menu-item:hover .feed-actions {
+            opacity: 1;
+        }
+        
+        .feed-action-btn:hover {
+            color: #5e2ca5 !important;
         }
         
         .menu-highlight {
@@ -167,11 +214,17 @@
             const sidebar = document.getElementById("mySidebar");
             let isCollapsed = false;
             
-            document.querySelector('.sidebar').addEventListener('dblclick', function() {
+            document.querySelector('.sidebar').addEventListener('dblclick', function(e) {
+                // Éviter que le double-clic sur un lien déclenche la réduction
+                if (e.target.tagName.toLowerCase() === 'a') return;
+                
                 if (isCollapsed) {
                     sidebar.style.width = "250px";
                     document.querySelectorAll(".sidebar-text").forEach(item => {
                         item.style.display = "inline";
+                    });
+                    document.querySelectorAll(".feed-actions").forEach(item => {
+                        item.style.display = "flex";
                     });
                     isCollapsed = false;
                 } else {
@@ -179,8 +232,172 @@
                     document.querySelectorAll(".sidebar-text").forEach(item => {
                         item.style.display = "none";
                     });
+                    document.querySelectorAll(".feed-actions").forEach(item => {
+                        item.style.display = "none";
+                    });
                     isCollapsed = true;
                 }
+            });
+            
+            // Actualisation de tous les flux
+            const refreshAllBtn = document.getElementById('refreshAllFeeds');
+            if (refreshAllBtn) {
+                refreshAllBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Animation sur le bouton
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('spin-animation');
+                        
+                        // Actualiser l'icône après un moment pour montrer que c'est en cours
+                        setTimeout(() => {
+                            icon.classList.remove('bi-arrow-repeat');
+                            icon.classList.add('bi-hourglass-split');
+                        }, 200);
+                    }
+                    
+                    // Simuler actualisations des flux avec un délai pour l'effet visuel
+                    fetch('{{ path("app_refresh_all_feeds") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Animation réussie
+                        if (icon) {
+                            icon.classList.remove('spin-animation', 'bi-hourglass-split');
+                            icon.classList.add('bi-check-circle-fill', 'text-success');
+                            
+                            // Restaurer l'icône d'origine
+                            setTimeout(() => {
+                                icon.classList.remove('bi-check-circle-fill', 'text-success');
+                                icon.classList.add('bi-arrow-repeat');
+                            }, 2000);
+                        }
+                        
+                        // Notification de succès
+                        showNotification('Tous les flux ont été actualisés', 'success');
+                        
+                        // Rediriger après un court délai
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        // Animation d'erreur
+                        if (icon) {
+                            icon.classList.remove('spin-animation', 'bi-hourglass-split');
+                            icon.classList.add('bi-exclamation-circle-fill', 'text-danger');
+                            
+                            // Restaurer l'icône d'origine
+                            setTimeout(() => {
+                                icon.classList.remove('bi-exclamation-circle-fill', 'text-danger');
+                                icon.classList.add('bi-arrow-repeat');
+                            }, 2000);
+                        }
+                        
+                        // Notification d'erreur
+                        showNotification('Erreur lors de l\'actualisation des flux', 'danger');
+                    });
+                });
+            }
+            
+            // Fonction pour afficher une notification
+            function showNotification(message, type = 'info') {
+                const notifContainer = document.createElement('div');
+                notifContainer.className = `alert alert-${type} notification-popup`;
+                notifContainer.innerHTML = message;
+                document.body.appendChild(notifContainer);
+                
+                setTimeout(() => {
+                    notifContainer.classList.add('show');
+                }, 100);
+                
+                setTimeout(() => {
+                    notifContainer.classList.remove('show');
+                    setTimeout(() => {
+                        notifContainer.remove();
+                    }, 300);
+                }, 3000);
+            }
+            
+            // Style pour la notification
+            const style = document.createElement('style');
+            style.textContent = `
+                .notification-popup {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    border-radius: 10px;
+                    padding: 15px 25px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    transform: translateY(-20px);
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                }
+                
+                .notification-popup.show {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+                
+                .spin-animation {
+                    animation: spin 1s infinite linear;
+                }
+                
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Actions sur les flux individuels
+            document.querySelectorAll('.feed-action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const feedItem = this.closest('.menu-item');
+                    const feedId = feedItem?.dataset.feedId;
+                    
+                    if (!feedId) return;
+                    
+                    // Marquer comme lu
+                    if (this.title === "Marquer tous comme lus") {
+                        // Icône animation
+                        this.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+                        
+                        fetch(`{{ path('app_mark_feed_read', {id: 'FEED_ID'}) }}`.replace('FEED_ID', feedId), {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Animation réussie
+                            this.innerHTML = '<i class="bi bi-check2-all text-success"></i>';
+                            
+                            // Restaurer l'icône d'origine
+                            setTimeout(() => {
+                                this.innerHTML = '<i class="bi bi-check-all"></i>';
+                            }, 2000);
+                        })
+                        .catch(error => {
+                            // Animation d'erreur
+                            this.innerHTML = '<i class="bi bi-exclamation-circle-fill text-danger"></i>';
+                            
+                            // Restaurer l'icône d'origine
+                            setTimeout(() => {
+                                this.innerHTML = '<i class="bi bi-check-all"></i>';
+                            }, 2000);
+                        });
+                    }
+                });
             });
         });
     </script>

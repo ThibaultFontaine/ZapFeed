@@ -240,6 +240,142 @@
         background-color: #198754;
         animation: glow 2s infinite;
     }
+    
+    /* Nouveaux styles pour les articles */
+    .feed-item {
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease;
+        border-left: 4px solid #5e2ca5;
+    }
+    
+    .feed-item:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transform: translateY(-3px);
+    }
+    
+    .feed-item-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1E152A;
+    }
+    
+    .feed-item-title a {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.2s;
+    }
+    
+    .feed-item-title a:hover {
+        color: #5e2ca5;
+    }
+    
+    .feed-item-meta {
+        display: flex;
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .feed-item-date {
+        display: flex;
+        align-items: center;
+    }
+    
+    .feed-item-date i {
+        margin-right: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .feed-item-description {
+        color: #495057;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;  /* Limite à 3 lignes */
+        -webkit-box-orient: vertical;
+    }
+    
+    .feed-item-link {
+        text-align: right;
+        margin-top: 0.75rem;
+    }
+    
+    .feed-item-link a {
+        color: #5e2ca5;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.2s;
+    }
+    
+    .feed-item-link a:hover {
+        color: #7953d2;
+        transform: translateX(2px);
+    }
+    
+    .feed-item-link i {
+        margin-left: 4px;
+        transition: transform 0.2s;
+    }
+    
+    .feed-item-link a:hover i {
+        transform: translateX(3px);
+    }
+    
+    .feed-empty {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+    
+    /* Styles pour la pagination des articles */
+    .feed-pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+        gap: 0.5rem;
+    }
+    
+    .pagination-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .pagination-btn:hover:not([disabled]) {
+        background-color: #5e2ca5;
+        border-color: #5e2ca5;
+        color: white;
+    }
+    
+    .pagination-btn[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .pagination-current {
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        background-color: #5e2ca5;
+        color: white;
+        font-weight: 500;
+    }
 </style>
 {% endblock %}
 
@@ -280,7 +416,7 @@
                     <i class="bi bi-link-45deg"></i> URL
                 </div>
                 <div class="detail-value feed-url-value">
-                    <a href="{{ user_feed.feed.url }}" target="_blank">{{ user_feed.feed.url }}</a>
+                    <a href="{{ user_feed.feed.url }}" target="_blank" rel="noopener noreferrer">{{ user_feed.feed.url }}</a>
                     <button class="btn-sm btn-link copy-url-btn ms-2" data-url="{{ user_feed.feed.url }}" title="Copier l'URL">
                         <i class="bi bi-clipboard"></i>
                     </button>
@@ -293,12 +429,28 @@
                 <i class="bi bi-eye-fill"></i> Aperçu du flux
             </h3>
             <div class="preview-content">
-                <!-- Placeholder for feed preview content -->
-                <div class="text-center py-4">
+                <!-- Spinner initial qui sera remplacé par le contenu du flux -->
+                <div class="text-center py-4" id="loadingSpinner">
                     <div class="spinner-border text-primary mb-3" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                     <p class="text-muted">Chargement du contenu du flux...</p>
+                </div>
+                
+                <!-- Container pour les articles qui seront ajoutés par JS -->
+                <div id="feedItemsContainer" style="display: none;">
+                    <!-- Les articles seront ajoutés ici dynamiquement -->
+                </div>
+                
+                <!-- Pagination pour les articles -->
+                <div class="feed-pagination" id="feedPagination" style="display: none;">
+                    <button class="pagination-btn" id="prevPageBtn" disabled>
+                        <i class="bi bi-chevron-left"></i> Précédent
+                    </button>
+                    <div class="pagination-current" id="paginationInfo">1 / 1</div>
+                    <button class="pagination-btn" id="nextPageBtn" disabled>
+                        Suivant <i class="bi bi-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -323,6 +475,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const tiltContainer = document.getElementById('tiltContainer');
         const titleIcon = document.getElementById('titleIcon');
+        const feedId = "{{ user_feed.feed.id }}";
 
         // 3D tilt effect on container
         function handleMouseMove(e) {
@@ -379,19 +532,6 @@
             });
         }
 
-        // Simulate loading feed preview (replace with actual feed fetching)
-        setTimeout(() => {
-            const previewContent = document.querySelector('.preview-content');
-
-            // Replace with actual feed content or a message if no items available
-            previewContent.innerHTML = `
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Pour visualiser le contenu de ce flux, veuillez aller à la page d'accueil.
-                </div>
-            `;
-        }, 1500);
-
         // Style delete form button
         const deleteForm = document.querySelector('form[name="delete_form"]');
         if (deleteForm) {
@@ -408,6 +548,247 @@
                     this.style.transform = 'translateY(0)';
                 });
             }
+        }
+        
+        // ===== ARTICLE LOADING AND DISPLAY =====
+        
+        // Variables for pagination
+        let currentPage = 1;
+        let totalPages = 1;
+        let articlesPerPage = 5;
+        let allArticles = [];
+        
+        // Fetch articles for the feed
+        function fetchFeedArticles() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const feedItemsContainer = document.getElementById('feedItemsContainer');
+            const feedPagination = document.getElementById('feedPagination');
+            
+            // Remplacer cette URL par l'endpoint réel qui récupère les articles du flux
+            const apiUrl = `/api/feeds/${feedId}/articles`;
+            
+            // Faire la requête pour récupérer les articles
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du chargement des articles');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (loadingSpinner) loadingSpinner.style.display = 'none';
+                    if (feedItemsContainer) feedItemsContainer.style.display = 'block';
+                    
+                    // Stocker tous les articles
+                    allArticles = data.articles || [];
+                    totalPages = Math.ceil(allArticles.length / articlesPerPage);
+                    
+                    // Afficher les articles et mettre à jour la pagination
+                    displayArticlesForPage(currentPage);
+                    updatePagination();
+                    
+                    // Afficher la pagination seulement si nécessaire
+                    if (totalPages > 1 && feedPagination) {
+                        feedPagination.style.display = 'flex';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    if (loadingSpinner) loadingSpinner.style.display = 'none';
+                    if (feedItemsContainer) {
+                        feedItemsContainer.style.display = 'block';
+                        feedItemsContainer.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                Une erreur s'est produite lors du chargement des articles. Veuillez réessayer plus tard.
+                            </div>
+                        `;
+                    }
+                });
+        }
+        
+        // Afficher les articles pour une page donnée
+        function displayArticlesForPage(page) {
+            const feedItemsContainer = document.getElementById('feedItemsContainer');
+            if (!feedItemsContainer) return;
+            
+            feedItemsContainer.innerHTML = '';
+            
+            const startIndex = (page - 1) * articlesPerPage;
+            const endIndex = Math.min(startIndex + articlesPerPage, allArticles.length);
+            const articlesToShow = allArticles.slice(startIndex, endIndex);
+            
+            if (articlesToShow.length === 0) {
+                feedItemsContainer.innerHTML = `
+                    <div class="feed-empty">
+                        <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+                        Aucun article trouvé dans ce flux.
+                    </div>
+                `;
+                return;
+            }
+            
+            articlesToShow.forEach(article => {
+                const articleDate = new Date(article.pubDate || article.date);
+                const formattedDate = articleDate.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const articleElement = document.createElement('div');
+                articleElement.className = 'feed-item';
+                articleElement.innerHTML = `
+                    <div class="feed-item-title">
+                        <a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a>
+                    </div>
+                    <div class="feed-item-meta">
+                        <div class="feed-item-date">
+                            <i class="bi bi-calendar3"></i> ${formattedDate}
+                        </div>
+                    </div>
+                    <div class="feed-item-description">
+                        ${article.description || 'Aucune description disponible.'}
+                    </div>
+                    <div class="feed-item-link">
+                        <a href="${article.link}" target="_blank" rel="noopener noreferrer">
+                            Lire l'article <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                `;
+                
+                feedItemsContainer.appendChild(articleElement);
+            });
+        }
+        
+        // Mettre à jour les contrôles de pagination
+        function updatePagination() {
+            const paginationInfo = document.getElementById('paginationInfo');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            
+            if (paginationInfo) {
+                paginationInfo.textContent = `${currentPage} / ${totalPages || 1}`;
+            }
+            
+            if (prevPageBtn) {
+                prevPageBtn.disabled = currentPage <= 1;
+            }
+            
+            if (nextPageBtn) {
+                nextPageBtn.disabled = currentPage >= totalPages;
+            }
+        }
+        
+        // Gestionnaires d'événements pour la pagination
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        
+        if (prevPageBtn) {
+            prevPageBtn.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayArticlesForPage(currentPage);
+                    updatePagination();
+                    
+                    // Scroll back to top of feed preview
+                    const feedPreview = document.querySelector('.feed-preview');
+                    if (feedPreview) {
+                        feedPreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        }
+        
+        if (nextPageBtn) {
+            nextPageBtn.addEventListener('click', function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayArticlesForPage(currentPage);
+                    updatePagination();
+                    
+                    // Scroll back to top of feed preview
+                    const feedPreview = document.querySelector('.feed-preview');
+                    if (feedPreview) {
+                        feedPreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        }
+        
+        // Simulation des données si l'API n'est pas disponible
+        if (!window.fetch) {
+            console.warn("Votre navigateur ne supporte pas Fetch API, utilisation des données de simulation");
+            simulateArticles();
+        } else {
+            // Charger les articles du flux
+            fetchFeedArticles();
+        }
+        
+        // Fonction pour simuler des données quand l'API n'est pas disponible
+        function simulateArticles() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const feedItemsContainer = document.getElementById('feedItemsContainer');
+            
+            setTimeout(() => {
+                if (loadingSpinner) loadingSpinner.style.display = 'none';
+                if (feedItemsContainer) feedItemsContainer.style.display = 'block';
+                
+                // Articles simulés (à utiliser quand l'API n'est pas disponible)
+                allArticles = [
+                    {
+                        title: "Comment optimiser votre flux RSS pour une meilleure expérience",
+                        link: "#",
+                        pubDate: new Date(Date.now() - 3600000).toISOString(),
+                        description: "Découvrez les meilleures pratiques pour organiser et optimiser vos flux RSS afin de ne rien manquer de l'actualité qui vous intéresse."
+                    },
+                    {
+                        title: "Les dernières innovations en intelligence artificielle",
+                        link: "#",
+                        pubDate: new Date(Date.now() - 86400000).toISOString(),
+                        description: "L'IA continue de progresser à un rythme soutenu. Voici un aperçu des avancées les plus récentes dans ce domaine en constante évolution."
+                    },
+                    {
+                        title: "Guide complet pour créer votre propre agrégateur RSS",
+                        link: "#",
+                        pubDate: new Date(Date.now() - 172800000).toISOString(),
+                        description: "Ce guide pas à pas vous aidera à concevoir et développer votre propre solution d'agrégation de contenu basée sur les flux RSS."
+                    },
+                    {
+                        title: "Comment ZapFeed révolutionne la consommation d'information",
+                        link: "#",
+                        pubDate: new Date(Date.now() - 259200000).toISOString(),
+                        description: "ZapFeed se démarque par son approche innovante de la gestion des flux RSS. Découvrez pourquoi de plus en plus d'utilisateurs l'adoptent."
+                    },
+                    {
+                        title: "Tendances technologiques à surveiller pour 2023",
+                        link: "#",
+                        pubDate: new Date(Date.now() - 345600000).toISOString(),
+                        description: "Quelles sont les technologies émergentes qui marqueront l'année 2023? Notre analyse des tendances qui façonneront le futur proche."
+                    },
+                    {
+                        title: "L'importance des sources fiables dans l'ère de la désinformation",
+                        link: "#",
+                        pubDate: new Date(Date.now() - 432000000).toISOString(),
+                        description: "À l'heure où la désinformation se propage rapidement, il est crucial de bien choisir ses sources d'information. Voici comment y parvenir."
+                    }
+                ];
+                
+                totalPages = Math.ceil(allArticles.length / articlesPerPage);
+                
+                // Afficher les articles simulés
+                displayArticlesForPage(currentPage);
+                updatePagination();
+                
+                // Afficher la pagination si nécessaire
+                const feedPagination = document.getElementById('feedPagination');
+                if (totalPages > 1 && feedPagination) {
+                    feedPagination.style.display = 'flex';
+                }
+                
+            }, 1500);
         }
     });
 </script>
