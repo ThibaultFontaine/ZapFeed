@@ -1,43 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter un nouveau flux{% endblock %}
+{% block title %}New Feed{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>Ajouter un nouveau flux</h1>
-        
-        <div class="card shadow-sm">
-            <div class="card-body">
-                {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        <div class="form-text">
-                            Donnez un nom à ce flux pour l'identifier facilement
-                        </div>
-                        {{ form_errors(form.name) }}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form_label(form.url) }}
-                        {{ form_widget(form.url) }}
-                        <div class="form-text">
-                            {{ form_help(form.url) }}
-                            L'URL du flux RSS ou Atom (ex: https://exemple.com/feed)
-                        </div>
-                        {{ form_errors(form.url) }}
-                    </div>
-                    
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('app_feed_index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Ajouter
-                        </button>
-                    </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
+    <h1>Create new Feed</h1>
+
+    {{ include('feed/_form.html.twig') }}
+
+    <a href="{{ path('app_feed_index') }}">back to list</a>
 {% endblock %}

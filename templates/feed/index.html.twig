@@ -1,64 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Flux{% endblock %}
+{% block title %}Feed index{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Mes Flux</h1>
-            <a href="{{ path('app_feed_new') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i> Ajouter un flux
-            </a>
-        </div>
+    <h1>Feed index</h1>
 
-        {% if user_feeds|length > 0 %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>URL</th>
-                            <th>Date d'ajout</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for user_feed in user_feeds %}
-                        <tr>
-                            <td>{{ user_feed.title }}</td>
-                            <td>
-                                <a href="{{ user_feed.feed.url }}" target="_blank" class="text-truncate d-inline-block" style="max-width: 300px;">
-                                    {{ user_feed.feed.url }}
-                                </a>
-                            </td>
-                            <td>{{ user_feed.createdAt|date('d/m/Y H:i') }}</td>
-                            <td class="d-flex gap-2">
-                                <a href="{{ path('app_feed_show', {'id': user_feed.feed.id}) }}" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-
-                                <a href="{{ path('app_feed_edit', {'id': user_feed.feed.id}) }}" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-
-                                <form method="post" action="{{ path('app_feed_delete', {'id': user_feed.feed.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce flux?');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user_feed.feed.id) }}">
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Url</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feed in feeds %}
+            <tr>
+                <td>{{ feed.id }}</td>
+                <td>{{ feed.name }}</td>
+                <td>{{ feed.url }}</td>
+                <td>
+                    <a href="{{ path('app_feed_show', {'id': feed.id}) }}">show</a>
+                    <a href="{{ path('app_feed_edit', {'id': feed.id}) }}">edit</a>
+                </td>
+            </tr>
         {% else %}
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i>
-                Vous n'avez pas encore ajouté de flux.
-                <a href="{{ path('app_feed_new') }}" class="alert-link">Cliquez ici pour ajouter votre premier flux</a>.
-            </div>
-        {% endif %}
-    </div>
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_feed_new') }}">Create new</a>
 {% endblock %}
