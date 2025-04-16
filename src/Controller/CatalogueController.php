@@ -7,12 +7,18 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\FeedRepository;
 
+#[Route("/catalogue")]
 class CatalogueController extends AbstractController
 {
-    #[Route("/catalogue", methods: ['GET'])]
-    public function catalogue(): Response
+    #[Route(name: "app_catalogue", methods: ['GET'])]
+    public function index(FeedRepository $feedRepository): Response
     {
-        return $this->render('catalogue.html.twig');
+        return $this->render('catalogue.html.twig', [
+            'feeds' => $feedRepository->findAll(),
+            'currentPage' => 1,
+            'totalPages' => 10,
+        ]);
     }
 }

@@ -420,13 +420,13 @@
         <div id="feeds-container">
             <div class="feeds-grid">
                 {% for feed in feeds %}
-                    <div class="feed-card" data-category="{{ feed.category|lower }}">
+                    {# <div class="feed-card" data-category="{{ feed.category|lower }}">
                         {% if feed.isNew %}
                             <span class="badge badge-new">Nouveau</span>
                         {% elseif feed.isPopular %}
                             <span class="badge badge-popular">Populaire</span>
                         {% endif %}
-                        
+
                         <div class="feed-header">
                             <img class="feed-image" src="{{ feed.imageUrl|default('/images/feed_default.jpg') }}" alt="{{ feed.title }}">
                             <span class="feed-category">{{ feed.category }}</span>
@@ -434,7 +434,7 @@
                         <div class="feed-body">
                             <h3 class="feed-title">{{ feed.title }}</h3>
                             <p class="feed-description">{{ feed.description|length > 100 ? feed.description|slice(0, 100) ~ '...' : feed.description }}</p>
-                            
+
                             <div class="feed-meta">
                                 <div class="feed-subscribers">
                                     <i class="bi bi-people-fill"></i>
@@ -445,7 +445,7 @@
                                     <span>Mis à jour {{ feed.lastUpdate|date('d/m/Y') }}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="feed-actions">
                                 {% if feed.isSubscribed %}
                                     <button class="btn btn-secondary btn-sm disabled">
@@ -456,13 +456,13 @@
                                         <i class="bi bi-plus-circle"></i> S'abonner
                                     </button>
                                 {% endif %}
-                                
+
                                 <button class="btn btn-preview btn-preview-action" data-feed-id="{{ feed.id }}" data-feed-url="{{ feed.url }}">
                                     <i class="bi bi-eye"></i> Aperçu
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> #}
                 {% else %}
                     <div class="no-results col-12">
                         <i class="bi bi-emoji-neutral fs-3 mb-3 d-block"></i>
@@ -482,18 +482,18 @@
                                 </a>
                             </li>
                         {% endif %}
-                        
+
                         {% for i in max(1, currentPage - 2)..min(totalPages, currentPage + 2) %}
                             <li class="page-item {{ currentPage == i ? 'active' : '' }}">
-                                <a class="page-link" href="{{ path('app_feed_catalogue', {page: i}) }}">{{ i }}</a>
+                                {# <a class="page-link" href="{{ path('app_feed_catalogue', {page: i}) }}">{{ i }}</a> #}
                             </li>
                         {% endfor %}
-                        
+
                         {% if currentPage < totalPages %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ path('app_feed_catalogue', {page: currentPage + 1}) }}" aria-label="Suivant">
+                               {#  <a class="page-link" href="{{ path('app_feed_catalogue', {page: currentPage + 1}) }}" aria-label="Suivant">
                                     <i class="bi bi-chevron-right"></i>
-                                </a>
+                                </a> #}
                             </li>
                         {% endif %}
                     </ul>
@@ -547,54 +547,54 @@
         // Effet de tilt 3D sur le container principal
         const tiltContainer = document.getElementById('tiltContainer');
         const titleIcon = document.getElementById('titleIcon');
-        
+
         if (tiltContainer) {
             tiltContainer.addEventListener('mousemove', function(e) {
                 const containerRect = tiltContainer.getBoundingClientRect();
                 const containerCenterX = containerRect.left + containerRect.width / 2;
                 const containerCenterY = containerRect.top + containerRect.height / 2;
-                
+
                 const mouseX = e.clientX;
                 const mouseY = e.clientY;
-                
+
                 const angleX = (mouseY - containerCenterY) / 30;
                 const angleY = (mouseX - containerCenterX) / 30;
-                
+
                 tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.1}deg) rotateY(${angleY * 0.1}deg) scale(1.01)`;
-                
+
                 if (titleIcon) {
                     titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.3}deg) rotateY(${angleY * 0.3}deg) scale(1.1)`;
                 }
             });
-            
+
             tiltContainer.addEventListener('mouseleave', function() {
                 tiltContainer.style.transition = 'transform 0.5s ease';
                 tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-                
+
                 if (titleIcon) {
                     titleIcon.style.transition = 'transform 0.5s ease';
                     titleIcon.style.transform = 'rotate(0) scale(1)';
                 }
-                
+
                 setTimeout(() => {
                     tiltContainer.style.transition = '';
                     if (titleIcon) titleIcon.style.transition = '';
                 }, 500);
             });
         }
-        
+
         // Filtrage par catégorie
         const categoryFilters = document.querySelectorAll('.category-filter');
         const feedCards = document.querySelectorAll('.feed-card');
-        
+
         categoryFilters.forEach(filter => {
             filter.addEventListener('click', function() {
                 const category = this.dataset.category;
-                
+
                 // Mettre à jour les classes active
                 categoryFilters.forEach(f => f.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 // Filtrer les cartes
                 feedCards.forEach(card => {
                     if (category === 'all' || card.dataset.category === category) {
@@ -613,20 +613,20 @@
                 });
             });
         });
-        
+
         // Recherche de flux
         const searchInput = document.getElementById('search-feeds');
-        
+
         if (searchInput) {
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const allFeedCards = document.querySelectorAll('.feed-card');
-                
+
                 allFeedCards.forEach(card => {
                     const title = card.querySelector('.feed-title').textContent.toLowerCase();
                     const description = card.querySelector('.feed-description').textContent.toLowerCase();
                     const category = card.dataset.category.toLowerCase();
-                    
+
                     if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
                         card.style.display = 'flex';
                         setTimeout(() => {
@@ -643,38 +643,38 @@
                 });
             });
         }
-        
+
         // Effet 3D sur les cartes de flux
         feedCards.forEach(card => {
             card.addEventListener('mousemove', function(e) {
                 const rect = this.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
+
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                
+
                 const tiltX = (y - centerY) / 15;
                 const tiltY = (x - centerX) / 15;
-                
+
                 this.style.transform = `perspective(1000px) rotateX(${-tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-                
+
                 const image = this.querySelector('.feed-image');
                 if (image) {
                     image.style.transform = 'scale(1.05) translateZ(20px)';
                 }
             });
-            
+
             card.addEventListener('mouseleave', function() {
                 this.style.transform = '';
-                
+
                 const image = this.querySelector('.feed-image');
                 if (image) {
                     image.style.transform = '';
                 }
             });
         });
-        
+
         // Gestion des tooltips personnalisés
         const createTooltip = () => {
             const tooltip = document.createElement('div');
@@ -682,54 +682,54 @@
             document.body.appendChild(tooltip);
             return tooltip;
         };
-        
+
         const tooltip = createTooltip();
-        
+
         document.querySelectorAll('[data-tooltip]').forEach(element => {
             element.addEventListener('mouseenter', function(e) {
                 tooltip.textContent = this.dataset.tooltip;
                 tooltip.style.opacity = '1';
-                
+
                 const rect = this.getBoundingClientRect();
                 const tooltipWidth = tooltip.offsetWidth;
                 const left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
                 const top = rect.top - tooltip.offsetHeight - 10;
-                
+
                 tooltip.style.left = `${left}px`;
                 tooltip.style.top = `${top}px`;
             });
-            
+
             element.addEventListener('mouseleave', function() {
                 tooltip.style.opacity = '0';
             });
         });
-        
+
         // Prévisualisation des flux
         const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
         const previewButtons = document.querySelectorAll('.btn-preview-action');
         let currentFeedId = null;
-        
+
         previewButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const feedId = this.dataset.feedId;
                 const feedUrl = this.dataset.feedUrl;
                 currentFeedId = feedId;
-                
+
                 // Mettre à jour le titre du modal et d'autres informations de base
                 const feedCard = this.closest('.feed-card');
                 const feedTitle = feedCard.querySelector('.feed-title').textContent;
                 const feedDescription = feedCard.querySelector('.feed-description').textContent;
                 const feedCategory = feedCard.querySelector('.feed-category').textContent;
-                
+
                 document.getElementById('preview-title').textContent = feedTitle;
                 document.getElementById('preview-description').textContent = feedDescription;
                 document.getElementById('preview-category').textContent = feedCategory;
                 document.getElementById('preview-count').textContent = 'Chargement...';
-                
+
                 // Mettre à jour le bouton d'abonnement dans le modal
                 const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
                 const isSubscribed = feedCard.querySelector('.btn-subscribe') ? false : true;
-                
+
                 if (isSubscribed) {
                     modalSubscribeBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
                     modalSubscribeBtn.classList.add('disabled', 'btn-secondary');
@@ -740,10 +740,10 @@
                     modalSubscribeBtn.classList.add('btn-subscribe');
                     modalSubscribeBtn.dataset.feedId = feedId;
                 }
-                
+
                 // Afficher le modal
                 previewModal.show();
-                
+
                 // Charger les articles du flux
                 const articlesContainer = document.getElementById('preview-articles');
                 articlesContainer.innerHTML = `
@@ -754,21 +754,21 @@
                         <p class="mt-3">Chargement des articles...</p>
                     </div>
                 `;
-                
+
                 // Ici, nous utilisons l'API pour charger les articles
                 fetch(`/api/feeds/${feedId}/preview`)
                     .then(response => response.json())
                     .then(data => {
                         // Mettre à jour le compteur d'articles
                         document.getElementById('preview-count').textContent = `${data.length} articles`;
-                        
+
                         if (data.length > 0) {
                             // Construire la liste des articles
                             let articlesHTML = '';
                             data.forEach(article => {
                                 const date = new Date(article.pubDate);
                                 const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} à ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-                                
+
                                 articlesHTML += `
                                     <div class="article-card mb-3" style="border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                                         <div class="article-header p-3" style="background-color: #f8f9fa;">
@@ -786,7 +786,7 @@
                                     </div>
                                 `;
                             });
-                            
+
                             articlesContainer.innerHTML = articlesHTML;
                         } else {
                             articlesContainer.innerHTML = `
@@ -810,20 +810,20 @@
                     });
             });
         });
-        
+
         // Gestion des abonnements
         const subscribeButtons = document.querySelectorAll('.btn-subscribe-action');
-        
+
         subscribeButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const feedId = this.dataset.feedId;
                 const buttonEl = this;
-                
+
                 // Animation de chargement
                 const originalHTML = buttonEl.innerHTML;
                 buttonEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Abonnement...';
                 buttonEl.disabled = true;
-                
+
                 // Appel AJAX pour s'abonner
                 fetch(`/api/feeds/${feedId}/subscribe`, {
                     method: 'POST',
@@ -843,7 +843,7 @@
                     buttonEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
                     buttonEl.classList.add('disabled', 'btn-secondary');
                     buttonEl.classList.remove('btn-subscribe');
-                    
+
                     // Afficher une notification de succès
                     showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
                 })
@@ -851,29 +851,29 @@
                     // Restaurer le bouton
                     buttonEl.innerHTML = originalHTML;
                     buttonEl.disabled = false;
-                    
+
                     // Afficher une notification d'erreur
                     showNotification('Erreur d\'abonnement', 'Impossible de s\'abonner à ce flux. Veuillez réessayer.', 'danger');
                     console.error('Erreur:', error);
                 });
             });
         });
-        
+
         // Gestion du bouton d'abonnement dans le modal
         const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
-        
+
         if (modalSubscribeBtn) {
             modalSubscribeBtn.addEventListener('click', function() {
                 if (this.classList.contains('disabled')) return;
-                
+
                 const feedId = currentFeedId;
                 const buttonEl = this;
-                
+
                 // Animation de chargement
                 const originalHTML = buttonEl.innerHTML;
                 buttonEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Abonnement...';
                 buttonEl.disabled = true;
-                
+
                 // Appel AJAX pour s'abonner
                 fetch(`/api/feeds/${feedId}/subscribe`, {
                     method: 'POST',
@@ -893,7 +893,7 @@
                     buttonEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
                     buttonEl.classList.add('disabled', 'btn-secondary');
                     buttonEl.classList.remove('btn-subscribe');
-                    
+
                     // Mettre à jour le bouton dans la carte
                     const cardButton = document.querySelector(`.btn-subscribe-action[data-feed-id="${feedId}"]`);
                     if (cardButton) {
@@ -901,7 +901,7 @@
                         cardButton.classList.add('disabled', 'btn-secondary');
                         cardButton.classList.remove('btn-subscribe');
                     }
-                    
+
                     // Afficher une notification de succès
                     showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
                 })
@@ -909,14 +909,14 @@
                     // Restaurer le bouton
                     buttonEl.innerHTML = originalHTML;
                     buttonEl.disabled = false;
-                    
+
                     // Afficher une notification d'erreur
                     showNotification('Erreur d\'abonnement', 'Impossible de s\'abonner à ce flux. Veuillez réessayer.', 'danger');
                     console.error('Erreur:', error);
                 });
             });
         }
-        
+
         // Système de notification
         function showNotification(title, message, type = 'info') {
             // Créer un élément toast
@@ -927,7 +927,7 @@
             toast.setAttribute('aria-live', 'assertive');
             toast.setAttribute('aria-atomic', 'true');
             toast.id = toastId;
-            
+
             // Définir le style en fonction du type
             let bgClass, iconClass;
             switch (type) {
@@ -947,7 +947,7 @@
                     bgClass = 'bg-info';
                     iconClass = 'bi-info-circle-fill';
             }
-            
+
             // Ajouter le contenu HTML
             toast.innerHTML = `
                 <div class="d-flex">
@@ -963,7 +963,7 @@
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
                 </div>
             `;
-            
+
             // Créer un conteneur de toast s'il n'existe pas
             let toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
@@ -973,19 +973,19 @@
                 toastContainer.style.zIndex = '1050';
                 document.body.appendChild(toastContainer);
             }
-            
+
             // Ajouter le toast au conteneur
             toastContainer.appendChild(toast);
-            
+
             // Créer un objet Toast Bootstrap
             const toastObject = new bootstrap.Toast(toast, {
                 autohide: true,
                 delay: 5000
             });
-            
+
             // Afficher le toast
             toastObject.show();
-            
+
             // Nettoyer le DOM après la fermeture
             toast.addEventListener('hidden.bs.toast', function() {
                 toast.remove();

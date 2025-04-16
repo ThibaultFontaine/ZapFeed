@@ -114,7 +114,7 @@ final class UserFeedController extends AbstractController
         $userFeed = $entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed]);
         $this->checkUserFeedOwnership($userFeed);
 
-        return $this->render('user_feed/show.html.twig', [
+        return $this->render('user_feed/show_old.html.twig', [
             'user_feed' => $userFeed,
         ]);
     }
