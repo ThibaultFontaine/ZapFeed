@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Item;
+use App\Entity\UserFeed;
 use App\Entity\UserItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -123,6 +124,21 @@ final class UserItemController extends AbstractController
             'user' => $user,
             'hasBeenLiked' => true,
         ], ['updatedAt' => 'DESC']);
+
+
+        $filteredUserItems = [];
+        foreach ($userItems as $userItem) {
+            $feed = $userItem->getItem()->getFeed();
+            $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy([
+                'user' => $user,
+                'feed' => $feed,
+            ]);
+
+            if ($userFeed) {
+                $filteredUserItems[] = $userItem;
+            }
+        }
+        $userItems = $filteredUserItems;
 
         return $this->render('user_item/like.html.twig', [
             'user_items' => $userItems,
