@@ -44,18 +44,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserFeed::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $userFeeds;
 
-    // /**
-    //  * @var Collection<int, Item>
-    //  */
-    // #[ORM\ManyToMany(targetEntity: Item::class, inversedBy: 'users')]
-    // private Collection $items;
-
 
     // CONSTRUCTOR
     public function __construct()
     {
         $this->userFeeds = new ArrayCollection();
-        // $this->items = new ArrayCollection();
     }
 
 
@@ -131,28 +124,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-    // /**
-    //  * @return Collection<int, Item>
-    //  */
-    // public function getItems(): Collection
-    // {
-    //     return $this->items;
-    // }
-    // public function addItem(Item $item): static
-    // {
-    //     if (!$this->items->contains($item)) {
-    //         $this->items->add($item);
-    //     }
-
-    //     return $this;
-    // }
-    // public function removeItem(Item $item): static
-    // {
-    //     $this->items->removeElement($item);
-
-    //     return $this;
-    // }
 
     /**
      * @return Collection<int, UserFeed>
