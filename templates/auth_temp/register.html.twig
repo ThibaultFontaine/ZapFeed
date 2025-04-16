@@ -7,6 +7,130 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
         {% block stylesheets %}
+        <style>
+            body {
+                background-image: url('https://source.unsplash.com/random/1920x1080/?abstract,dark');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                position: relative;
+            }
+            
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(30, 21, 42, 0.75);
+                z-index: -1;
+            }
+            
+            .register-container {
+                background-color: rgba(255, 255, 255, 0.9);
+                border-radius: 15px;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+                width: 100%;
+                max-width: 900px;
+                display: flex;
+            }
+            
+            .register-form {
+                padding: 40px;
+                flex: 1;
+            }
+            
+            .logo-container {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 40px;
+                background-color: #1E152A;
+                position: relative;
+            }
+            
+            .logo {
+                max-width: 80%;
+                transform-origin: center;
+            }
+            
+            h1 {
+                color: #1E152A;
+                font-weight: 700;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            
+            .form-control {
+                padding: 15px;
+                margin-bottom: 15px;
+                border: 1px solid rgba(30, 21, 42, 0.2);
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: #1E152A;
+                box-shadow: 0 0 0 0.25rem rgba(30, 21, 42, 0.25);
+            }
+            
+            .form-label {
+                color: #1E152A;
+                font-weight: 600;
+            }
+            
+            .form-check-input:checked {
+                background-color: #1E152A;
+                border-color: #1E152A;
+            }
+            
+            .btn-primary {
+                background-color: #1E152A;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .btn-primary:hover {
+                background-color: #312244;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(30, 21, 42, 0.4);
+            }
+            
+            a {
+                color: #1E152A;
+                text-decoration: none;
+                font-weight: 600;
+                transition: color 0.3s ease;
+            }
+            
+            a:hover {
+                color: #312244;
+            }
+            
+            @media (max-width: 768px) {
+                .register-container {
+                    flex-direction: column;
+                }
+                
+                .logo-container {
+                    order: -1;
+                    padding: 20px;
+                }
+            }
+        </style>
         {% endblock %}
 
         {% block javascripts %}
@@ -15,55 +139,83 @@
     </head>
     <body>
 {% block body %}
-<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #cce7ff; padding: 20px;">
-  <form class="p-4 rounded shadow w-100" style="max-width: 90%; background-color: #f8f9fa;">
-    <!-- Full Name input -->
-    <div class="mb-4">
-      <label for="PseudoInputRegister" class="form-label" style="font-weight: 600;">Pseudo</label>
-      <input type="text" name="PseudoInputRegister" id="PseudoInputRegister" class="form-control" style="padding: 15px; font-size: 1rem;" />
-    </div>
+<div class="register-container">
+    <div class="register-form">
+        <h1>Inscription</h1>
+        <form>
+            <div class="mb-3">
+                <label for="PseudoInputRegister" class="form-label">Pseudo</label>
+                <input type="text" name="PseudoInputRegister" id="PseudoInputRegister" class="form-control" required />
+            </div>
 
-    <!-- Email input -->
-    <div class="mb-4">
-      <label for="EmailInputRegister" class="form-label" style="font-weight: 600;">Email</label>
-      <input type="email" name="EmailInputRegister" id="EmailInputRegister" class="form-control" style="padding: 15px; font-size: 1rem;" />
-    </div>
+            <div class="mb-3">
+                <label for="EmailInputRegister" class="form-label">Email</label>
+                <input type="email" name="EmailInputRegister" id="EmailInputRegister" class="form-control" required />
+            </div>
 
-    <!-- Password input -->
-    <div class="mb-4">
-      <label for="PasswordInputRegister" class="form-label" style="font-weight: 600;">Mot de passe</label>
-      <input type="password" name="PasswordInputRegister" id="PasswordInputRegister" class="form-control" style="padding: 15px; font-size: 1rem;" />
-    </div>
+            <div class="mb-3">
+                <label for="PasswordInputRegister" class="form-label">Mot de passe</label>
+                <input type="password" name="PasswordInputRegister" id="PasswordInputRegister" class="form-control" required />
+            </div>
 
-    <!-- Confirm Password input -->
-    <div class="mb-4">
-      <label for="PasswordInputRegisterConfirm" class="form-label" style="font-weight: 600;">Confirmer le mot de passe</label>
-      <input type="password" name="PasswordInputRegisterConfirm" id="PasswordInputRegisterConfirm" class="form-control" style="padding: 15px; font-size: 1rem;" />
-    </div>
+            <div class="mb-3">
+                <label for="PasswordInputRegisterConfirm" class="form-label">Confirmer le mot de passe</label>
+                <input type="password" name="PasswordInputRegisterConfirm" id="PasswordInputRegisterConfirm" class="form-control" required />
+            </div>
 
-    <!-- Row for checkbox -->
-    <div class="row mb-4">
-      <div class="col d-flex align-items-center">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" name="CheckInputRegister" id="CheckInputRegister" />
-          <label class="form-check-label" for="CheckInputRegister" style="font-size: 0.9rem;">
-            J'accepte les <a href="#!" style="text-decoration: none; color: #0d6efd;">conditions générales</a>
-          </label>
-        </div>
-      </div>
-    </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" name="CheckInputRegister" id="CheckInputRegister" required />
+                    <label class="form-check-label" for="CheckInputRegister">
+                        J'accepte les <a href="#">conditions générales</a>
+                    </label>
+                </div>
+            </div>
 
-    <!-- Submit button -->
-    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4" style="padding: 10px; font-weight: 600; font-size: 1rem;">
-      S'inscrire
-    </button>
+            <button type="submit" class="btn btn-primary">
+                S'inscrire
+            </button>
 
-    <!-- Register link -->
-    <div class="text-center">
-      <p style="font-size: 0.9rem;">Déjà membre ? <a href="/Register" style="text-decoration: none; font-weight: 500; color: #0d6efd;">Connexion</a></p>
+            <div class="text-center mt-4">
+                <p>Déjà membre ? <a href="/login">Connexion</a></p>
+            </div>
+        </form>
     </div>
-  </form>
+    
+    <div class="logo-container">
+        <img src="https://placehold.co/300x200/1E152A/DEDEDE?text=ZapFeed+Logo" alt="ZapFeed Logo" class="logo" id="tilting-logo">
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const logo = document.getElementById('tilting-logo');
+    
+    window.addEventListener('mousemove', function(e) {
+        if (!logo) return;
+        
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
+        
+        const tiltX = (mouseY - 0.5) * 40;
+        const tiltY = (mouseX - 0.5) * 40;
+        
+        logo.style.transform = `perspective(800px) rotateX(${-tiltX}deg) rotateY(${tiltY}deg) scale(1.05)`;
+    });
+    
+    document.body.addEventListener('mouseleave', function() {
+        if (logo) {
+            logo.style.transition = 'transform 0.5s ease';
+            logo.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+            setTimeout(() => {
+                logo.style.transition = 'transform 0.1s ease';
+            }, 500);
+        }
+    });
+    
+    logo.style.transition = 'transform 0.1s ease';
+});
+</script>
 {% endblock %}
     </body>
 </html>

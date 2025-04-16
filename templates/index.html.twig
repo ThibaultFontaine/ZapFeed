@@ -1,5 +1,377 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}ZapFeed - Votre agrégateur d'actualités{% endblock %}
 
-{% block body %}Welcome to ZapFeed!{% endblock %}
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Styles principaux */
+    .landing-wrapper {
+        overflow: hidden;
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #5e2ca5, #7953d2);
+        color: white;
+    }
+    
+    .glowing-dots {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        opacity: 0.2;
+    }
+    
+    .hero-container {
+        position: relative;
+        z-index: 10;
+        padding: 6rem 2rem;
+    }
+    
+    .hero-title {
+        font-size: 5rem;
+        font-weight: 800;
+        background: linear-gradient(to right, #ffffff, #f0f0f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+        transition: transform 0.5s ease;
+    }
+    
+    .hero-tagline {
+        font-size: 1.5rem;
+        font-weight: 400;
+        opacity: 0.9;
+        margin-bottom: 3rem;
+        max-width: 600px;
+    }
+    
+    .hero-cta {
+        display: inline-block;
+        background: white;
+        color: #5e2ca5;
+        font-weight: 700;
+        font-size: 1.2rem;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        margin-top: 1rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .hero-cta:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .rss-feed-preview {
+        width: 100%;
+        max-width: 500px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+        transition: all 0.5s ease;
+        margin: 0 auto;
+    }
+    
+    .rss-feed-preview:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-10px);
+    }
+    
+    .feed-header {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .feed-title {
+        color: #212529;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feed-source {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .feed-articles {
+        padding: 0.5rem;
+    }
+    
+    .feed-item {
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .feed-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .feed-item-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #5e2ca5, #7953d2);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .feed-item-content {
+        flex-grow: 1;
+    }
+    
+    .feed-item-title {
+        color: #212529;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .feed-item-meta {
+        color: #6c757d;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .feed-item-date {
+        margin-right: 1rem;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.5; }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+        
+        .rss-feed-preview {
+            transform: none;
+            margin-top: 3rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="landing-wrapper">
+    <canvas class="glowing-dots" id="dotsCanvas"></canvas>
+    
+    <div class="container hero-container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6 text-center text-lg-start" id="heroContent">
+                <h1 class="hero-title" id="heroTitle">ZapFeed</h1>
+                <p class="hero-tagline">Agrégez, organisez et lisez tous vos flux RSS en un seul endroit. Restez informé sans effort, à votre rythme.</p>
+                <a href="{{ path('app_feed_index') }}" class="hero-cta">Commencer maintenant</a>
+            </div>
+            
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="rss-feed-preview" id="feedPreview">
+                    <div class="feed-header">
+                        <div class="feed-title">Vos actualités du jour</div>
+                        <div class="feed-source">20 sources • Mis à jour il y a 5 minutes</div>
+                    </div>
+                    <div class="feed-articles">
+                        <div class="feed-item">
+                            <div class="feed-item-icon">
+                                <i class="bi bi-newspaper"></i>
+                            </div>
+                            <div class="feed-item-content">
+                                <div class="feed-item-title">Les dernières innovations en intelligence artificielle</div>
+                                <div class="feed-item-meta">
+                                    <span class="feed-item-date">Il y a 35 min</span>
+                                    <span class="feed-item-source">Tech News</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-item-icon">
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div class="feed-item-content">
+                                <div class="feed-item-title">Les marchés financiers en hausse cette semaine</div>
+                                <div class="feed-item-meta">
+                                    <span class="feed-item-date">Il y a 1h</span>
+                                    <span class="feed-item-source">Finance Mag</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-item-icon">
+                                <i class="bi bi-camera"></i>
+                            </div>
+                            <div class="feed-item-content">
+                                <div class="feed-item-title">10 photos spectaculaires de la nature sauvage</div>
+                                <div class="feed-item-meta">
+                                    <span class="feed-item-date">Il y a 3h</span>
+                                    <span class="feed-item-source">Photo Journal</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-item-icon">
+                                <i class="bi bi-cup-hot"></i>
+                            </div>
+                            <div class="feed-item-content">
+                                <div class="feed-item-title">5 recettes de café pour booster votre productivité</div>
+                                <div class="feed-item-meta">
+                                    <span class="feed-item-date">Il y a 5h</span>
+                                    <span class="feed-item-source">Food & Drink</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation du titre
+        const heroTitle = document.getElementById('heroTitle');
+        heroTitle.style.opacity = '0';
+        heroTitle.style.transform = 'translateY(50px)';
+        
+        setTimeout(() => {
+            heroTitle.style.transition = 'opacity 1s ease, transform 1s ease';
+            heroTitle.style.opacity = '1';
+            heroTitle.style.transform = 'translateY(0)';
+        }, 300);
+        
+        // Effet de particules sur le canvas
+        const canvas = document.getElementById('dotsCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Ajuste la taille du canvas pour qu'il remplisse toute la fenêtre
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Créer les particules
+        let particles = [];
+        let numberOfParticles = Math.min(100, window.innerWidth / 10);
+        
+        function init() {
+            particles = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = Math.random() * 5 + 2;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let directionX = (Math.random() * 2) - 1;
+                let directionY = (Math.random() * 2) - 1;
+                let color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+                
+                particles.push({
+                    x: x,
+                    y: y,
+                    size: size,
+                    speedX: directionX * 0.5,
+                    speedY: directionY * 0.5,
+                    color: color
+                });
+            }
+        }
+        
+        // Animer les particules
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                
+                // Connecter les particules proches
+                for (let j = i; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let distance = Math.sqrt(
+                        Math.pow(p2.x - p.x, 2) + 
+                        Math.pow(p2.y - p.y, 2)
+                    );
+                    
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - distance/600})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Mettre à jour la position
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                // Rebondir sur les bords
+                if (p.x > canvas.width || p.x < 0) {
+                    p.speedX = -p.speedX;
+                }
+                
+                if (p.y > canvas.height || p.y < 0) {
+                    p.speedY = -p.speedY;
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Animation de l'aperçu du flux RSS au survol
+        const feedPreview = document.getElementById('feedPreview');
+        
+        document.addEventListener('mousemove', function(e) {
+            if (window.innerWidth >= 992) { // Seulement sur les grands écrans
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                feedPreview.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+            }
+        });
+        
+        document.addEventListener('mouseleave', function() {
+            feedPreview.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+        });
+        
+        // Effet de parallaxe sur le contenu au défilement
+        window.addEventListener('scroll', function() {
+            const offset = window.pageYOffset;
+            if (offset < 600) {
+                document.getElementById('heroContent').style.transform = `translateY(${offset * 0.3}px)`;
+                feedPreview.style.transform = `perspective(1000px) rotateY(-10deg) rotateX(5deg) translateY(${offset * 0.2}px)`;
+            }
+        });
+    });
+</script>
+{% endblock %}

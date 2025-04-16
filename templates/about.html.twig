@@ -1,0 +1,397 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ZapFeed - À propos de nous{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .header-section {
+        background: linear-gradient(135deg, #5e2ca5, #7953d2);
+        color: white;
+        padding: 5rem 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJub2lzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNjUiIHJlc3VsdD0ibm9pc2UiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVCbGVuZCBtb2RlPSJzb2Z0LWxpZ2h0IiBpbj0ibm9pc2UiIGluMj0ib3JpZ2luYWxPdXRwdXQiIHJlc3VsdD0iYmxlbmQiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wOCI+PC9yZWN0Pjwvc3ZnPg==');
+        opacity: 0.4;
+    }
+    
+    .header-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .header-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+    
+    .header-text {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .team-section {
+        background: white;
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 1rem;
+    }
+    
+    .section-subtitle {
+        color: #6c757d;
+        max-width: 700px;
+        margin: 0 auto 3rem;
+    }
+    
+    .team-cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+    }
+    
+    .team-card {
+        width: 300px;
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .team-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .team-card-header {
+        height: 120px;
+        background: linear-gradient(135deg, #5e2ca5, #7953d2);
+        position: relative;
+    }
+    
+    .team-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid white;
+        background: white;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .team-info {
+        padding: 60px 1.5rem 1.5rem;
+    }
+    
+    .team-name {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .team-role {
+        color: #7953d2;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .team-bio {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .team-social {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #5e2ca5;
+        transition: all 0.3s ease;
+    }
+    
+    .social-link:hover {
+        background: #5e2ca5;
+        color: white;
+        transform: translateY(-3px);
+    }
+    
+    .about-us-content {
+        padding: 4rem 0;
+        background-color: #f8f9fa;
+    }
+    
+    .mission-text {
+        line-height: 1.8;
+        margin-bottom: 2rem;
+    }
+    
+    .value-item {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #5e2ca5;
+        background-color: white;
+        border-radius: 0 8px 8px 0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .value-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .value-title {
+        font-weight: 700;
+        color: #5e2ca5;
+        margin-bottom: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .team-cards {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-size: 2.5rem;
+        }
+        
+        .team-card {
+            width: 100%;
+            max-width: 320px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<section class="header-section">
+    <div class="header-content">
+        <h1 class="header-title">À propos de ZapFeed</h1>
+        <p class="header-text">Découvrez notre histoire, notre mission et l'équipe qui a créé ZapFeed pour révolutionner la façon dont vous consommez l'information.</p>
+    </div>
+</section>
+
+<section class="about-us-content">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-4">Notre Mission</h2>
+                <p class="mission-text">
+                    Chez ZapFeed, nous croyons que chacun devrait avoir accès à l'information qui compte vraiment pour lui, sans distraction et sans algorithme qui décide à sa place. Notre mission est de donner aux utilisateurs le contrôle total de leur flux d'information, en leur permettant de suivre les sources qu'ils choisissent, quand ils le souhaitent.
+                </p>
+                <p class="mission-text">
+                    Nous avons créé ZapFeed en 2023 avec une conviction simple : la technologie devrait nous servir, pas nous submerger. Notre agrégateur RSS est conçu pour être à la fois puissant et intuitif, offrant une expérience de lecture sans publicité, respectueuse de votre vie privée et adaptée à vos centres d'intérêt.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="mb-4 text-center">Nos Valeurs</h2>
+                <div class="value-item">
+                    <h3 class="value-title">Simplicité</h3>
+                    <p>Nous croyons en la puissance de la simplicité. Notre interface est épurée et intuitive, pour vous permettre de vous concentrer sur ce qui compte : le contenu.</p>
+                </div>
+                <div class="value-item">
+                    <h3 class="value-title">Autonomie</h3>
+                    <p>Nous vous donnons le contrôle total sur votre flux d'information. Pas d'algorithme caché, pas de contenu sponsorisé. Vous décidez ce que vous lisez.</p>
+                </div>
+                <div class="value-item">
+                    <h3 class="value-title">Innovation</h3>
+                    <p>Nous repoussons constamment les limites de ce qu'un agrégateur RSS peut faire, en intégrant des fonctionnalités intelligentes qui vous font gagner du temps.</p>
+                </div>
+                <div class="value-item">
+                    <h3 class="value-title">Respect</h3>
+                    <p>Nous respectons votre vie privée et votre temps. ZapFeed est conçu pour être rapide, fiable et sans distraction.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="team-section">
+    <div class="container">
+        <h2 class="section-title">Notre équipe</h2>
+        <p class="section-subtitle">Des passionnés qui ont créé ZapFeed pour vous simplifier la vie numérique.</p>
+        
+        <div class="team-cards">
+            <div class="team-card">
+                <div class="team-card-header">
+                    <img src="https://ui-avatars.com/api/?name=Ryan+Sion&background=7953d2&color=fff&size=100" alt="Ryan Sion" class="team-avatar">
+                </div>
+                <div class="team-info">
+                    <h3 class="team-name">Ryan Sion</h3>
+                    <div class="team-role">UI/UX Designer</div>
+                    <p class="team-bio">Designer passionné par la création d'interfaces utilisateur intuitives et esthétiques, Ryan apporte son expertise visuelle à ZapFeed.</p>
+                    <div class="team-social">
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-dribbble"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <div class="team-card-header">
+                    <img src="https://ui-avatars.com/api/?name=Thibault+Fontaine&background=7953d2&color=fff&size=100" alt="Thibault Fontaine" class="team-avatar">
+                </div>
+                <div class="team-info">
+                    <h3 class="team-name">Thibault Fontaine</h3>
+                    <div class="team-role">Développeur Back-end</div>
+                    <p class="team-bio">Expert en technologies web et bases de données, Thibault assure la performance et la robustesse des systèmes de ZapFeed.</p>
+                    <div class="team-social">
+                        <a href="#" class="social-link"><i class="bi bi-github"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-stack-overflow"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <div class="team-card-header">
+                    <img src="https://ui-avatars.com/api/?name=Clément+Jaunay&background=7953d2&color=fff&size=100" alt="Clément Jaunay" class="team-avatar">
+                </div>
+                <div class="team-info">
+                    <h3 class="team-name">Clément Jaunay</h3>
+                    <div class="team-role">CEO</div>
+                    <p class="team-bio">Visionnaire et stratège, Clément dirige l'équipe de ZapFeed avec passion, en veillant à l'excellence du produit et la satisfaction des utilisateurs.</p>
+                    <div class="team-social">
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animations au défilement
+        function checkVisible(elm) {
+            var rect = elm.getBoundingClientRect();
+            var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+            return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+        }
+        
+        function scanForVisibleSections() {
+            // Animer les cartes d'équipe
+            document.querySelectorAll('.team-card').forEach(function(card, index) {
+                if (checkVisible(card)) {
+                    setTimeout(function() {
+                        card.style.opacity = 1;
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                }
+            });
+            
+            // Animer les valeurs
+            document.querySelectorAll('.value-item').forEach(function(item, index) {
+                if (checkVisible(item)) {
+                    setTimeout(function() {
+                        item.style.opacity = 1;
+                        item.style.transform = 'translateX(0)';
+                    }, index * 100);
+                }
+            });
+        }
+        
+        // Initialiser les styles pour l'animation d'entrée
+        document.querySelectorAll('.team-card').forEach(function(card) {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        document.querySelectorAll('.value-item').forEach(function(item) {
+            item.style.opacity = 0;
+            item.style.transform = 'translateX(-20px)';
+            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        // Lancer l'analyse au chargement et au défilement
+        scanForVisibleSections();
+        window.addEventListener('scroll', scanForVisibleSections);
+        
+        // Animation au survol des cartes d'équipe
+        const teamCards = document.querySelectorAll('.team-card');
+        
+        teamCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const avatar = this.querySelector('.team-avatar');
+                avatar.style.transform = 'translateX(-50%) scale(1.1)';
+                avatar.style.transition = 'transform 0.3s ease';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                const avatar = this.querySelector('.team-avatar');
+                avatar.style.transform = 'translateX(-50%) scale(1)';
+            });
+        });
+        
+        // Animation d'apparition du header
+        const headerSection = document.querySelector('.header-section');
+        headerSection.style.opacity = 0;
+        headerSection.style.transform = 'translateY(-20px)';
+        headerSection.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        
+        setTimeout(function() {
+            headerSection.style.opacity = 1;
+            headerSection.style.transform = 'translateY(0)';
+        }, 300);
+        
+        // Animer le contenu de la mission avec un décalage
+        const missionText = document.querySelectorAll('.mission-text');
+        missionText.forEach((text, index) => {
+            text.style.opacity = 0;
+            text.style.transform = 'translateY(20px)';
+            text.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            
+            setTimeout(() => {
+                text.style.opacity = 1;
+                text.style.transform = 'translateY(0)';
+            }, 500 + index * 200);
+        });
+    });
+</script>
+{% endblock %}

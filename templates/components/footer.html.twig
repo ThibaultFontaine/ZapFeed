@@ -1,6 +1,385 @@
-<footer class="bg-body-tertiary text-center text-lg-start">
-	<div class="text-center p-1" style="background-color: rgba(0, 0, 0, 0.05);">
-		© 2025 Copyright:
-		<a class="text-body" href="/">ZapFeed.fr</a>
-	</div>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-main">
+            <div class="footer-logo">
+                <img src="/images/logoZapFeed.png" alt="ZapFeed Logo" class="footer-logo-img">
+                <div class="footer-tagline">Votre agrégateur de flux RSS</div>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-links-column">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="/">Accueil</a></li>
+                        <li><a href="/feed">Mes flux</a></li>
+                        <li><a href="">Mon profil</a></li>
+                        <li><a href="">Explorer</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h4>Assistance</h4>
+                    <ul>
+                        <li><a href="">FAQ</a></li>
+                        <li><a href="">Contact</a></li>
+                        <li><a href="">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links-column">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="">Conditions d'utilisation</a></li>
+                        <li><a href="">Politique de confidentialité</a></li>
+                        <li><a href="">Gestion des cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-newsletter">
+                <h4>Abonnez-vous à notre newsletter</h4>
+                <p>Restez informé des dernières fonctionnalités et mises à jour</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Votre email" class="newsletter-input">
+                    <button type="submit" class="newsletter-button">S'abonner</button>
+                </form>
+                
+                <div class="footer-social">
+                    <a href="#" class="social-icon" title="Twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-icon" title="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon" title="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon" title="GitHub"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="copyright">
+                &copy; 2025 ZapFeed.fr - Tous droits réservés
+            </div>
+            <div class="footer-app-links">
+                <a href="#" class="app-link"><i class="bi bi-apple me-1"></i>App Store</a>
+                <a href="#" class="app-link"><i class="bi bi-google-play me-1"></i>Google Play</a>
+            </div>
+        </div>
+    </div>
 </footer>
+
+<style>
+    .footer {
+        background: linear-gradient(135deg, #2b2d42 0%, #121420 100%);
+        color: #f8f9fa;
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .footer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(to right, #5e2ca5, #7953d2);
+    }
+    
+    .footer-content {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+    
+    .footer-main {
+        padding: 3.5rem 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+    
+    .footer-logo {
+        flex: 1 1 240px;
+        max-width: 280px;
+    }
+    
+    .footer-logo-img {
+        height: 60px;
+        margin-bottom: 1rem;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+        transition: transform 0.3s ease;
+    }
+    
+    .footer-logo:hover .footer-logo-img {
+        transform: translateY(-3px);
+    }
+    
+    .footer-tagline {
+        color: #b8c2cc;
+        font-size: 0.9rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .footer-links {
+        flex: 2 1 500px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+    
+    .footer-links-column {
+        flex: 1 1 140px;
+    }
+    
+    .footer-links-column h4 {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .footer-links-column h4::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 30px;
+        height: 3px;
+        background: linear-gradient(to right, #5e2ca5, #7953d2);
+    }
+    
+    .footer-links-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .footer-links-column li {
+        margin-bottom: 0.7rem;
+    }
+    
+    .footer-links-column a {
+        color: #d1d5db;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        position: relative;
+        padding-left: 0;
+        display: inline-block;
+    }
+    
+    .footer-links-column a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-links-column a::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        left: 0;
+        background-color: white;
+        transition: width 0.3s ease;
+    }
+    
+    .footer-links-column a:hover::before {
+        width: 100%;
+    }
+    
+    .footer-newsletter {
+        flex: 1 1 300px;
+    }
+    
+    .footer-newsletter h4 {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-newsletter p {
+        color: #b8c2cc;
+        font-size: 0.9rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .newsletter-form {
+        display: flex;
+        margin-bottom: 1.5rem;
+    }
+    
+    .newsletter-input {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        border: none;
+        border-radius: 4px 0 0 4px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 0.9rem;
+    }
+    
+    .newsletter-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .newsletter-input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .newsletter-button {
+        background: linear-gradient(to right, #5e2ca5, #7953d2);
+        border: none;
+        color: white;
+        padding: 0.7rem 1.2rem;
+        border-radius: 0 4px 4px 0;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .newsletter-button:hover {
+        background: linear-gradient(to right, #7953d2, #5e2ca5);
+        transform: translateY(-2px);
+    }
+    
+    .footer-social {
+        display: flex;
+        gap: 0.8rem;
+    }
+    
+    .social-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+        background: linear-gradient(to right, #5e2ca5, #7953d2);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .footer-bottom {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1.2rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .copyright {
+        font-size: 0.9rem;
+        color: #b8c2cc;
+    }
+    
+    .footer-app-links {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .app-link {
+        color: #d1d5db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+    
+    .app-link:hover {
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .footer-main {
+            flex-direction: column;
+        }
+        
+        .footer-logo, .footer-links, .footer-newsletter {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .footer-app-links {
+            margin-top: 0.8rem;
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pulsating logo effect
+        const footerLogo = document.querySelector('.footer-logo-img');
+        if (footerLogo) {
+            setInterval(() => {
+                footerLogo.style.filter = 'drop-shadow(0 4px 12px rgba(94, 44, 165, 0.6))';
+                setTimeout(() => {
+                    footerLogo.style.filter = 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2))';
+                }, 500);
+            }, 3000);
+        }
+        
+        // Form submission animation
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const emailInput = this.querySelector('.newsletter-input');
+                const submitBtn = this.querySelector('.newsletter-button');
+                
+                if (emailInput.value.trim()) {
+                    // Animate submit button
+                    submitBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
+                    submitBtn.style.width = submitBtn.offsetWidth + 'px'; // Prevent width change
+                    
+                    // Clear input and show success state
+                    setTimeout(() => {
+                        emailInput.value = '';
+                        emailInput.setAttribute('placeholder', 'Inscription réussie !');
+                        emailInput.style.borderColor = '#28a745';
+                        emailInput.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.2)';
+                        
+                        // Reset after some time
+                        setTimeout(() => {
+                            submitBtn.innerHTML = 'S\'abonner';
+                            emailInput.setAttribute('placeholder', 'Votre email');
+                            emailInput.style.borderColor = '';
+                            emailInput.style.boxShadow = '';
+                        }, 3000);
+                    }, 700);
+                }
+            });
+        }
+        
+        // Animate social icons on hover
+        document.querySelectorAll('.social-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) rotate(5deg)';
+            });
+            
+            icon.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotate(0)';
+            });
+        });
+    });
+</script>
