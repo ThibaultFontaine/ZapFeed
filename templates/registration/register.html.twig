@@ -1,128 +1,344 @@
 {% extends 'baseNotLogged.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Rejoindre ZapFeed{% endblock %}
 
 {% block stylesheets %}
 {{ parent() }}
 <style>
     body {
-        background-image: url('https://source.unsplash.com/random/1920x1080/?abstract,dark');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
         min-height: 100vh;
+        background: linear-gradient(135deg, #5e2ca5, #7953d2);
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
-        position: relative;
+        overflow-x: hidden;
     }
     
-    body::before {
+    .bg-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        z-index: 0;
+        opacity: 0.3;
+    }
+    
+    .floating-shapes {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+    
+    .floating-shape {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 50%;
+    }
+    
+    .register-container {
+        display: flex;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1000px;
+        margin: 2rem;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        background: white;
+    }
+    
+    .register-visual {
+        flex: 1;
+        background: linear-gradient(135deg, #432a74, #5e2ca5);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        min-height: 500px;
+    }
+    
+    .register-visual::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(30, 21, 42, 0.75);
-        z-index: -1;
-    }
-    
-    .register-container {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
         width: 100%;
-        max-width: 900px;
-        display: flex;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-width='1.5'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%23FFFFFF' opacity='0.08'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E");
+        background-position: center center;
+        opacity: 0.1;
     }
     
-    .register-form {
-        padding: 40px;
-        flex: 1;
-    }
-    
-    .logo-container {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px;
-        background-color: #1E152A;
+    .register-visual-content {
         position: relative;
-    }
-    
-    .logo {
-        max-width: 80%;
-        transform-origin: center;
-    }
-    
-    h1 {
-        color: #1E152A;
-        font-weight: 700;
-        margin-bottom: 30px;
+        z-index: 2;
         text-align: center;
-    }
-    
-    .form-control, .form-select {
-        padding: 15px;
-        margin-bottom: 15px;
-        border: 1px solid rgba(30, 21, 42, 0.2);
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus, .form-select:focus {
-        border-color: #1E152A;
-        box-shadow: 0 0 0 0.25rem rgba(30, 21, 42, 0.25);
-    }
-    
-    .form-label {
-        color: #1E152A;
-        font-weight: 600;
-    }
-    
-    .form-check-input:checked {
-        background-color: #1E152A;
-        border-color: #1E152A;
-    }
-    
-    .btn {
-        background-color: #1E152A;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-top: 20px;
         color: white;
     }
     
-    .btn:hover {
-        background-color: #312244;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(30, 21, 42, 0.4);
+    .brand-logo {
+        max-width: 180px;
+        margin-bottom: 2rem;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .brand-logo.pulse {
+        animation: pulse 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes dance {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(-5deg) translateY(-5px); }
+        50% { transform: rotate(0deg); }
+        75% { transform: rotate(5deg) translateY(-5px); }
+        100% { transform: rotate(0deg); }
+    }
+    
+    .register-tagline {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, #ffffff, #e0e0e0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .register-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        opacity: 0.9;
+        max-width: 90%;
+        margin: 0 auto 2rem;
+    }
+    
+    .benefit-list {
+        list-style: none;
+        padding: 0;
+        margin: 2rem 0;
+        text-align: left;
+    }
+    
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2rem;
+    }
+    
+    .benefit-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .register-form-wrapper {
+        flex: 1;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .register-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .register-title {
+        font-size: 2.2rem;
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .register-subtitle {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #495057;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #7953d2;
+        box-shadow: 0 0 0 4px rgba(121, 83, 210, 0.15);
+        background-color: #fff;
+        outline: none;
+    }
+    
+    .form-icon {
+        position: absolute;
+        right: 15px;
+        top: 40px;
+        color: #adb5bd;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus + .form-icon {
+        color: #7953d2;
+    }
+    
+    .form-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-top: 0.25rem;
+        accent-color: #5e2ca5;
+        cursor: pointer;
+    }
+    
+    .form-check-label {
+        font-size: 0.95rem;
+        color: #495057;
+    }
+    
+    .form-check-label a {
+        color: #5e2ca5;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .form-check-label a:hover {
+        text-decoration: underline;
+    }
+    
+    .register-btn {
+        display: block;
+        width: 100%;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, #5e2ca5, #7953d2);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px -10px rgba(94, 44, 165, 0.5);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .register-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.5s;
+    }
+    
+    .register-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px -10px rgba(94, 44, 165, 0.6);
+    }
+    
+    .register-btn:hover::before {
+        left: 100%;
+    }
+    
+    .login-prompt {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    
+    .login-link {
+        color: #5e2ca5;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .login-link:hover {
+        text-decoration: underline;
     }
     
     .form-error {
-        color: #dc3545;
         font-size: 0.875rem;
-        margin-top: -10px;
-        margin-bottom: 15px;
+        color: #e74c3c;
+        margin-top: 0.4rem;
     }
     
-    a {
-        color: #1E152A;
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.3s ease;
+    .alert {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
     }
     
-    a:hover {
-        color: #312244;
+    .alert-danger {
+        background-color: #fdf1f0;
+        border: 1px solid #f9d7d5;
+        color: #e74c3c;
+    }
+    
+    /* Animation for floating shapes */
+    @keyframes float {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(5deg); }
+        100% { transform: translateY(0) rotate(0deg); }
+    }
+    
+    /* Media queries */
+    @media (max-width: 992px) {
+        .register-container {
+            max-width: 800px;
+        }
     }
     
     @media (max-width: 768px) {
@@ -130,18 +346,79 @@
             flex-direction: column;
         }
         
-        .logo-container {
+        .register-visual {
             order: -1;
-            padding: 20px;
+            min-height: auto;
+            padding-bottom: 3rem;
+        }
+        
+        .register-form-wrapper {
+            padding: 2rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .register-container {
+            margin: 1rem;
+            border-radius: 15px;
+        }
+        
+        .register-visual, .register-form-wrapper {
+            padding: 1.5rem;
+        }
+        
+        .brand-logo {
+            max-width: 120px;
+        }
+        
+        .register-title {
+            font-size: 1.8rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block body %}
+<div class="bg-pattern"></div>
+<div class="floating-shapes" id="floating-shapes"></div>
+
 <div class="register-container">
-    <div class="register-form">
-        <h1>Inscription</h1>
+    <div class="register-visual">
+        <div class="register-visual-content">
+            <img src="/images/logoZapFeed.png" alt="ZapFeed Logo" class="brand-logo" id="dancing-logo">
+            <h2 class="register-tagline">Rejoignez l'expérience ZapFeed</h2>
+            <p class="register-description">
+                Créez votre compte et découvrez une nouvelle façon de suivre vos actualités préférées.
+            </p>
+            
+            <ul class="benefit-list">
+                <li class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-check"></i>
+                    </div>
+                    <span>Agrégateur RSS personnalisable</span>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-check"></i>
+                    </div>
+                    <span>Interface intuitive et rapide</span>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-check"></i>
+                    </div>
+                    <span>Gratuit et sans publicité</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="register-form-wrapper">
+        <div class="register-header">
+            <h1 class="register-title">Créer un compte</h1>
+            <p class="register-subtitle">Quelques informations pour commencer</p>
+        </div>
         
         {% if registrationForm.vars.errors|length > 0 %}
             <div class="alert alert-danger">
@@ -149,10 +426,11 @@
             </div>
         {% endif %}
 
-        {{ form_start(registrationForm, {'attr': {'class': 'needs-validation'}}) }}
-            <div class="mb-3">
+        {{ form_start(registrationForm, {'attr': {'class': 'register-form', 'id': 'registration-form'}}) }}
+            <div class="form-group">
                 {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre adresse email'}}) }}
+                <span class="form-icon"><i class="bi bi-envelope"></i></span>
                 {% if registrationForm.email.vars.errors|length > 0 %}
                     <div class="form-error">
                         {{ form_errors(registrationForm.email) }}
@@ -160,68 +438,149 @@
                 {% endif %}
             </div>
             
-            <div class="mb-3">
+            <div class="form-group">
                 {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Créez un mot de passe sécurisé'}}) }}
+                <span class="form-icon"><i class="bi bi-lock"></i></span>
                 {% if registrationForm.plainPassword.vars.errors|length > 0 %}
                     <div class="form-error">
                         {{ form_errors(registrationForm.plainPassword) }}
                     </div>
                 {% endif %}
+                <small class="text-muted d-block mt-1">Minimum 8 caractères avec des lettres et des chiffres</small>
             </div>
             
-            <div class="mb-3">
-                <div class="form-check">
-                    {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions générales', {'label_attr': {'class': 'form-check-label'}}) }}
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions générales', {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+            {% if registrationForm.agreeTerms.vars.errors|length > 0 %}
+                <div class="form-error">
+                    {{ form_errors(registrationForm.agreeTerms) }}
                 </div>
-                {% if registrationForm.agreeTerms.vars.errors|length > 0 %}
-                    <div class="form-error">
-                        {{ form_errors(registrationForm.agreeTerms) }}
-                    </div>
-                {% endif %}
-            </div>
+            {% endif %}
 
-            <button type="submit" class="btn">S'inscrire</button>
+            <button type="submit" class="register-btn">
+                Créer mon compte
+            </button>
             
-            <div class="text-center mt-4">
-                <p>Déjà membre ? <a href="{{ path('app_login') }}">Connexion</a></p>
+            <div class="login-prompt">
+                Déjà membre ? <a href="{{ path('app_login') }}" class="login-link">Se connecter</a>
             </div>
         {{ form_end(registrationForm) }}
-    </div>
-    
-    <div class="logo-container">
-        <img src="/images/logoZapFeed.png" alt="ZapFeed Logo" class="logo" id="tilting-logo">
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const logo = document.getElementById('tilting-logo');
+    const logo = document.getElementById('dancing-logo');
+    const inputs = document.querySelectorAll('.form-control');
+    let isDancing = false;
+    let danceTimeout;
     
-    window.addEventListener('mousemove', function(e) {
-        if (!logo) return;
+    // Fonction pour faire danser le logo
+    function danceLogo() {
+        if (isDancing) return;
         
-        const mouseX = e.clientX / window.innerWidth;
-        const mouseY = e.clientY / window.innerHeight;
+        isDancing = true;
+        logo.style.animation = 'dance 1s ease-in-out';
         
-        const tiltX = (mouseY - 0.5) * 40;
-        const tiltY = (mouseX - 0.5) * 40;
+        // Arrêter la danse après l'animation
+        danceTimeout = setTimeout(() => {
+            logo.style.animation = '';
+            isDancing = false;
+        }, 1000);
+    }
+    
+    // Faire danser le logo quand l'utilisateur tape dans les champs
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Annuler toute animation en cours
+            clearTimeout(danceTimeout);
+            
+            // Faire danser le logo
+            danceLogo();
+        });
         
-        logo.style.transform = `perspective(800px) rotateX(${-tiltX}deg) rotateY(${tiltY}deg) scale(1.05)`;
+        // Animation au focus des champs
+        input.addEventListener('focus', function() {
+            this.parentElement.querySelector('.form-icon').style.color = '#7953d2';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.querySelector('.form-icon').style.color = '#adb5bd';
+        });
     });
     
-    document.body.addEventListener('mouseleave', function() {
-        if (logo) {
-            logo.style.transition = 'transform 0.5s ease';
-            logo.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
-            setTimeout(() => {
-                logo.style.transition = 'transform 0.1s ease';
-            }, 500);
+    // Animation de pulsation lorsque la page se charge
+    setTimeout(() => {
+        logo.classList.add('pulse');
+        setTimeout(() => {
+            logo.classList.remove('pulse');
+        }, 500);
+    }, 300);
+    
+    // Créer des formes flottantes en arrière-plan
+    const shapesContainer = document.getElementById('floating-shapes');
+    if (shapesContainer) {
+        const numShapes = 8;
+        
+        for (let i = 0; i < numShapes; i++) {
+            const shape = document.createElement('div');
+            shape.classList.add('floating-shape');
+            
+            const size = Math.random() * 250 + 50;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const duration = Math.random() * 10 + 15;
+            const delay = Math.random() * 5;
+            
+            shape.style.width = `${size}px`;
+            shape.style.height = `${size}px`;
+            shape.style.left = `${posX}%`;
+            shape.style.top = `${posY}%`;
+            shape.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+            
+            shapesContainer.appendChild(shape);
         }
-    });
+    }
     
-    logo.style.transition = 'transform 0.1s ease';
+    // Animation du bouton de soumission
+    const submitBtn = document.querySelector('.register-btn');
+    if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', function() {
+            this.innerHTML = "C'est parti ! 🚀";
+        });
+        
+        submitBtn.addEventListener('mouseleave', function() {
+            this.innerHTML = "Créer mon compte";
+        });
+    }
+    
+    // Animation du formulaire lors de la validation
+    const form = document.getElementById('registration-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Animation du logo à la soumission
+            logo.classList.add('pulse');
+            
+            // Si le formulaire n'est pas valide, on arrête l'animation après un délai
+            const inputs = this.querySelectorAll('.form-control');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                setTimeout(() => {
+                    logo.classList.remove('pulse');
+                }, 500);
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
