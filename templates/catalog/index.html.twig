@@ -1,0 +1,570 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue de Flux RSS{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .catalogue-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .catalogue-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #5e2ca5, #7953d2);
+        }
+
+        .page-title {
+            color: #1E152A;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .page-title-icon {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(94, 44, 165, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .page-title:hover .page-title-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            border-radius: 30px;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid #ced4da;
+            width: 100%;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            padding-left: 3rem;
+            background-color: #f8f9fa;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 6px 15px rgba(94, 44, 165, 0.1);
+            border-color: #7953d2;
+            background-color: #fff;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus + .search-icon {
+            color: #5e2ca5;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .category-filter {
+            background: #f8f9fa;
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #495057;
+            border: 1px solid #ced4da;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-filter:hover, .category-filter.active {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(94, 44, 165, 0.2);
+        }
+
+        .category-filter i {
+            margin-right: 0.5rem;
+        }
+
+        .feeds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feed-card {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .feed-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: rgba(94, 44, 165, 0.3);
+        }
+
+        .feed-header {
+            position: relative;
+            height: 80px;
+            overflow: hidden;
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feed-header i {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .feed-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .feed-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1E152A;
+            min-height: 3.10rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .feed-url {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            word-break: break-all;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .feed-actions-catalog {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-subscribe {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            width: 80%;
+        }
+
+        .btn-subscribe:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(94, 44, 165, 0.3);
+        }
+
+        .pagination-container {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+
+        .page-item {
+            margin: 0 0.25rem;
+        }
+
+        .page-link {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px) rotateX(5deg);
+            z-index: 1;
+        }
+
+        .page-item.active .page-link {
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
+        }
+
+        .feed-card .badge {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            padding: 0.35rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .feed-card .badge-new {
+            background: linear-gradient(45deg, #2ca58d, #53d2a1);
+            color: white;
+            box-shadow: 0 4px 8px rgba(44, 165, 141, 0.3);
+        }
+
+        .feed-card .badge-popular {
+            background: linear-gradient(45deg, #e5556e, #f88e8e);
+            color: white;
+            box-shadow: 0 4px 8px rgba(229, 85, 110, 0.3);
+        }
+
+        .loader {
+            margin: 2rem auto;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(94, 44, 165, 0.1);
+            border-radius: 50%;
+            border-top-color: #5e2ca5;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            border: 2px dashed #dee2e6;
+            border-radius: 15px;
+            margin: 2rem 0;
+            color: #6c757d;
+            background: rgba(222, 226, 230, 0.1);
+        }
+
+        .tooltip-custom {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="catalogue-container" id="tiltContainer">
+        <div class="page-title">
+            <div class="page-title-icon" id="titleIcon">
+                <i class="bi bi-collection-fill fs-4"></i>
+            </div>
+            <span>Catalogue de Flux RSS</span>
+        </div>
+
+        <div class="search-container mb-4">
+            <form method="get" action="{{ path('app_catalog') }}" id="search-form">
+                <input type="text" class="search-input" id="search-feeds" name="search" 
+                       placeholder="Rechercher des flux par titre..."
+                       value="{{ search|default('') }}">
+                <i class="bi bi-search search-icon"></i>
+            </form>
+        </div>
+
+        <div id="feeds-container">
+            {% if search is defined and search is not empty %}
+                <div class="mb-4 alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Résultats de recherche pour : <strong>{{ search }}</strong>
+                    <a href="{{ path('app_catalog') }}" class="ms-2 btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Effacer
+                    </a>
+                </div>
+            {% endif %}
+
+            <div class="feeds-grid">
+                {% for feed in feeds %}
+                    <div class="feed-card">
+                        <div class="feed-header">
+                            <i class="bi bi-rss"></i>
+                        </div>
+                        <div class="feed-body">
+                            <h3 class="feed-title">{{ feed.baseTitle }}</h3>
+                            <div class="feed-url">{{ feed.url|length > 60 ? feed.url|slice(0, 60) ~ '...' : feed.url }}</div>
+                            
+                            <div class="feed-actions-catalog">
+                                {% set isSubscribed = false %}
+                                {% for user_feed in user_feeds %}
+                                    {% if user_feed.feed.id == feed.id %}
+                                        {% set isSubscribed = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <button
+                                    class="btn {% if isSubscribed %}btn-secondary disabled{% else %}btn-subscribe{% endif %}"
+                                    id="subscribe-button-{{ feed.id }}"
+                                    data-feed-id="{{ feed.id }}"
+                                >
+                                    {% if isSubscribed %}
+                                        <i class="bi bi-check-circle-fill me-2"></i> Abonné
+                                    {% else %}
+                                        <i class="bi bi-plus-circle me-2"></i> S'abonner
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="no-results col-12">
+                        <i class="bi bi-emoji-neutral fs-3 mb-3 d-block"></i>
+                        <h4>Aucun flux disponible</h4>
+                        {% if search is defined and search is not empty %}
+                            <p>Aucun flux ne correspond à votre recherche "{{ search }}". Essayez avec un autre terme.</p>
+                            <a href="{{ path('app_catalog') }}" class="btn btn-outline-primary mt-3">
+                                <i class="bi bi-arrow-left"></i> Revenir à tous les flux
+                            </a>
+                        {% else %}
+                            <p>Il n'y a actuellement aucun flux dans notre catalogue.</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pour l'animation de chargement si nécessaire -->
+            <div id="loading-indicator" class="loader d-none"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1050;"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search form handling
+        const searchInput = document.getElementById('search-feeds');
+        const searchForm = document.getElementById('search-form');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                // Only submit if there's text or it was previously filled and now is empty
+                if (this.value.length > 2 || (this.value === '' && '{{ search|default('') }}' !== '')) {
+                    setTimeout(() => {
+                        searchForm.submit();
+                    }, 500);
+                }
+            });
+        }
+
+        // Subscribe button handling
+        const subscribeButtons = document.querySelectorAll('button[id^="subscribe-button"]');
+
+        subscribeButtons.forEach(button => {
+            if (button.classList.contains('disabled')) return;
+
+            button.addEventListener('click', function() {
+                const feedId = this.dataset.feedId;
+                const buttonEl = this;
+
+                // Animation de chargement
+                const originalHTML = buttonEl.innerHTML;
+                buttonEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Abonnement...';
+                buttonEl.disabled = true;
+
+                // Appel AJAX pour s'abonner
+                fetch(`/catalog/${feedId}/subscribe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Succès: mettre à jour le bouton
+                        buttonEl.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Abonné';
+                        buttonEl.classList.add('disabled', 'btn-secondary');
+                        buttonEl.classList.remove('btn-subscribe');
+
+                        // Afficher une notification de succès
+                        showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
+                    } else {
+                        // Erreur: afficher le message d'erreur
+                        buttonEl.innerHTML = originalHTML;
+                        buttonEl.disabled = false;
+
+                        showNotification('Impossible de s\'abonner', data.message, 'danger');
+                    }
+                })
+                .catch(error => {
+                    // Erreur technique
+                    buttonEl.innerHTML = originalHTML;
+                    buttonEl.disabled = false;
+
+                    showNotification('Erreur', 'Une erreur est survenue lors de l\'abonnement.', 'danger');
+                    console.error('Erreur:', error);
+                });
+            });
+        });
+
+        // Système de notification
+        function showNotification(title, message, type = 'info') {
+            // Créer un élément toast
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center border-0 show`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.id = toastId;
+
+            // Définir le style en fonction du type
+            let bgClass, iconClass;
+            switch (type) {
+                case 'success':
+                    bgClass = 'bg-success';
+                    iconClass = 'bi-check-circle-fill';
+                    break;
+                case 'danger':
+                    bgClass = 'bg-danger';
+                    iconClass = 'bi-exclamation-triangle-fill';
+                    break;
+                case 'warning':
+                    bgClass = 'bg-warning';
+                    iconClass = 'bi-exclamation-circle-fill';
+                    break;
+                default:
+                    bgClass = 'bg-info';
+                    iconClass = 'bi-info-circle-fill';
+            }
+
+            // Ajouter le contenu HTML
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body ${bgClass} text-white">
+                        <div class="d-flex align-items-center">
+                            <i class="bi ${iconClass} me-2"></i>
+                            <div>
+                                <strong>${title}</strong>
+                                <div>${message}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
+                </div>
+            `;
+
+            // Créer un conteneur de toast s'il n'existe pas
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                toastContainer.style.zIndex = '1050';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Ajouter le toast au conteneur
+            toastContainer.appendChild(toast);
+
+            // Créer un objet Toast Bootstrap
+            const toastObject = new bootstrap.Toast(toast, {
+                autohide: true,
+                delay: 5000
+            });
+
+            // Afficher le toast
+            toastObject.show();
+
+            // Nettoyer le DOM après la fermeture
+            toast.addEventListener('hidden.bs.toast', function() {
+                toast.remove();
+                if (toastContainer.children.length === 0) {
+                    toastContainer.remove();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+
