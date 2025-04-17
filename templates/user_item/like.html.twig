@@ -5,6 +5,128 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
+/* Bouton Like avec Animation Spectaculaire */
+.app-like-button {
+  position: relative;
+  padding: 12px 24px 12px 45px;
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  color: #4f6fff;
+  border: 2px solid #4f6fff;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(79, 111, 255, 0.15);
+  isolation: isolate;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.app-like-button::before {
+  content: '❤️';
+  position: absolute;
+  left: 18px;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+/* Glow Effect autour du bouton */
+.app-like-button:hover {
+  background: linear-gradient(45deg, #4f6fff, #7e96ff);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 25px rgba(79, 111, 255, 0.3),
+    0 0 30px rgba(79, 111, 255, 0.2);
+}
+
+/* Effet 3D au survol */
+.app-like-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.4) 30%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.app-like-button:hover::after {
+  opacity: 1;
+}
+
+/* Effet de pulsation du cœur principal */
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+.app-like-button:hover::before {
+  animation: heart-beat 0.6s infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+
+/* Conteneur pour les particules */
+.app-like-particles-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Styles des particules */
+.app-heart-particle {
+  position: absolute;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* Animation de mouvement pour les cœurs */
+@keyframes float-up-particle {
+  0% {
+    opacity: 0;
+    transform: translate(var(--startX), var(--startY)) scale(0);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(var(--startX), var(--startY)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc(var(--startX) + var(--moveX)), 
+      calc(var(--startY) - var(--distance))
+    ) 
+    rotate(var(--rotate)) 
+    scale(var(--scale));
+  }
+}
+
+/* Animation d'entrée pour le fond du bouton */
+@keyframes wave-background {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animation d'onde colorée */
+.app-like-button:hover {
+  background-size: 200% 200%;
+  animation: wave-background 1s ease forwards;
+}
+
+/* Overlay lumineux qui passe sur le bouton */
+.app-like-button::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
     /* Style général de la page */
     .app-container {
         max-width: 1100px;
@@ -330,6 +452,134 @@
 {% block javascripts %}
 {{ parent() }}
 <script>
+// Animation JavaScript - À ajouter au bloc javascripts
+document.addEventListener('DOMContentLoaded', function() {
+  const likeButtons = document.querySelectorAll('.app-like-button');
+  
+  likeButtons.forEach(button => {
+    // Créer un conteneur pour les particules
+    const particlesContainer = document.createElement('div');
+    particlesContainer.classList.add('app-like-particles-container');
+    button.appendChild(particlesContainer);
+    
+    // Ajouter les événements
+    button.addEventListener('mouseenter', function(e) {
+      // Créer l'explosion de particules
+      createHeartExplosion(particlesContainer);
+      
+      // Ajouter un effet de secousse
+      applyShakeEffect(button);
+      
+      // Ajouter un effet sonore subtil (si désiré)
+      // playHeartSound();
+    });
+  });
+  
+  function createHeartExplosion(container) {
+    // Nettoyer les anciennes particules
+    container.innerHTML = '';
+    
+    // Variété de types de cœurs
+    const heartTypes = ['❤️', '💖', '💕', '💓', '💗', '♥️', '💘', '💝', '💞'];
+    
+    // Variété de tailles
+    const sizes = [0.8, 1, 1.2, 1.5, 0.6];
+    
+    // Nombre de particules - beaucoup pour un effet impressionnant
+    const particleCount = 35;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('app-heart-particle');
+      
+      // Choisir aléatoirement un type de cœur
+      particle.innerHTML = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+      
+      // Position de départ près du centre
+      const startX = 20 + (Math.random() * 10 - 5);
+      const startY = container.clientHeight / 2 + (Math.random() * 10 - 5);
+      
+      // Direction du mouvement
+      const angle = Math.random() * Math.PI * 2; // Angle en radians (360°)
+      const distance = 100 + Math.random() * 150; // Distance parcourue
+      const moveX = Math.cos(angle) * distance;
+      
+      // Rotation finale
+      const rotate = -30 + Math.random() * 60; // -30° à 30°
+      
+      // Taille finale
+      const scale = sizes[Math.floor(Math.random() * sizes.length)];
+      
+      // Délai pour un effet d'explosion séquentiel
+      const delay = Math.random() * 0.2;
+      
+      // Durée de l'animation
+      const duration = 1 + Math.random() * 1.5;
+      
+      // Appliquer les styles
+      particle.style.left = '0';
+      particle.style.top = '0';
+      particle.style.fontSize = `${1 + Math.random() * 0.5}rem`;
+      particle.style.opacity = '0';
+      
+      // Définir les variables CSS pour l'animation
+      particle.style.setProperty('--startX', `${startX}px`);
+      particle.style.setProperty('--startY', `${startY}px`);
+      particle.style.setProperty('--moveX', `${moveX}px`);
+      particle.style.setProperty('--distance', `${distance}px`);
+      particle.style.setProperty('--rotate', `${rotate}deg`);
+      particle.style.setProperty('--scale', `${scale}`);
+      
+      // Appliquer l'animation
+      particle.style.animation = `float-up-particle ${duration}s ease-out ${delay}s forwards`;
+      
+      // Ajouter la particule au conteneur
+      container.appendChild(particle);
+      
+      // Supprimer la particule une fois l'animation terminée
+      setTimeout(() => {
+        particle.remove();
+      }, (duration + delay) * 1000);
+    }
+  }
+  
+  function applyShakeEffect(button) {
+    // Supprimer toute animation en cours
+    button.style.animation = 'none';
+    void button.offsetWidth; // Forcer le reflow
+    
+    // Créer une animation de secousse aléatoire
+    let keyframes = '';
+    for (let i = 0; i < 10; i++) {
+      const percent = i * 10;
+      const x = Math.random() * 4 - 2;
+      const y = Math.random() * 2 - 1;
+      keyframes += `${percent}% { transform: translate(${x}px, ${y}px); }`;
+    }
+    keyframes += '100% { transform: translate(0, -2px); }';
+    
+    // Créer et appliquer la feuille de style
+    const styleSheet = document.createElement('style');
+    styleSheet.type = 'text/css';
+    styleSheet.innerHTML = `
+      @keyframes button-shake-${Math.random().toString(36).substring(2, 15)} {
+        ${keyframes}
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    
+    // Appliquer l'animation
+    button.style.animation = `${styleSheet.innerHTML.match(/button-shake-[^\s]+/)[0]} 0.4s forwards`;
+    
+    // Nettoyer après l'animation
+    setTimeout(() => {
+      button.style.animation = '';
+      styleSheet.remove();
+    }, 500);
+  }
+});
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // Animation des particules de cœur sur les boutons
         const actionButtons = document.querySelectorAll('.app-action-btn');
