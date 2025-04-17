@@ -1,0 +1,82 @@
+{# Toast container for notifications #}
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1050;"></div>
+
+<script>
+    // Système de notification
+    function showNotification(title, message, type = 'info') {
+        // Créer un élément toast
+        const toastId = 'toast-' + Date.now();
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center border-0 show`;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+        toast.id = toastId;
+
+        // Définir le style en fonction du type
+        let bgClass, iconClass;
+        switch (type) {
+            case 'success':
+                bgClass = 'bg-success';
+                iconClass = 'bi-check-circle-fill';
+                break;
+            case 'danger':
+                bgClass = 'bg-danger';
+                iconClass = 'bi-exclamation-triangle-fill';
+                break;
+            case 'warning':
+                bgClass = 'bg-warning';
+                iconClass = 'bi-exclamation-circle-fill';
+                break;
+            default:
+                bgClass = 'bg-info';
+                iconClass = 'bi-info-circle-fill';
+        }
+
+        // Ajouter le contenu HTML
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body ${bgClass} text-white">
+                    <div class="d-flex align-items-center">
+                        <i class="bi ${iconClass} me-2"></i>
+                        <div>
+                            <strong>${title}</strong>
+                            <div>${message}</div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
+            </div>
+        `;
+
+        // Créer un conteneur de toast s'il n'existe pas
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            toastContainer.style.zIndex = '1050';
+            document.body.appendChild(toastContainer);
+        }
+
+        // Ajouter le toast au conteneur
+        toastContainer.appendChild(toast);
+
+        // Créer un objet Toast Bootstrap
+        const toastObject = new bootstrap.Toast(toast, {
+            autohide: true,
+            delay: 5000
+        });
+
+        // Afficher le toast
+        toastObject.show();
+
+        // Nettoyer le DOM après la fermeture
+        toast.addEventListener('hidden.bs.toast', function() {
+            toast.remove();
+            if (toastContainer.children.length === 0) {
+                toastContainer.classList.add('d-none');
+            }
+        });
+    }
+</script>
