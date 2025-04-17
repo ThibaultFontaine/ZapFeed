@@ -5,7 +5,7 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    .feed-container {
+    .feed-containter-show {
         background-color: #fff;
         border-radius: 20px;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
@@ -17,7 +17,7 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .feed-container::before {
+    .feed-containter-show::before {
         content: '';
         position: absolute;
         top: 0;
@@ -27,7 +27,7 @@
         background: linear-gradient(to right, #5e2ca5, #7953d2);
     }
 
-    .page-title {
+    .page-title-show {
         color: #1E152A;
         font-weight: 700;
         margin-bottom: 2rem;
@@ -37,7 +37,7 @@
         position: relative;
     }
 
-    .page-title-icon {
+    .page-title-show-icon {
         background: linear-gradient(45deg, #5e2ca5, #7953d2);
         width: 60px;
         height: 60px;
@@ -52,24 +52,24 @@
         transform-origin: center;
     }
 
-    .feed-details {
+    .feed-details-shows-show {
         background-color: #f8f9fa;
         border-radius: 15px;
         padding: 1.5rem;
         margin-bottom: 2rem;
     }
 
-    .detail-row {
+    .details-show-row {
         display: flex;
         border-bottom: 1px solid #e9ecef;
         padding: 1.2rem 0;
     }
 
-    .detail-row:last-child {
+    .details-show-row:last-child {
         border-bottom: none;
     }
 
-    .detail-label {
+    .details-show-label {
         flex-basis: 200px;
         font-weight: 600;
         color: #495057;
@@ -77,24 +77,24 @@
         align-items: center;
     }
 
-    .detail-label i {
+    .details-show-label i {
         margin-right: 10px;
         color: #5e2ca5;
         font-size: 1.2rem;
     }
 
-    .detail-value {
+    .details-show-value {
         flex-grow: 1;
         font-size: 1rem;
     }
 
-    .feed-url-value {
+    .feed-url-value-show {
         word-break: break-all;
         color: #5e2ca5;
         font-weight: 500;
     }
 
-    .feed-url-value a {
+    .feed-url-value-show a {
         color: #5e2ca5;
         text-decoration: none;
         border-bottom: 1px dashed #5e2ca5;
@@ -102,12 +102,12 @@
         padding-bottom: 2px;
     }
 
-    .feed-url-value a:hover {
+    .feed-url-value-show a:hover {
         color: #7953d2;
         border-bottom-color: #7953d2;
     }
 
-    .feed-preview {
+    .feed-preview-show {
         background: white;
         border-radius: 15px;
         padding: 1.5rem;
@@ -115,7 +115,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
 
-    .preview-title {
+    .preview-title-show {
         color: #1E152A;
         font-weight: 600;
         margin-bottom: 1rem;
@@ -123,18 +123,18 @@
         align-items: center;
     }
 
-    .preview-title i {
+    .preview-title-show i {
         margin-right: 10px;
         color: #5e2ca5;
     }
 
-    .action-buttons {
+    .action-buttons-show {
         display: flex;
         gap: 1rem;
         margin-top: 2.5rem;
     }
 
-    .btn {
+    .btn-show {
         padding: 0.8rem 1.5rem;
         border-radius: 30px;
         font-weight: 600;
@@ -145,37 +145,37 @@
         gap: 8px;
     }
 
-    .btn-primary {
+    .btn-show-primary {
         background: linear-gradient(45deg, #5e2ca5, #7953d2);
         border: none;
         color: white;
         box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
     }
 
-    .btn-primary:hover {
+    .btn-show-primary:hover {
         transform: translateY(-3px);
         box-shadow: 0 6px 15px rgba(94, 44, 165, 0.3);
         background: linear-gradient(45deg, #7953d2, #5e2ca5);
     }
 
-    .btn-outline {
+    .btn-show-outline {
         background-color: transparent;
         color: #5e2ca5;
         border: 2px solid #5e2ca5;
     }
 
-    .btn-outline:hover {
+    .btn-show-outline:hover {
         background-color: rgba(94, 44, 165, 0.05);
         transform: translateY(-2px);
     }
 
-    .btn-danger {
+    .btn-show-danger {
         background-color: #f8d7da;
         color: #dc3545;
         border: none;
     }
 
-    .btn-danger:hover {
+    .btn-show-danger:hover {
         background-color: #f5c2c7;
         transform: translateY(-2px);
     }
@@ -242,7 +242,7 @@
     }
     
     /* Nouveaux styles pour les articles */
-    .feed-item {
+    .feed-item-show {
         padding: 1.25rem;
         border-radius: 12px;
         margin-bottom: 1.5rem;
@@ -251,29 +251,29 @@
         border-left: 4px solid #5e2ca5;
     }
     
-    .feed-item:hover {
+    .feed-item-show:hover {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         transform: translateY(-3px);
     }
     
-    .feed-item-title {
+    .feed-item-show-title {
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
         color: #1E152A;
     }
     
-    .feed-item-title a {
+    .feed-item-show-title a {
         text-decoration: none;
         color: inherit;
         transition: color 0.2s;
     }
     
-    .feed-item-title a:hover {
+    .feed-item-show-title a:hover {
         color: #5e2ca5;
     }
     
-    .feed-item-meta {
+    .feed-item-show-meta {
         display: flex;
         font-size: 0.85rem;
         color: #6c757d;
@@ -282,17 +282,17 @@
         gap: 1rem;
     }
     
-    .feed-item-date {
+    .feed-item-show-date {
         display: flex;
         align-items: center;
     }
     
-    .feed-item-date i {
+    .feed-item-show-date i {
         margin-right: 5px;
         font-size: 0.9rem;
     }
     
-    .feed-item-description {
+    .feed-item-show-description {
         color: #495057;
         font-size: 0.95rem;
         line-height: 1.6;
@@ -304,12 +304,12 @@
         -webkit-box-orient: vertical;
     }
     
-    .feed-item-link {
+    .feed-item-show-link {
         text-align: right;
         margin-top: 0.75rem;
     }
     
-    .feed-item-link a {
+    .feed-item-show-link a {
         color: #5e2ca5;
         text-decoration: none;
         font-weight: 500;
@@ -319,21 +319,21 @@
         transition: all 0.2s;
     }
     
-    .feed-item-link a:hover {
+    .feed-item-show-link a:hover {
         color: #7953d2;
         transform: translateX(2px);
     }
     
-    .feed-item-link i {
+    .feed-item-show-link i {
         margin-left: 4px;
         transition: transform 0.2s;
     }
     
-    .feed-item-link a:hover i {
+    .feed-item-show-link a:hover i {
         transform: translateX(3px);
     }
     
-    .feed-empty {
+    .feed-empty-show {
         text-align: center;
         padding: 2rem;
         color: #6c757d;
@@ -341,14 +341,14 @@
     }
     
     /* Styles pour la pagination des articles */
-    .feed-pagination {
+    .feed-pagination-show {
         display: flex;
         justify-content: center;
         margin-top: 1.5rem;
         gap: 0.5rem;
     }
     
-    .pagination-btn {
+    .pagination-btn-show {
         padding: 0.5rem 1rem;
         border-radius: 30px;
         background-color: #f8f9fa;
@@ -358,13 +358,13 @@
         transition: all 0.2s;
     }
     
-    .pagination-btn:hover:not([disabled]) {
+    .pagination-btn-show:hover:not([disabled]) {
         background-color: #5e2ca5;
         border-color: #5e2ca5;
         color: white;
     }
     
-    .pagination-btn[disabled] {
+    .pagination-btn-show[disabled] {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -381,9 +381,9 @@
 
 {% block body %}
 <div class="container mt-4">
-    <div class="feed-container" id="tiltContainer">
-        <div class="page-title">
-            <div class="page-title-icon" id="titleIcon">
+    <div class="feed-containter-show" id="tiltContainer">
+        <div class="page-title-show">
+            <div class="page-title-show-icon" id="titleIcon">
                 <i class="bi bi-rss fs-3"></i>
             </div>
             <div class="d-flex flex-row justify-content-between align-items-center w-100">
@@ -399,28 +399,28 @@
             </div>
         </div>
 
-        <div class="feed-details">
-            <div class="detail-row">
-                <div class="detail-label">
+        <div class="feed-details-shows-show">
+            <div class="details-show-row">
+                <div class="details-show-label">
                     <i class="bi bi-fingerprint"></i> Identifiant
                 </div>
-                <div class="detail-value">{{ user_feed.feed.id }}</div>
+                <div class="details-show-value">{{ user_feed.feed.id }}</div>
             </div>
 
-            <div class="detail-row">
-                <div class="detail-label">
+            <div class="details-show-row">
+                <div class="details-show-label">
                     <i class="bi bi-card-heading"></i> Nom
                 </div>
-                <div class="detail-value">{{ user_feed.title }}</div>
+                <div class="details-show-value">{{ user_feed.title }}</div>
             </div>
 
-            <div class="detail-row">
-                <div class="detail-label">
+            <div class="details-show-row">
+                <div class="details-show-label">
                     <i class="bi bi-link-45deg"></i> URL
                 </div>
-                <div class="detail-value feed-url-value">
+                <div class="details-show-value feed-url-value-show">
                     <a href="{{ user_feed.feed.url }}" target="_blank" rel="noopener noreferrer">{{ user_feed.feed.url }}</a>
-                    <button class="btn-sm btn-link copy-url-btn ms-2" data-url="{{ user_feed.feed.url }}" title="Copier l'URL">
+                    <button class="btn-show-sm btn-show-link copy-url-btn-show ms-2" data-url="{{ user_feed.feed.url }}" title="Copier l'URL">
                         <i class="bi bi-clipboard"></i>
                     </button>
                 </div>
@@ -432,14 +432,14 @@
                 <a href="{{ path('app_user_item_show', {
                     feedId: first_unread.item.feed.id,
                     itemId: first_unread.item.id
-                }) }}" class="btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                }) }}" class="btn-show btn-show-primary d-flex align-items-center justify-content-center gap-2">
                     <i class="bi bi-book"></i> Commencer la lecture
                 </a>
             </div>
         {% endif %}
 
-        {# <div class="feed-preview">
-            <h3 class="preview-title">
+        {# <div class="feed-preview-show">
+            <h3 class="preview-title-show">
                 <i class="bi bi-eye-fill"></i> Aperçu du flux
             </h3>
             <div class="preview-content">
@@ -457,24 +457,24 @@
                 </div>
                 
                 <!-- Pagination pour les articles -->
-                <div class="feed-pagination" id="feedPagination" style="display: none;">
-                    <button class="pagination-btn" id="prevPageBtn" disabled>
+                <div class="feed-pagination-show" id="feedPagination" style="display: none;">
+                    <button class="pagination-btn-show" id="prevPagebtn-show" disabled>
                         <i class="bi bi-chevron-left"></i> Précédent
                     </button>
                     <div class="pagination-current" id="paginationInfo">1 / 1</div>
-                    <button class="pagination-btn" id="nextPageBtn" disabled>
+                    <button class="pagination-btn-show" id="nextPagebtn-show" disabled>
                         Suivant <i class="bi bi-chevron-right"></i>
                     </button>
                 </div>
             </div>
         </div> #}
 
-        <div class="action-buttons">
-            <a href="{{ path('app_user_feed_index') }}" class="btn btn-outline">
+        <div class="action-buttons-show">
+            <a href="{{ path('app_user_feed_index') }}" class="btn-show btn-show-outline">
                 <i class="bi bi-arrow-left"></i> Retour
             </a>
 
-            <a href="{{ path('app_user_feed_edit', {'id': user_feed.feed.id}) }}" class="btn btn-primary">
+            <a href="{{ path('app_user_feed_edit', {'id': user_feed.feed.id}) }}" class="btn-show btn-show-primary">
                 <i class="bi bi-pencil-square"></i> Modifier
             </a>
 
@@ -528,9 +528,9 @@
         // });
 
         // Copy URL button functionality
-        const copyUrlBtn = document.querySelector('.copy-url-btn');
-        if (copyUrlBtn) {
-            copyUrlBtn.addEventListener('click', function() {
+        const copyUrlbtn-show = document.querySelector('.copy-url-btn-show');
+        if (copyUrlbtn-show) {
+            copyUrlbtn-show.addEventListener('click', function() {
                 const url = this.dataset.url;
                 navigator.clipboard.writeText(url).then(() => {
                     // Show feedback
@@ -551,7 +551,7 @@
         if (deleteForm) {
             const deleteButton = deleteForm.querySelector('button');
             if (deleteButton) {
-                deleteButton.classList.add('btn', 'btn-danger');
+                deleteButton.classList.add('btn-show', 'btn-show-danger');
                 deleteButton.innerHTML = '<i class="bi bi-trash"></i> Supprimer';
 
                 deleteButton.addEventListener('mouseenter', function() {
@@ -634,7 +634,7 @@
             
             if (articlesToShow.length === 0) {
                 feedItemsContainer.innerHTML = `
-                    <div class="feed-empty">
+                    <div class="feed-empty-show">
                         <i class="bi bi-inbox fs-4 d-block mb-2"></i>
                         Aucun article trouvé dans ce flux.
                     </div>
@@ -653,20 +653,20 @@
                 });
                 
                 const articleElement = document.createElement('div');
-                articleElement.className = 'feed-item';
+                articleElement.className = 'feed-item-show';
                 articleElement.innerHTML = `
-                    <div class="feed-item-title">
+                    <div class="feed-item-show-title">
                         <a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a>
                     </div>
-                    <div class="feed-item-meta">
-                        <div class="feed-item-date">
+                    <div class="feed-item-show-meta">
+                        <div class="feed-item-show-date">
                             <i class="bi bi-calendar3"></i> ${formattedDate}
                         </div>
                     </div>
-                    <div class="feed-item-description">
+                    <div class="feed-item-show-description">
                         ${article.description || 'Aucune description disponible.'}
                     </div>
-                    <div class="feed-item-link">
+                    <div class="feed-item-show-link">
                         <a href="${article.link}" target="_blank" rel="noopener noreferrer">
                             Lire l'article <i class="bi bi-arrow-right"></i>
                         </a>
@@ -680,35 +680,35 @@
         // Mettre à jour les contrôles de pagination
         function updatePagination() {
             const paginationInfo = document.getElementById('paginationInfo');
-            const prevPageBtn = document.getElementById('prevPageBtn');
-            const nextPageBtn = document.getElementById('nextPageBtn');
+            const prevPagebtn-show = document.getElementById('prevPagebtn-show');
+            const nextPagebtn-show = document.getElementById('nextPagebtn-show');
             
             if (paginationInfo) {
                 paginationInfo.textContent = `${currentPage} / ${totalPages || 1}`;
             }
             
-            if (prevPageBtn) {
-                prevPageBtn.disabled = currentPage <= 1;
+            if (prevPagebtn-show) {
+                prevPagebtn-show.disabled = currentPage <= 1;
             }
             
-            if (nextPageBtn) {
-                nextPageBtn.disabled = currentPage >= totalPages;
+            if (nextPagebtn-show) {
+                nextPagebtn-show.disabled = currentPage >= totalPages;
             }
         }
         
         // Gestionnaires d'événements pour la pagination
-        const prevPageBtn = document.getElementById('prevPageBtn');
-        const nextPageBtn = document.getElementById('nextPageBtn');
+        const prevPagebtn-show = document.getElementById('prevPagebtn-show');
+        const nextPagebtn-show = document.getElementById('nextPagebtn-show');
         
-        if (prevPageBtn) {
-            prevPageBtn.addEventListener('click', function() {
+        if (prevPagebtn-show) {
+            prevPagebtn-show.addEventListener('click', function() {
                 if (currentPage > 1) {
                     currentPage--;
                     displayArticlesForPage(currentPage);
                     updatePagination();
                     
                     // Scroll back to top of feed preview
-                    const feedPreview = document.querySelector('.feed-preview');
+                    const feedPreview = document.querySelector('.feed-preview-show');
                     if (feedPreview) {
                         feedPreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
@@ -716,15 +716,15 @@
             });
         }
         
-        if (nextPageBtn) {
-            nextPageBtn.addEventListener('click', function() {
+        if (nextPagebtn-show) {
+            nextPagebtn-show.addEventListener('click', function() {
                 if (currentPage < totalPages) {
                     currentPage++;
                     displayArticlesForPage(currentPage);
                     updatePagination();
                     
                     // Scroll back to top of feed preview
-                    const feedPreview = document.querySelector('.feed-preview');
+                    const feedPreview = document.querySelector('.feed-preview-show');
                     if (feedPreview) {
                         feedPreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }

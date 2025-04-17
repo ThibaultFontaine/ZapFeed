@@ -32,11 +32,11 @@
                             <a href="{{ path('app_user_feed_show', {'id': userFeed.feed.id}) }}" class="text-decoration-none text-dark sb-text sb-feed-title">
                                 {{ userFeed.title|length > 20 ? userFeed.title|slice(0, 20) ~ '...' : userFeed.title }}
                             </a>
-                            <div class="ms-auto sb-feed-actions">
+                            {# <div class="ms-auto sb-feed-actions">
                                 <button class="btn btn-sm text-muted sb-action-btn p-1" title="Marquer tous comme lus">
                                     <i class="bi bi-check-all"></i>
                                 </button>
-                            </div>
+                            </div> #}
                         </div>
                     {% endfor %}
                 {% else %}
