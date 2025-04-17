@@ -228,30 +228,30 @@
             const sidebar = document.getElementById("mySidebar");
             let isCollapsed = false;
 
-            document.querySelector('.sb-sidebar').addEventListener('dblclick', function(e) {
-                // Éviter que le double-clic sur un lien déclenche la réduction
-                if (e.target.tagName.toLowerCase() === 'a') return;
+            // document.querySelector('.sb-sidebar').addEventListener('dblclick', function(e) {
+            //     // Éviter que le double-clic sur un lien déclenche la réduction
+            //     if (e.target.tagName.toLowerCase() === 'a') return;
 
-                if (isCollapsed) {
-                    sidebar.style.width = "250px";
-                    document.querySelectorAll(".sb-text").forEach(item => {
-                        item.style.display = "inline";
-                    });
-                    document.querySelectorAll(".sb-feed-actions").forEach(item => {
-                        item.style.display = "flex";
-                    });
-                    isCollapsed = false;
-                } else {
-                    sidebar.style.width = "80px";
-                    document.querySelectorAll(".sb-text").forEach(item => {
-                        item.style.display = "none";
-                    });
-                    document.querySelectorAll(".sb-feed-actions").forEach(item => {
-                        item.style.display = "none";
-                    });
-                    isCollapsed = true;
-                }
-            });
+            //     if (isCollapsed) {
+            //         sidebar.style.width = "250px";
+            //         document.querySelectorAll(".sb-text").forEach(item => {
+            //             item.style.display = "inline";
+            //         });
+            //         document.querySelectorAll(".sb-feed-actions").forEach(item => {
+            //             item.style.display = "flex";
+            //         });
+            //         isCollapsed = false;
+            //     } else {
+            //         sidebar.style.width = "80px";
+            //         document.querySelectorAll(".sb-text").forEach(item => {
+            //             item.style.display = "none";
+            //         });
+            //         document.querySelectorAll(".sb-feed-actions").forEach(item => {
+            //             item.style.display = "none";
+            //         });
+            //         isCollapsed = true;
+            //     }
+            // });
 
             // Actualisation de tous les flux
             const refreshAllBtn = document.getElementById('refreshAllFeeds');
