@@ -77,22 +77,16 @@ final class UserFeedController extends AbstractController
                 dump($pie->get_title());
                 dump($pie->get_description());
 
-                foreach ($pie->get_items() as $_item) {
+                foreach ($pie->get_items() as $key => $_item) {
+                    if ($key === 201) {
+                        break;
+                    }
                     $item = new Item();
                     $item->setFeed($feed);
                     $item->setTitle($_item->get_title());
                     $item->setUrl($_item->get_link());
                     $item->setDescription($_item->get_description());
-                    /* if ($_item->get_thumbnail()) {
-                        $item->setMediaLink($_item->get_thumbnail()->get_link());
-                    } elseif ($_item->get_enclosure()) {
-                        $item->setMediaLink($_item->get_enclosure()->get_link());
-                    } else {
-                        $item->setMediaLink(null);
-                    } */
 
-
-                    // Persist the feed item
                     $this->entityManager->persist($item);
                     $this->entityManager->flush();
 
