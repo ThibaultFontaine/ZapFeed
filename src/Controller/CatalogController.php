@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Feed;
+use App\Entity\UserFeed;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,8 +21,7 @@ class CatalogController extends AbstractController
     {
         return $this->render('catalog.html.twig', [
             'feeds' => $this->entityManager->getRepository(Feed::class)->findAll(),
-            'currentPage' => 1,
-            'totalPages' => 10,
+            'user_feeds' => $this->entityManager->getRepository(UserFeed::class)->findBy(['user' => $this->getUser()]),
         ]);
     }
 }
