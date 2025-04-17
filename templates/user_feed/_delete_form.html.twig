@@ -1,11 +1,13 @@
-<form method="post" action="{{ path('app_user_feed_delete', {'id': user_feed.feed.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+<form method="post" action="{{ path('app_user_feed_delete', {'id': user_feed.feed.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" class="delete-form">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user_feed.feed.id) }}">
     <button class="btn_delete"><span class="btn_delete_text">Supprimer</span></button>
 </form>
 
 <style>
 /* Style pour le bouton de suppression */
-form[action*="delete"] .btn_delete {
+.btn_delete, 
+form[action*="delete"] .btn_delete,
+.delete-form .btn_delete {
   position: relative;
   background: linear-gradient(to right, #ff3c5f, #ff386a);
   color: white;
@@ -22,13 +24,17 @@ form[action*="delete"] .btn_delete {
 }
 
 /* Conteneur du texte pour l'animation de chute */
-form[action*="delete"] .btn_delete_text {
+.btn_delete_text,
+form[action*="delete"] .btn_delete_text,
+.delete-form .btn_delete_text {
   display: inline-block;
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Pseudo-élément pour l'icône corbeille */
-form[action*="delete"] .btn_delete::before {
+.btn_delete::before,
+form[action*="delete"] .btn_delete::before,
+.delete-form .btn_delete::before {
   content: "";
   position: absolute;
   left: 15px;
@@ -43,7 +49,9 @@ form[action*="delete"] .btn_delete::before {
 }
 
 /* Pseudo-élément pour le couvercle */
-form[action*="delete"] .btn_delete::after {
+.btn_delete::after,
+form[action*="delete"] .btn_delete::after,
+.delete-form .btn_delete::after {
   content: "";
   position: absolute;
   left: 15px;
@@ -59,7 +67,9 @@ form[action*="delete"] .btn_delete::after {
 }
 
 /* Animation au survol */
-form[action*="delete"] .btn_delete:hover {
+.btn_delete:hover,
+form[action*="delete"] .btn_delete:hover,
+.delete-form .btn_delete:hover {
   transform: perspective(400px) rotateX(10deg) translateZ(5px) translateY(-3px);
   box-shadow: 0 12px 25px rgba(255, 60, 95, 0.5), 0 6px 10px rgba(0, 0, 0, 0.1);
   padding-left: 54px;
@@ -67,20 +77,26 @@ form[action*="delete"] .btn_delete:hover {
 }
 
 /* Animation de la corbeille au survol */
-form[action*="delete"] .btn_delete:hover::before {
+.btn_delete:hover::before,
+form[action*="delete"] .btn_delete:hover::before,
+.delete-form .btn_delete:hover::before {
   transform: translateY(-25%) scale(1.2);
   animation: delete_trash_shake 0.5s ease-in-out;
 }
 
 /* Animation du couvercle au survol */
-form[action*="delete"] .btn_delete:hover::after {
+.btn_delete:hover::after,
+form[action*="delete"] .btn_delete:hover::after,
+.delete-form .btn_delete:hover::after {
   opacity: 1;
   transform: translateY(-200%) rotateZ(-15deg);
   animation: delete_lid_open 0.8s ease-out;
 }
 
 /* Animation du texte au survol */
-form[action*="delete"] .btn_delete:hover .btn_delete_text {
+.btn_delete:hover .btn_delete_text,
+form[action*="delete"] .btn_delete:hover .btn_delete_text,
+.delete-form .btn_delete:hover .btn_delete_text {
   transform: translateY(50px) scale(0.8);
   opacity: 0;
   animation: delete_text_fall 0.6s forwards;
@@ -113,19 +129,25 @@ form[action*="delete"] .btn_delete:hover .btn_delete_text {
 }
 
 /* Effet de pression au clic */
-form[action*="delete"] .btn_delete:active {
+.btn_delete:active,
+form[action*="delete"] .btn_delete:active,
+.delete-form .btn_delete:active {
   transform: perspective(400px) rotateX(5deg) translateZ(3px) translateY(-1px);
   box-shadow: 0 4px 8px rgba(255, 60, 95, 0.2);
   background: linear-gradient(to right, #ff1c46, #ff1c55);
 }
 
 /* Pour ajouter une lueur au survol */
-form[action*="delete"] .btn_delete:hover::before {
+.btn_delete:hover::before,
+form[action*="delete"] .btn_delete:hover::before,
+.delete-form .btn_delete:hover::before {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
 /* Ombre subtile sous le bouton pour renforcer l'effet 3D */
-form[action*="delete"] .btn_delete::before {
+.btn_delete::before,
+form[action*="delete"] .btn_delete::before,
+.delete-form .btn_delete::before {
   filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.1));
 }
 </style>
