@@ -236,7 +236,20 @@
 
 {% block body %}
 <div class="user-item-container">
-    <h1 class="page-title">{{ item.title }}</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 class="page-title">{{ item.title }}</h1>
+
+        {# read status #}
+        <div class="status-badge {{ user_item.hasBeenRead ? 'yes' : 'no' }}">
+            {{ user_item.hasBeenRead ? 'Lu' : 'Non lu' }}
+
+        </div>
+
+        {# like status #}
+        <div class="status-badge {{ user_item.hasBeenLiked ? 'yes' : 'no' }}">
+            {{ user_item.hasBeenLiked ? 'Aimé' : 'Non aimé' }}
+        </div>
+    </div>
 
     <div class="pagination my-4 d-flex justify-content-between">
         {% if not prev.isDisabled %}
@@ -254,14 +267,6 @@
 
     <table class="content-table">
         <tbody>
-            <tr>
-                <th>Statut de lecture</th>
-                <td>
-                    <span class="status-badge {{ user_item.hasBeenRead ? 'yes' : 'no' }}">
-                        {{ user_item.hasBeenRead ? 'Lu' : 'Non lu' }}
-                    </span>
-                </td>
-            </tr>
             <tr>
                 <th>Appréciation</th>
                 <td>
@@ -281,10 +286,6 @@
                         {{ user_item.hasBeenLiked ? 'Liked' : 'Like' }}
                     </button>
                 </td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td><h3 style="margin:0; color:#333;">{{ item.title }}</h3></td>
             </tr>
             <tr>
                 <th>Lien source</th>
