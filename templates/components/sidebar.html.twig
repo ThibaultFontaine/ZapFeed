@@ -1,14 +1,14 @@
-<aside id="mySidebar" class="sidebar shadow-lg" style="width: 250px; transition: all 0.3s ease; background: linear-gradient(180deg, #f8f9fa 0%, #eeeeee 100%);">
-    <div class="sidebar-content p-3">
+<aside id="mySidebar" class="sb-sidebar shadow-lg" style="width: 250px; transition: all 0.3s ease; background: linear-gradient(180deg, #f8f9fa 0%, #eeeeee 100%);">
+    <div class="sb-content p-3">
         <!-- Catalogue Section -->
-        <div class="menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
-            <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
+        <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
+            <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
                  style="width: 40px; height: 40px; background: linear-gradient(135deg, #5e2ca5, #7953d2); color: white;">
                 <i class="bi bi-lightning-fill fs-5"></i>
             </div>
-            <a href="{{ path('app_catalog') }}" class="text-decoration-none fw-bold text-dark sidebar-text position-relative">
+            <a href="{{ path('app_catalog') }}" class="text-decoration-none fw-bold text-dark sb-text position-relative">
                 Catalogue
-                <span class="menu-highlight"></span>
+                <span class="sb-highlight"></span>
             </a>
         </div>
 
@@ -19,21 +19,21 @@
             <i class="bi bi-collection me-2 text-primary"></i> Mes flux
         </h5>
 
-        <div class="feeds-container">
+        <div class="sb-feeds-list">
             {% if app.user %}
                 {% if app.user.userFeeds is defined and app.user.userFeeds|length > 0 %}
                     {% for userFeed in app.user.userFeeds %}
-                        <div class="menu-item d-flex align-items-center p-2 rounded mb-2" data-tilt
+                        <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2" data-tilt
                              data-feed-id="{{ userFeed.feed.id }}">
-                            <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
+                            <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
                                  style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
                                 <i class="bi bi-folder fs-5"></i>
                             </div>
-                            <a href="{{ path('app_user_feed_show', {'id': userFeed.feed.id}) }}" class="text-decoration-none text-dark sidebar-text feed-title">
+                            <a href="{{ path('app_user_feed_show', {'id': userFeed.feed.id}) }}" class="text-decoration-none text-dark sb-text sb-feed-title">
                                 {{ userFeed.title|length > 20 ? userFeed.title|slice(0, 20) ~ '...' : userFeed.title }}
                             </a>
-                            <div class="ms-auto feed-actions">
-                                <button class="btn btn-sm text-muted feed-action-btn p-1" title="Marquer tous comme lus">
+                            <div class="ms-auto sb-feed-actions">
+                                <button class="btn btn-sm text-muted sb-action-btn p-1" title="Marquer tous comme lus">
                                     <i class="bi bi-check-all"></i>
                                 </button>
                             </div>
@@ -59,7 +59,7 @@
 
         {% if app.user %}
             <div class="mt-4 text-center">
-                <button onclick="location.href='{{ path('app_user_feed_new') }}'" class="btn btn-sm w-100 add-feed-btn" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border: none; border-radius: 25px; padding: 8px 15px;">
+                <button onclick="location.href='{{ path('app_user_feed_new') }}'" class="btn btn-sm w-100 sb-add-btn" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border: none; border-radius: 25px; padding: 8px 15px;">
                     <i class="bi bi-plus-circle-fill me-1"></i> Ajouter un flux
                 </button>
             </div>
@@ -69,23 +69,23 @@
             <hr class="border-dark opacity-25 w-100 my-3"/>
 
             <!-- Feed management options -->
-            <div class="feed-management">
-                <div class="menu-item d-flex align-items-center p-2 rounded mb-2">
-                    <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
+            <div class="sb-feed-mgmt">
+                <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2">
+                    <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
                          style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
                         <i class="bi bi-gear fs-5"></i>
                     </div>
-                    <a href="{{ path('app_user_feed_index') }}" class="text-decoration-none text-dark sidebar-text">
+                    <a href="{{ path('app_user_feed_index') }}" class="text-decoration-none text-dark sb-text">
                         Gérer mes flux
                     </a>
                 </div>
 
-                <div class="menu-item d-flex align-items-center p-2 rounded mb-2">
-                    <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
+                <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2">
+                    <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle"
                          style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
                         <i class="bi bi-arrow-repeat fs-5"></i>
                     </div>
-                    <a href="#" class="text-decoration-none text-dark sidebar-text" id="refreshAllFeeds">
+                    <a href="#" class="text-decoration-none text-dark sb-text" id="refreshAllFeeds">
                         Actualiser tous
                     </a>
                 </div>
@@ -95,14 +95,14 @@
         <hr class="border-dark opacity-25 w-100 my-3"/>
 
         <!-- My Likes Section -->
-        <div class="menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
-            <div class="icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
+        <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
+            <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
                  style="width: 40px; height: 40px; background: linear-gradient(135deg, #5e2ca5, #7953d2); color: white;">
                 <i class="bi bi-heart-fill"></i>
             </div>
-            <a href="{{ path('app_user_item_liked') }}" class="text-decoration-none fw-bold text-dark sidebar-text position-relative">
+            <a href="{{ path('app_user_item_liked') }}" class="text-decoration-none fw-bold text-dark sb-text position-relative">
                 Mes flux aimés
-                <span class="menu-highlight"></span>
+                <span class="sb-highlight"></span>
             </a>
         </div>
     </div>
@@ -110,36 +110,36 @@
     <style>
         @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
-        .sidebar {
+        .sb-sidebar {
             height: 100vh;
             border-right: 1px solid rgba(0,0,0,0.1);
             overflow-y: auto;
         }
 
-        .menu-item {
+        .sb-menu-item {
             transition: all 0.2s ease;
             cursor: pointer;
         }
 
-        .menu-item:hover {
+        .sb-menu-item:hover {
             background-color: rgba(94, 44, 165, 0.05);
             transform: translateY(-2px);
         }
 
-        .feed-actions {
+        .sb-feed-actions {
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
-        .menu-item:hover .feed-actions {
+        .sb-menu-item:hover .sb-feed-actions {
             opacity: 1;
         }
 
-        .feed-action-btn:hover {
+        .sb-action-btn:hover {
             color: #5e2ca5 !important;
         }
 
-        .menu-highlight {
+        .sb-highlight {
             position: absolute;
             bottom: -2px;
             left: 0;
@@ -149,42 +149,42 @@
             transition: width 0.3s ease;
         }
 
-        .menu-item:hover .menu-highlight {
+        .sb-menu-item:hover .sb-highlight {
             width: 100%;
         }
 
-        .sidebar-content {
+        .sb-content {
             padding-bottom: 50px;
         }
 
-        .add-feed-btn {
+        .sb-add-btn {
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(94, 44, 165, 0.2);
         }
 
-        .add-feed-btn:hover {
+        .sb-add-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(94, 44, 165, 0.3);
         }
 
-        .icon-container {
+        .sb-icon-container {
             transition: all 0.3s ease;
         }
 
-        .menu-item:hover .icon-container {
+        .sb-menu-item:hover .sb-icon-container {
             transform: scale(1.1);
         }
 
         /* Scrollbar styling */
-        .sidebar::-webkit-scrollbar {
+        .sb-sidebar::-webkit-scrollbar {
             width: 5px;
         }
 
-        .sidebar::-webkit-scrollbar-track {
+        .sb-sidebar::-webkit-scrollbar-track {
             background: rgba(0,0,0,0.05);
         }
 
-        .sidebar::-webkit-scrollbar-thumb {
+        .sb-sidebar::-webkit-scrollbar-thumb {
             background: rgba(94, 44, 165, 0.3);
             border-radius: 10px;
         }
@@ -192,7 +192,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const menuItems = document.querySelectorAll('.menu-item[data-tilt]');
+            const menuItems = document.querySelectorAll('.sb-menu-item[data-tilt]');
 
             menuItems.forEach(item => {
                 item.addEventListener('mousemove', function(e) {
@@ -208,7 +208,7 @@
 
                     this.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
 
-                    const iconContainer = this.querySelector('.icon-container');
+                    const iconContainer = this.querySelector('.sb-icon-container');
                     if (iconContainer) {
                         iconContainer.style.transform = `translateZ(20px) scale(1.1)`;
                     }
@@ -217,7 +217,7 @@
                 item.addEventListener('mouseleave', function() {
                     this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
 
-                    const iconContainer = this.querySelector('.icon-container');
+                    const iconContainer = this.querySelector('.sb-icon-container');
                     if (iconContainer) {
                         iconContainer.style.transform = 'translateZ(0) scale(1)';
                     }
@@ -228,25 +228,25 @@
             const sidebar = document.getElementById("mySidebar");
             let isCollapsed = false;
 
-            document.querySelector('.sidebar').addEventListener('dblclick', function(e) {
+            document.querySelector('.sb-sidebar').addEventListener('dblclick', function(e) {
                 // Éviter que le double-clic sur un lien déclenche la réduction
                 if (e.target.tagName.toLowerCase() === 'a') return;
 
                 if (isCollapsed) {
                     sidebar.style.width = "250px";
-                    document.querySelectorAll(".sidebar-text").forEach(item => {
+                    document.querySelectorAll(".sb-text").forEach(item => {
                         item.style.display = "inline";
                     });
-                    document.querySelectorAll(".feed-actions").forEach(item => {
+                    document.querySelectorAll(".sb-feed-actions").forEach(item => {
                         item.style.display = "flex";
                     });
                     isCollapsed = false;
                 } else {
                     sidebar.style.width = "80px";
-                    document.querySelectorAll(".sidebar-text").forEach(item => {
+                    document.querySelectorAll(".sb-text").forEach(item => {
                         item.style.display = "none";
                     });
-                    document.querySelectorAll(".feed-actions").forEach(item => {
+                    document.querySelectorAll(".sb-feed-actions").forEach(item => {
                         item.style.display = "none";
                     });
                     isCollapsed = true;
@@ -262,7 +262,7 @@
                     // Animation sur le bouton
                     const icon = this.querySelector('i');
                     if (icon) {
-                        icon.classList.add('spin-animation');
+                        icon.classList.add('sb-spin-animation');
 
                         // Actualiser l'icône après un moment pour montrer que c'est en cours
                         setTimeout(() => {
@@ -276,7 +276,7 @@
             // Fonction pour afficher une notification
             function showNotification(message, type = 'info') {
                 const notifContainer = document.createElement('div');
-                notifContainer.className = `alert alert-${type} notification-popup`;
+                notifContainer.className = `alert alert-${type} sb-notification-popup`;
                 notifContainer.innerHTML = message;
                 document.body.appendChild(notifContainer);
 
@@ -295,7 +295,7 @@
             // Style pour la notification
             const style = document.createElement('style');
             style.textContent = `
-                .notification-popup {
+                .sb-notification-popup {
                     position: fixed;
                     top: 20px;
                     right: 20px;
@@ -308,16 +308,16 @@
                     transition: all 0.3s ease;
                 }
 
-                .notification-popup.show {
+                .sb-notification-popup.show {
                     transform: translateY(0);
                     opacity: 1;
                 }
 
-                .spin-animation {
-                    animation: spin 1s infinite linear;
+                .sb-spin-animation {
+                    animation: sb-spin 1s infinite linear;
                 }
 
-                @keyframes spin {
+                @keyframes sb-spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                 }
@@ -325,11 +325,11 @@
             document.head.appendChild(style);
 
             // Actions sur les flux individuels
-            document.querySelectorAll('.feed-action-btn').forEach(btn => {
+            document.querySelectorAll('.sb-action-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
 
-                    const feedItem = this.closest('.menu-item');
+                    const feedItem = this.closest('.sb-menu-item');
                     const feedId = feedItem?.dataset.feedId;
 
                     if (!feedId) return;
