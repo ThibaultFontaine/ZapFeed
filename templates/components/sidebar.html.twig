@@ -99,9 +99,11 @@
                          style="width: 40px; height: 40px; background: rgba(94, 44, 165, 0.1); color: #5e2ca5;">
                         <i class="bi bi-arrow-repeat fs-5"></i>
                     </div>
-                    <a href="#" class="text-decoration-none text-dark sb-text" id="refreshAllFeeds">
-                        Actualiser tous
-                    </a>
+                    <form action="{{ path('app_refresh_feeds') }}" method="post" id="refreshForm" class="m-0 w-100">
+                        <button type="submit" class="btn p-0 border-0 text-start w-100 bg-transparent text-decoration-none text-dark sb-text">
+                            Actualiser tous
+                        </button>
+                    </form>
                 </div>
             </div>
         {% endif %}
@@ -254,93 +256,97 @@
             // });
 
             // Actualisation de tous les flux
-            const refreshAllBtn = document.getElementById('refreshAllFeeds');
-            if (refreshAllBtn) {
-                refreshAllBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
+            // const refreshAllBtn = document.getElementById('refreshAllFeeds');
+            // if (refreshAllBtn) {
+            //     refreshAllBtn.addEventListener('click', function(e) {
+            //         // On n'annule pas la propagation pour permettre au formulaire de se soumettre
+            //         // e.preventDefault();
 
-                    // Animation sur le bouton
-                    const icon = this.querySelector('i');
-                    if (icon) {
-                        icon.classList.add('sb-spin-animation');
+            //         // Animation sur le bouton
+            //         const icon = document.querySelector('.sb-icon-container i'); // Sélectionner l'icône
+            //         if (icon) {
+            //             icon.classList.add('sb-spin-animation');
 
-                        // Actualiser l'icône après un moment pour montrer que c'est en cours
-                        setTimeout(() => {
-                            icon.classList.remove('bi-arrow-repeat');
-                            icon.classList.add('bi-hourglass-split');
-                        }, 200);
-                    }
-                });
-            }
+            //             // Actualiser l'icône après un moment pour montrer que c'est en cours
+            //             setTimeout(() => {
+            //                 icon.classList.remove('bi-arrow-repeat');
+            //                 icon.classList.add('bi-hourglass-split');
+            //             }, 100);
+            //         }
+                    
+            //         // On laisse le formulaire se soumettre normalement
+            //         // document.getElementById('refreshForm').submit();
+            //     });
+            // }
 
             // Fonction pour afficher une notification
-            function showNotification(message, type = 'info') {
-                const notifContainer = document.createElement('div');
-                notifContainer.className = `alert alert-${type} sb-notification-popup`;
-                notifContainer.innerHTML = message;
-                document.body.appendChild(notifContainer);
+            // function showNotification(message, type = 'info') {
+            //     const notifContainer = document.createElement('div');
+            //     notifContainer.className = `alert alert-${type} sb-notification-popup`;
+            //     notifContainer.innerHTML = message;
+            //     document.body.appendChild(notifContainer);
 
-                setTimeout(() => {
-                    notifContainer.classList.add('show');
-                }, 100);
+            //     setTimeout(() => {
+            //         notifContainer.classList.add('show');
+            //     }, 100);
 
-                setTimeout(() => {
-                    notifContainer.classList.remove('show');
-                    setTimeout(() => {
-                        notifContainer.remove();
-                    }, 300);
-                }, 3000);
-            }
+            //     setTimeout(() => {
+            //         notifContainer.classList.remove('show');
+            //         setTimeout(() => {
+            //             notifContainer.remove();
+            //         }, 300);
+            //     }, 3000);
+            // }
 
             // Style pour la notification
-            const style = document.createElement('style');
-            style.textContent = `
-                .sb-notification-popup {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    border-radius: 10px;
-                    padding: 15px 25px;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                    transform: translateY(-20px);
-                    opacity: 0;
-                    transition: all 0.3s ease;
-                }
+            // const style = document.createElement('style');
+            // style.textContent = `
+            //     .sb-notification-popup {
+            //         position: fixed;
+            //         top: 20px;
+            //         right: 20px;
+            //         z-index: 9999;
+            //         border-radius: 10px;
+            //         padding: 15px 25px;
+            //         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            //         transform: translateY(-20px);
+            //         opacity: 0;
+            //         transition: all 0.3s ease;
+            //     }
 
-                .sb-notification-popup.show {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
+            //     .sb-notification-popup.show {
+            //         transform: translateY(0);
+            //         opacity: 1;
+            //     }
 
-                .sb-spin-animation {
-                    animation: sb-spin 1s infinite linear;
-                }
+            //     .sb-spin-animation {
+            //         animation: sb-spin 1s infinite linear;
+            //     }
 
-                @keyframes sb-spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `;
-            document.head.appendChild(style);
+            //     @keyframes sb-spin {
+            //         0% { transform: rotate(0deg); }
+            //         100% { transform: rotate(360deg); }
+            //     }
+            // `;
+            // document.head.appendChild(style);
 
-            // Actions sur les flux individuels
-            document.querySelectorAll('.sb-action-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
+            // // Actions sur les flux individuels
+            // document.querySelectorAll('.sb-action-btn').forEach(btn => {
+            //     btn.addEventListener('click', function(e) {
+            //         e.stopPropagation();
 
-                    const feedItem = this.closest('.sb-menu-item');
-                    const feedId = feedItem?.dataset.feedId;
+            //         const feedItem = this.closest('.sb-menu-item');
+            //         const feedId = feedItem?.dataset.feedId;
 
-                    if (!feedId) return;
+            //         if (!feedId) return;
 
-                    // Marquer comme lu
-                    if (this.title === "Marquer tous comme lus") {
-                        // Icône animation
-                        this.innerHTML = '<i class="bi bi-hourglass-split"></i>';
-                    }
-                });
-            });
+            //         // Marquer comme lu
+            //         if (this.title === "Marquer tous comme lus") {
+            //             // Icône animation
+            //             this.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+            //         }
+            //     });
+            // });
         });
     </script>
 </aside>
