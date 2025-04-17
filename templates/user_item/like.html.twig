@@ -2,40 +2,320 @@
 
 {% block title %}Mes articles likés{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Style général de la page */
+    .liked-articles-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px;
+        background: linear-gradient(145deg, #f9f9f9, #ffffff);
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Backgrounds décoratifs */
+    .liked-articles-container::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255,82,82,0.1) 0%, rgba(255,82,82,0) 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+    
+    .liked-articles-container::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        left: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255,82,82,0.1) 0%, rgba(255,82,82,0) 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+    
+    /* Titre avec effet pulsatile */
+    .page-title {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+        font-weight: 700;
+        text-align: center;
+    }
+    
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #ff5252, #ff7b7b);
+        border-radius: 2px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 82, 82, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); }
+    }
+    
+    /* Message d'alerte personnalisé */
+    .empty-alert {
+        background-color: rgba(255, 82, 82, 0.1);
+        border-left: 4px solid #ff5252;
+        padding: 20px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        color: #555;
+        margin: 40px 0;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .empty-alert::before {
+        content: '💔';
+        font-size: 2rem;
+        margin-right: 15px;
+    }
+    
+    /* Tableau amélioré */
+    .liked-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 25px 0;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .liked-table thead {
+        background: linear-gradient(to right, #ff5252, #ff7b7b);
+    }
+    
+    .liked-table th {
+        color: white;
+        padding: 16px 20px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    .liked-table tbody tr {
+        background-color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .liked-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+    .liked-table tbody tr:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        position: relative;
+    }
+    
+    .liked-table td {
+        padding: 16px 20px;
+        color: #444;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* Cellule de titre stylisée */
+    .article-title {
+        font-weight: 600;
+        color: #333;
+        position: relative;
+        display: inline-block;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .article-title::after {
+        content: '❤️';
+        font-size: 0.9rem;
+        position: absolute;
+        right: -20px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    tr:hover .article-title::after {
+        opacity: 1;
+        right: -25px;
+    }
+    
+    /* Liens URL stylisés */
+    .article-url {
+        color: #ff5252;
+        text-decoration: none;
+        position: relative;
+        display: inline-block;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-left: 25px;
+        transition: all 0.2s ease;
+    }
+    
+    .article-url::before {
+        content: '🔗';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+    }
+    
+    .article-url:hover {
+        color: #ff7b7b;
+        text-decoration: underline;
+    }
+    
+    /* Bouton Voir avec animation spectaculaire */
+    .view-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 22px 10px 45px;
+        background: white;
+        color: #ff5252;
+        border: 2px solid #ff5252;
+        border-radius: 50px;
+        font-weight: 600;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-decoration: none;
+        box-shadow: 0 5px 15px rgba(255, 82, 82, 0.15);
+        z-index: 1;
+    }
+    
+    /* L'incroyable animation du cœur sur le bouton Voir */
+    .view-button::before {
+        content: '❤️';
+        position: absolute;
+        left: 18px;
+        font-size: 1.2rem;
+        transform: scale(1);
+        transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    }
+    
+    .view-button:hover {
+        background: linear-gradient(45deg, #ff5252, #ff7b7b);
+        color: white;
+        transform: translateY(-3px);
+        padding-left: 25px;
+        box-shadow: 0 10px 25px rgba(255, 82, 82, 0.3);
+    }
+    
+    /* Animation spectaculaire du cœur au survol */
+    .view-button:hover::before {
+        transform: scale(15);
+        opacity: 0;
+        left: 50%;
+        top: 50%;
+        transition: all 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    }
+    
+    .view-button::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: -1;
+    }
+    
+    .view-button:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+    
+    /* Animation des particules de cœur sur le bouton */
+    @keyframes particleAnimation {
+        0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(var(--tx), var(--ty)) scale(0);
+            opacity: 0;
+        }
+    }
+    
+    .heart-particle {
+        position: absolute;
+        font-size: 0.8rem;
+        pointer-events: none;
+        animation: particleAnimation 0.8s forwards;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
-    <h1>Mes articles ❤️ likés</h1>
+<div class="liked-articles-container">
+    <h1 class="page-title">Mes articles ❤️ likés</h1>
 
     {% if user_items is empty %}
-        <div class="alert alert-info">
+        <div class="empty-alert">
             Vous n'avez pas encore liké d'article.
         </div>
     {% else %}
-        <table class="table table-striped">
+        <table class="liked-table">
             <thead>
                 <tr>
                     <th>Titre</th>
                     <th>URL</th>
-                    {# <th>Feed</th> #}
-                    {# <th>Créé le</th> #}
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user_item in user_items %}
                     <tr>
-                        <td>{{ user_item.item.title }}</td>
                         <td>
-                            <a href="{{ user_item.item.url }}" target="_blank">
+                            <span class="article-title">{{ user_item.item.title }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ user_item.item.url }}" class="article-url" target="_blank">
                                 {{ user_item.item.url }}
                             </a>
                         </td>
-                        {# <td>{{ user_item.item.feed.title }}</td> #}
-                        {# <td>{{ user_item.createdAt|date('Y-m-d H:i') }}</td> #}
                         <td>
                             <a href="{{ path('app_user_item_show', {
                                 feedId: user_item.item.feed.id,
                                 itemId: user_item.item.id
-                            }) }}" class="btn btn-sm btn-outline-primary">
+                            }) }}" class="view-button">
                                 Voir
                             </a>
                         </td>
@@ -44,4 +324,67 @@
             </tbody>
         </table>
     {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation spectaculaire des particules de cœur sur les boutons
+        const viewButtons = document.querySelectorAll('.view-button');
+        
+        viewButtons.forEach(button => {
+            button.addEventListener('mouseenter', function(e) {
+                // Créer une explosion de petits cœurs
+                for (let i = 0; i < 15; i++) {
+                    createHeartParticle(e, this);
+                }
+                
+                // Effet de vibration subtil
+                let count = 0;
+                const interval = setInterval(() => {
+                    const x = Math.random() * 2 - 1;
+                    const y = Math.random() * 2 - 1;
+                    button.style.transform = `translateY(-3px) translate(${x}px, ${y}px)`;
+                    count++;
+                    if (count > 10) {
+                        clearInterval(interval);
+                        button.style.transform = 'translateY(-3px)';
+                    }
+                }, 30);
+            });
+        });
+        
+        function createHeartParticle(e, parent) {
+            const particle = document.createElement('span');
+            particle.innerHTML = ["❤️", "💕", "💖", "💗", "💓"][Math.floor(Math.random() * 5)];
+            particle.classList.add('heart-particle');
+            
+            // Position de départ: emplacement du cœur dans le bouton
+            const rect = parent.getBoundingClientRect();
+            const x = 20 - (rect.left - e.clientX);
+            const y = rect.height / 2 - (rect.top - e.clientY);
+            
+            // Position et paramètres aléatoires pour chaque particule
+            const tx = (Math.random() - 0.5) * 200;
+            const ty = (Math.random() - 0.5) * 200;
+            
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.setProperty('--tx', `${tx}px`);
+            particle.style.setProperty('--ty', `${ty}px`);
+            
+            // Délai aléatoire pour l'animation
+            particle.style.animationDelay = `${Math.random() * 0.2}s`;
+            
+            parent.appendChild(particle);
+            
+            // Nettoyage après animation
+            setTimeout(() => {
+                particle.remove();
+            }, 1000);
+        }
+    });
+</script>
 {% endblock %}
