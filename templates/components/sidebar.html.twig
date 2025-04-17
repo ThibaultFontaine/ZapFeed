@@ -12,6 +12,20 @@
             </a>
         </div>
 
+        {# <hr class="border-dark opacity-25 w-100 my-3"/> #}
+
+        <!-- My Likes Section -->
+        <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
+            <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
+                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #5e2ca5, #7953d2); color: white;">
+                <i class="bi bi-heart-fill"></i>
+            </div>
+            <a href="{{ path('app_user_item_liked') }}" class="text-decoration-none fw-bold text-dark sb-text position-relative">
+                Mes flux aimés
+                <span class="sb-highlight"></span>
+            </a>
+        </div>
+
         <hr class="border-dark opacity-25 w-100 my-3"/>
 
         <!-- My Feeds Section -->
@@ -91,20 +105,6 @@
                 </div>
             </div>
         {% endif %}
-
-        <hr class="border-dark opacity-25 w-100 my-3"/>
-
-        <!-- My Likes Section -->
-        <div class="sb-menu-item d-flex align-items-center p-2 rounded mb-2 position-relative overflow-hidden" data-tilt>
-            <div class="sb-icon-container me-3 d-flex align-items-center justify-content-center rounded-circle" 
-                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #5e2ca5, #7953d2); color: white;">
-                <i class="bi bi-heart-fill"></i>
-            </div>
-            <a href="{{ path('app_user_item_liked') }}" class="text-decoration-none fw-bold text-dark sb-text position-relative">
-                Mes flux aimés
-                <span class="sb-highlight"></span>
-            </a>
-        </div>
     </div>
 
     <style>
