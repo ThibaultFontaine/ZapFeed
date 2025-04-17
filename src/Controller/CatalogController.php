@@ -19,7 +19,7 @@ class CatalogController extends AbstractController
     #[Route(name: 'app_catalog', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('catalog.html.twig', [
+        return $this->render('catalog/index.html.twig', [
             'feeds' => $this->entityManager->getRepository(Feed::class)->findAll(),
             'user_feeds' => $this->entityManager->getRepository(UserFeed::class)->findBy(['user' => $this->getUser()]),
         ]);
