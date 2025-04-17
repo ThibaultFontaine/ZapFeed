@@ -124,6 +124,12 @@ class HomeController extends AbstractController
 
         $this->entityManager->flush();
 
+        // // Add flash message for JavaScript to display
+        // $this->addFlash('refresh-result', json_encode([
+        //     'count' => $newItemsCount,
+        //     'timestamp' => (new \DateTime())->format('H:i:s')
+        // ]));
+
         // Get the referer URL (the page that made the request)
         $referer = $request->headers->get('referer');
 

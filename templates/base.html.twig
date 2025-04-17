@@ -6,6 +6,7 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         <link rel="icon" href={{ asset("favicon/favicon.ico") }} />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
         {% block stylesheets %}{% endblock %}
 
@@ -25,5 +26,41 @@
         </div>
 
         {% include 'components/footer.html.twig'%}
+        {% include 'components/notifications.html.twig'%}
+        
+        // <script>
+        //     // Check for flash messages and display them as notifications
+        //     document.addEventListener('DOMContentLoaded', function() {
+        //         {% for label, messages in app.flashes %}
+        //             {% for message in messages %}
+        //                 {% if label == 'refresh-result' %}
+        //                     try {
+        //                         const data = JSON.parse('{{ message|raw }}');
+        //                         const count = data.count;
+        //                         const timestamp = data.timestamp;
+                                
+        //                         if (count > 0) {
+        //                             showNotification(
+        //                                 'Actualisation terminée', 
+        //                                 `${count} nouveau(x) article(s) trouvé(s) à ${timestamp}`,
+        //                                 'success'
+        //                             );
+        //                         } else {
+        //                             showNotification(
+        //                                 'Actualisation terminée', 
+        //                                 `Aucun nouvel article trouvé à ${timestamp}`,
+        //                                 'info'
+        //                             );
+        //                         }
+        //                     } catch (e) {
+        //                         console.error('Error parsing refresh result:', e);
+        //                     }
+        //                 {% else %}
+        //                     showNotification('Notification', '{{ message|raw }}', '{{ label }}');
+        //                 {% endif %}
+        //             {% endfor %}
+        //         {% endfor %}
+        //     });
+        // </script>
     </body>
 </html>
