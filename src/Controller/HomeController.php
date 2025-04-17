@@ -46,4 +46,10 @@ class HomeController extends AbstractController
             'userFeedsByFeedId' => $userFeedsByFeedId ?? []
         ]);
     }
+
+    #[Route('/about', name: 'app_about', methods: ['GET'])]
+    public function about(): Response
+    {
+        return $this->render('about.html.twig');
+    }
 }
