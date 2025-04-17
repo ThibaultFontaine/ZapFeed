@@ -1,15 +1,27 @@
+{# {{ form_start(form, {'attr': {'class': 'register-form', 'id': 'registration-form'}}) }}
 <div class="card">
     <div class="card-header">
         {{ form_label(form.name) }}
     </div>
 
     <div class="card-body">
-        {# {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }} #}
+        {# {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }} #
         {{ form_widget(form.name) }}
         {{ form_errors(form.name) }}
+
+        {{ form_widget(form.url) }}
+        {{ form_errors(form.url) }}
     </div>
 
     <div class="card-footer d-flex justify-content-between">
         <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
     </div>
 </div>
+
+{{ form_end(form) }} #}
+
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
