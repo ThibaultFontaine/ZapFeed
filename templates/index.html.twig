@@ -183,68 +183,59 @@
                 <a href="{{ path('app_user_feed_index') }}" class="hero-cta">Accéder à mes flux</a>
             </div>
 
-            <div class="col-lg-6 mt-5 mt-lg-0">
-                <div class="rss-feed-preview" id="feedPreview">
-                    <div class="feed-header">
-                        <div class="feed-title">Vos actualités du jour</div>
-                        <div class="feed-source">20 sources • Mis à jour il y a 5 minutes</div>
+<div class="col-lg-6 mt-5 mt-lg-0">
+    <div class="rss-feed-preview" id="feedPreview">
+        <div class="feed-header">
+            <div class="feed-title">Vos actualités du jour</div>
+            {% if app.user and user_feeds is defined and user_feeds|length > 0 %}
+                <div class="feed-source">{{ user_feeds|length }} source{% if user_feeds|length > 1 %}s{% endif %} • Mis à jour récemment</div>
+            {% else %}
+                <div class="feed-source">Pas encore d'abonnements</div>
+            {% endif %}
+        </div>
+        <div class="feed-articles">
+            {% if app.user and latest_items is defined and latest_items|length > 0 %}
+                {% for item in latest_items %}
+                    <div class="feed-item">
+                        <div class="feed-item-icon">
+                            <i class="bi bi-{% if item.feed.icon is defined %}{{ item.feed.icon }}{% else %}newspaper{% endif %}"></i>
+                        </div>
+                        <div class="feed-item-content">
+                            <div class="feed-item-title">{{ item.title }}</div>
+                            <div class="feed-item-meta">
+                                {# <span class="feed-item-date">{{ item.pubDate|date_modify() }}</span> #}
+                                <span class="feed-item-source">{{ item.feed.title }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="feed-articles">
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-newspaper"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">Les dernières innovations en intelligence artificielle</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 35 min</span>
-                                    <span class="feed-item-source">Tech News</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-graph-up"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">Les marchés financiers en hausse cette semaine</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 1h</span>
-                                    <span class="feed-item-source">Finance Mag</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-camera"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">10 photos spectaculaires de la nature sauvage</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 3h</span>
-                                    <span class="feed-item-source">Photo Journal</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-cup-hot"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">5 recettes de café pour booster votre productivité</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 5h</span>
-                                    <span class="feed-item-source">Food & Drink</span>
-                                </div>
-                            </div>
+                {% endfor %}
+            {% elseif app.user and user_feeds is defined and user_feeds|length > 0 %}
+                <div class="feed-item">
+                    <div class="feed-item-content text-center py-4">
+                        <div class="feed-item-title">Aucun article récent disponible</div>
+                        <div class="feed-item-meta">Vos flux sont configurés mais n'ont pas encore d'articles</div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="feed-item">
+                    <div class="feed-item-content text-center py-4">
+                        <div class="feed-item-title">Vous n'avez pas encore ajouté de flux RSS</div>
+                        <div class="feed-item-meta">
+                            {# <a href="{{ path('app_user_feed_new') }}" class="mt-2 btn btn-sm btn-outline-primary">
+                                <i class="bi bi-plus-circle-dotted"></i> Ajouter votre premier flux
+                            </a> #}
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </div>
+</div>
+</div>
+</div>
 {% endblock %}
+
 
 {% block javascripts %}
 {{ parent() }}
