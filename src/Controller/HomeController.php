@@ -10,6 +10,7 @@ use SimplePie\SimplePie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/')]
 class HomeController extends AbstractController
@@ -54,7 +55,7 @@ class HomeController extends AbstractController
 
 
     #[Route('/refresh', name: 'app_refresh_feeds', methods: ['POST'])]
-    public function refreshFeeds(): Response
+    public function refreshFeeds(Request $request): Response
     {
         $user = $this->getUser();
         if (!$user) {
@@ -123,6 +124,20 @@ class HomeController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_home');
+        // // Add flash message for JavaScript to display
+        // $this->addFlash('refresh-result', json_encode([
+        //     'count' => $newItemsCount,
+        //     'timestamp' => (new \DateTime())->format('H:i:s')
+        // ]));
+
+        // Get the referer URL (the page that made the request)
+        $referer = $request->headers->get('referer');
+
+        // If we have a referer URL, redirect back to it, otherwise go to homepage
+        if ($referer) {
+            return $this->redirect($referer);
+        } else {
+            return $this->redirectToRoute('app_home');
+        }
     }
 }

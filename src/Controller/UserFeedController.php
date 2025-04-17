@@ -120,14 +120,18 @@ final class UserFeedController extends AbstractController
         if (!$feed) {
             throw $this->createNotFoundException('Feed not found');
         }
-        $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed]);
-        $this->checkUserFeedOwnership($userFeed);
-
-
+        
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException('User not logged in');
         }
+        
+        $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed, 'user' => $user]);
+        if (!$userFeed) {
+            throw $this->createNotFoundException('UserFeed not found');
+        }
+        
+        $this->checkUserFeedOwnership($userFeed);
 
         $userItems = $this->entityManager->getRepository(UserItem::class)->findBy([
             'user' => $user,
@@ -161,7 +165,17 @@ final class UserFeedController extends AbstractController
         if (!$feed) {
             throw $this->createNotFoundException('Feed not found');
         }
-        $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed]);
+        
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('User not logged in');
+        }
+        
+        $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed, 'user' => $user]);
+        if (!$userFeed) {
+            throw $this->createNotFoundException('UserFeed not found');
+        }
+        
         $this->checkUserFeedOwnership($userFeed);
 
         // Créer le formulaire avec les données existantes
@@ -199,10 +213,17 @@ final class UserFeedController extends AbstractController
         if (!$feed) {
             throw $this->createNotFoundException('Feed not found');
         }
-        $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed]);
+        
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('User not logged in');
+        }
+        
+        $userFeed = $this->entityManager->getRepository(UserFeed::class)->findOneBy(['feed' => $feed, 'user' => $user]);
         if (!$userFeed) {
             throw $this->createNotFoundException('UserFeed not found');
         }
+        
         $this->checkUserFeedOwnership($userFeed);
 
         // if ($this->isCsrfTokenValid('delete' . $userFeed->getUser()->getId() . $userFeed->getFeed()->getId(), $request->getPayload()->getString('_token'))) {
