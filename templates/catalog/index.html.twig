@@ -140,41 +140,29 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            position: relative;
+            padding-bottom: 15px;
         }
 
         .feed-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: rgba(94, 44, 165, 0.3);
         }
 
         .feed-header {
             position: relative;
-            height: 160px;
+            height: 80px;
             overflow: hidden;
+            background: linear-gradient(45deg, #5e2ca5, #7953d2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .feed-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .feed-card:hover .feed-image {
-            transform: scale(1.05);
-        }
-
-        .feed-category {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(94, 44, 165, 0.9);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 1;
+        .feed-header i {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .feed-body {
@@ -187,84 +175,52 @@
         .feed-title {
             font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: #1E152A;
-        }
-
-        .feed-description {
-            color: #6c757d;
-            font-size: 0.9rem;
             margin-bottom: 1.5rem;
-            flex-grow: 1;
+            color: #1E152A;
+            min-height: 3.10rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .feed-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
+        .feed-url {
             color: #6c757d;
-            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            word-break: break-all;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
 
-        .feed-subscribers {
-            display: flex;
-            align-items: center;
-        }
-
-        .feed-subscribers i {
-            margin-right: 0.4rem;
-            color: #5e2ca5;
-        }
-
-        .feed-date {
-            display: flex;
-            align-items: center;
-        }
-
-        .feed-date i {
-            margin-right: 0.4rem;
-            color: #5e2ca5;
-        }
-
-        .feed-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .feed-actions-catalog {
             margin-top: auto;
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
 
         .btn-subscribe {
             background: linear-gradient(45deg, #5e2ca5, #7953d2);
             border: none;
-            padding: 0.5rem 1.25rem;
+            padding: 0.6rem 1.5rem;
             border-radius: 30px;
             font-weight: 600;
             color: white;
             box-shadow: 0 4px 10px rgba(94, 44, 165, 0.2);
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            width: 80%;
         }
 
         .btn-subscribe:hover {
+            color: white;
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(94, 44, 165, 0.3);
-        }
-
-        .btn-preview {
-            background-color: #f8f9fa;
-            color: #495057;
-            border: 1px solid #ced4da;
-            padding: 0.5rem 1.25rem;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .btn-preview:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
         }
 
         .pagination-container {
@@ -353,11 +309,12 @@
 
         .no-results {
             text-align: center;
-            padding: 2rem;
-            border: 1px dashed #dee2e6;
-            border-radius: 10px;
-            margin: 1rem 0;
+            padding: 3rem;
+            border: 2px dashed #dee2e6;
+            border-radius: 15px;
+            margin: 2rem 0;
             color: #6c757d;
+            background: rgba(222, 226, 230, 0.1);
         }
 
         .tooltip-custom {
@@ -385,66 +342,70 @@
             <span>Catalogue de Flux RSS</span>
         </div>
 
-        <div class="search-container">
-            <input type="text" class="search-input" id="search-feeds" placeholder="Rechercher des flux par nom, catégorie ou description...">
-            <i class="bi bi-search search-icon"></i>
-        </div>
-
-        <div class="category-filters">
-            <div class="category-filter active" data-category="all">
-                <i class="bi bi-grid-fill"></i> Tous
-            </div>
-            <div class="category-filter" data-category="actualites">
-                <i class="bi bi-newspaper"></i> Actualités
-            </div>
-            <div class="category-filter" data-category="technologie">
-                <i class="bi bi-cpu-fill"></i> Technologie
-            </div>
-            <div class="category-filter" data-category="sports">
-                <i class="bi bi-trophy-fill"></i> Sports
-            </div>
-            <div class="category-filter" data-category="culture">
-                <i class="bi bi-book-fill"></i> Culture
-            </div>
-            <div class="category-filter" data-category="sciences">
-                <i class="bi bi-lightbulb-fill"></i> Sciences
-            </div>
-            <div class="category-filter" data-category="economie">
-                <i class="bi bi-graph-up"></i> Économie
-            </div>
-            <div class="category-filter" data-category="sante">
-                <i class="bi bi-heart-pulse-fill"></i> Santé
-            </div>
+        <div class="search-container mb-4">
+            <form method="get" action="{{ path('app_catalog') }}" id="search-form">
+                <input type="text" class="search-input" id="search-feeds" name="search" 
+                       placeholder="Rechercher des flux par titre..."
+                       value="{{ search|default('') }}">
+                <i class="bi bi-search search-icon"></i>
+            </form>
         </div>
 
         <div id="feeds-container">
+            {% if search is defined and search is not empty %}
+                <div class="mb-4 alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Résultats de recherche pour : <strong>{{ search }}</strong>
+                    <a href="{{ path('app_catalog') }}" class="ms-2 btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Effacer
+                    </a>
+                </div>
+            {% endif %}
+
             <div class="feeds-grid">
                 {% for feed in feeds %}
                     <div class="feed-card">
                         <div class="feed-header">
+                            <i class="bi bi-rss"></i>
                         </div>
                         <div class="feed-body">
-                            <h3 class="feed-title">{{ feed.url }}</h3>
-
-                            {# <div class="feed-actions">
+                            <h3 class="feed-title">{{ feed.baseTitle }}</h3>
+                            <div class="feed-url">{{ feed.url|length > 60 ? feed.url|slice(0, 60) ~ '...' : feed.url }}</div>
+                            
+                            <div class="feed-actions-catalog">
+                                {% set isSubscribed = false %}
+                                {% for user_feed in user_feeds %}
+                                    {% if user_feed.feed.id == feed.id %}
+                                        {% set isSubscribed = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                
                                 <button
-                                    class="btn btn-primary"
-                                    id="like-button"
-                                    data-liked="{{ user_item.hasBeenLiked ? '1' : '0' }}"
-                                    data-feed-id="{{ item.feed.id }}"
-                                    data-item-id="{{ item.id }}"
-                                    data-token="{{ csrf_token('like' ~ item.id) }}"
+                                    class="btn {% if isSubscribed %}btn-secondary disabled{% else %}btn-subscribe{% endif %}"
+                                    id="subscribe-button-{{ feed.id }}"
+                                    data-feed-id="{{ feed.id }}"
                                 >
-                                    {{ user_item.hasBeenLiked ? '❤️ Liked' : '🤍 Like' }}
+                                    {% if isSubscribed %}
+                                        <i class="bi bi-check-circle-fill me-2"></i> Abonné
+                                    {% else %}
+                                        <i class="bi bi-plus-circle me-2"></i> S'abonner
+                                    {% endif %}
                                 </button>
-                            </div> #}
+                            </div>
                         </div>
                     </div>
                 {% else %}
                     <div class="no-results col-12">
                         <i class="bi bi-emoji-neutral fs-3 mb-3 d-block"></i>
                         <h4>Aucun flux disponible</h4>
-                        <p>Il n'y a actuellement aucun flux dans notre catalogue. Revenez bientôt ou contactez l'administrateur.</p>
+                        {% if search is defined and search is not empty %}
+                            <p>Aucun flux ne correspond à votre recherche "{{ search }}". Essayez avec un autre terme.</p>
+                            <a href="{{ path('app_catalog') }}" class="btn btn-outline-primary mt-3">
+                                <i class="bi bi-arrow-left"></i> Revenir à tous les flux
+                            </a>
+                        {% else %}
+                            <p>Il n'y a actuellement aucun flux dans notre catalogue.</p>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -455,296 +416,33 @@
     </div>
 </div>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1050;"></div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Effet de tilt 3D sur le container principal
-        const tiltContainer = document.getElementById('tiltContainer');
-        const titleIcon = document.getElementById('titleIcon');
-
-        if (tiltContainer) {
-            tiltContainer.addEventListener('mousemove', function(e) {
-                const containerRect = tiltContainer.getBoundingClientRect();
-                const containerCenterX = containerRect.left + containerRect.width / 2;
-                const containerCenterY = containerRect.top + containerRect.height / 2;
-
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
-
-                const angleX = (mouseY - containerCenterY) / 30;
-                const angleY = (mouseX - containerCenterX) / 30;
-
-                tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.1}deg) rotateY(${angleY * 0.1}deg) scale(1.01)`;
-
-                if (titleIcon) {
-                    titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.3}deg) rotateY(${angleY * 0.3}deg) scale(1.1)`;
-                }
-            });
-
-            tiltContainer.addEventListener('mouseleave', function() {
-                tiltContainer.style.transition = 'transform 0.5s ease';
-                tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-
-                if (titleIcon) {
-                    titleIcon.style.transition = 'transform 0.5s ease';
-                    titleIcon.style.transform = 'rotate(0) scale(1)';
-                }
-
-                setTimeout(() => {
-                    tiltContainer.style.transition = '';
-                    if (titleIcon) titleIcon.style.transition = '';
-                }, 500);
-            });
-        }
-
-        // Filtrage par catégorie
-        const categoryFilters = document.querySelectorAll('.category-filter');
-        const feedCards = document.querySelectorAll('.feed-card');
-
-        categoryFilters.forEach(filter => {
-            filter.addEventListener('click', function() {
-                const category = this.dataset.category;
-
-                // Mettre à jour les classes active
-                categoryFilters.forEach(f => f.classList.remove('active'));
-                this.classList.add('active');
-
-                // Filtrer les cartes
-                feedCards.forEach(card => {
-                    if (category === 'all' || card.dataset.category === category) {
-                        card.style.display = 'flex';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(10px)';
-                        setTimeout(() => {
-                            card.style.display = 'none';
-                        }, 300);
-                    }
-                });
-            });
-        });
-
-        // Recherche de flux
+        // Search form handling
         const searchInput = document.getElementById('search-feeds');
+        const searchForm = document.getElementById('search-form');
 
         if (searchInput) {
             searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const allFeedCards = document.querySelectorAll('.feed-card');
-
-                allFeedCards.forEach(card => {
-                    const title = card.querySelector('.feed-title').textContent.toLowerCase();
-                    const description = card.querySelector('.feed-description').textContent.toLowerCase();
-                    const category = card.dataset.category.toLowerCase();
-
-                    if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
-                        card.style.display = 'flex';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(10px)';
-                        setTimeout(() => {
-                            card.style.display = 'none';
-                        }, 300);
-                    }
-                });
+                // Only submit if there's text or it was previously filled and now is empty
+                if (this.value.length > 2 || (this.value === '' && '{{ search|default('') }}' !== '')) {
+                    setTimeout(() => {
+                        searchForm.submit();
+                    }, 500);
+                }
             });
         }
 
-        // Effet 3D sur les cartes de flux
-        feedCards.forEach(card => {
-            card.addEventListener('mousemove', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-
-                const tiltX = (y - centerY) / 15;
-                const tiltY = (x - centerX) / 15;
-
-                this.style.transform = `perspective(1000px) rotateX(${-tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-
-                const image = this.querySelector('.feed-image');
-                if (image) {
-                    image.style.transform = 'scale(1.05) translateZ(20px)';
-                }
-            });
-
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = '';
-
-                const image = this.querySelector('.feed-image');
-                if (image) {
-                    image.style.transform = '';
-                }
-            });
-        });
-
-        // Gestion des tooltips personnalisés
-        const createTooltip = () => {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tooltip-custom';
-            document.body.appendChild(tooltip);
-            return tooltip;
-        };
-
-        const tooltip = createTooltip();
-
-        document.querySelectorAll('[data-tooltip]').forEach(element => {
-            element.addEventListener('mouseenter', function(e) {
-                tooltip.textContent = this.dataset.tooltip;
-                tooltip.style.opacity = '1';
-
-                const rect = this.getBoundingClientRect();
-                const tooltipWidth = tooltip.offsetWidth;
-                const left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
-                const top = rect.top - tooltip.offsetHeight - 10;
-
-                tooltip.style.left = `${left}px`;
-                tooltip.style.top = `${top}px`;
-            });
-
-            element.addEventListener('mouseleave', function() {
-                tooltip.style.opacity = '0';
-            });
-        });
-
-        // Prévisualisation des flux
-        const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
-        const previewButtons = document.querySelectorAll('.btn-preview-action');
-        let currentFeedId = null;
-
-        previewButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const feedId = this.dataset.feedId;
-                const feedUrl = this.dataset.feedUrl;
-                currentFeedId = feedId;
-
-                // Mettre à jour le titre du modal et d'autres informations de base
-                const feedCard = this.closest('.feed-card');
-                const feedTitle = feedCard.querySelector('.feed-title').textContent;
-                const feedDescription = feedCard.querySelector('.feed-description').textContent;
-                const feedCategory = feedCard.querySelector('.feed-category').textContent;
-
-                document.getElementById('preview-title').textContent = feedTitle;
-                document.getElementById('preview-description').textContent = feedDescription;
-                document.getElementById('preview-category').textContent = feedCategory;
-                document.getElementById('preview-count').textContent = 'Chargement...';
-
-                // Mettre à jour le bouton d'abonnement dans le modal
-                const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
-                const isSubscribed = feedCard.querySelector('.btn-subscribe') ? false : true;
-
-                if (isSubscribed) {
-                    modalSubscribeBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
-                    modalSubscribeBtn.classList.add('disabled', 'btn-secondary');
-                    modalSubscribeBtn.classList.remove('btn-subscribe');
-                } else {
-                    modalSubscribeBtn.innerHTML = '<i class="bi bi-plus-circle"></i> S\'abonner';
-                    modalSubscribeBtn.classList.remove('disabled', 'btn-secondary');
-                    modalSubscribeBtn.classList.add('btn-subscribe');
-                    modalSubscribeBtn.dataset.feedId = feedId;
-                }
-
-                // Afficher le modal
-                previewModal.show();
-
-                // Charger les articles du flux
-                const articlesContainer = document.getElementById('preview-articles');
-                articlesContainer.innerHTML = `
-                    <div class="text-center p-5">
-                        <div class="spinner-border" style="color: #5e2ca5;" role="status">
-                            <span class="visually-hidden">Chargement...</span>
-                        </div>
-                        <p class="mt-3">Chargement des articles...</p>
-                    </div>
-                `;
-                    .then(response => response.json())
-                    .then(data => {
-                        // Mettre à jour le compteur d'articles
-                        document.getElementById('preview-count').textContent = `${data.length} articles`;
-
-                        if (data.length > 0) {
-                            // Construire la liste des articles
-                            let articlesHTML = '';
-                            data.forEach(article => {
-                                const date = new Date(article.pubDate);
-                                const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} à ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-
-                                articlesHTML += `
-                                    <div class="article-card mb-3" style="border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
-                                        <div class="article-header p-3" style="background-color: #f8f9fa;">
-                                            <h5 class="mb-0">${article.title}</h5>
-                                            <small class="text-muted d-block mt-1">${formattedDate}</small>
-                                        </div>
-                                        <div class="article-body p-3">
-                                                                                        <p>${article.description || 'Aucune description disponible.'}</p>
-                                            <div class="text-end">
-                                                <a href="${article.link}" target="_blank" class="btn btn-sm" style="background: linear-gradient(45deg, #5e2ca5, #7953d2); color: white; border-radius: 20px;">
-                                                    <i class="bi bi-box-arrow-up-right me-1"></i> Lire l'article
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                            });
-
-                            articlesContainer.innerHTML = articlesHTML;
-                        } else {
-                            articlesContainer.innerHTML = `
-                                <div class="text-center p-5">
-                                    <i class="bi bi-emoji-neutral fs-3 mb-3 d-block"></i>
-                                    <h4>Aucun article disponible</h4>
-                                    <p>Ce flux ne contient actuellement aucun article. Il pourrait être temporairement indisponible ou vide.</p>
-                                </div>
-                            `;
-                        }
-                    })
-                    .catch(error => {
-                        articlesContainer.innerHTML = `
-                            <div class="text-center p-5 text-danger">
-                                <i class="bi bi-exclamation-triangle fs-3 mb-3 d-block"></i>
-                                <h4>Erreur de chargement</h4>
-                                <p>Impossible de charger les articles de ce flux. Veuillez réessayer ultérieurement.</p>
-                            </div>
-                        `;
-                        console.error('Erreur lors du chargement des articles:', error);
-                    });
-            });
-        });
-
-        // Gestion des abonnements
-        const subscribeButtons = document.querySelectorAll('.btn-subscribe-action');
+        // Subscribe button handling
+        const subscribeButtons = document.querySelectorAll('button[id^="subscribe-button"]');
 
         subscribeButtons.forEach(button => {
+            if (button.classList.contains('disabled')) return;
+
             button.addEventListener('click', function() {
                 const feedId = this.dataset.feedId;
-                const buttonEl = this;
-
-                // Animation de chargement
-                const originalHTML = buttonEl.innerHTML;
-                buttonEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Abonnement...';
-                buttonEl.disabled = true;
-
-            });
-        });
-
-        // Gestion du bouton d'abonnement dans le modal
-        const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
-
-        if (modalSubscribeBtn) {
-            modalSubscribeBtn.addEventListener('click', function() {
-                if (this.classList.contains('disabled')) return;
-
-                const feedId = currentFeedId;
                 const buttonEl = this;
 
                 // Animation de chargement
@@ -753,47 +451,41 @@
                 buttonEl.disabled = true;
 
                 // Appel AJAX pour s'abonner
-                fetch(`/api/feeds/${feedId}/subscribe`, {
+                fetch(`/catalog/${feedId}/subscribe`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de l\'abonnement');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    // Mettre à jour le bouton dans le modal
-                    buttonEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
-                    buttonEl.classList.add('disabled', 'btn-secondary');
-                    buttonEl.classList.remove('btn-subscribe');
+                    if (data.success) {
+                        // Succès: mettre à jour le bouton
+                        buttonEl.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Abonné';
+                        buttonEl.classList.add('disabled', 'btn-secondary');
+                        buttonEl.classList.remove('btn-subscribe');
 
-                    // Mettre à jour le bouton dans la carte
-                    const cardButton = document.querySelector(`.btn-subscribe-action[data-feed-id="${feedId}"]`);
-                    if (cardButton) {
-                        cardButton.innerHTML = '<i class="bi bi-check-circle-fill"></i> Abonné';
-                        cardButton.classList.add('disabled', 'btn-secondary');
-                        cardButton.classList.remove('btn-subscribe');
+                        // Afficher une notification de succès
+                        showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
+                    } else {
+                        // Erreur: afficher le message d'erreur
+                        buttonEl.innerHTML = originalHTML;
+                        buttonEl.disabled = false;
+
+                        showNotification('Impossible de s\'abonner', data.message, 'danger');
                     }
-
-                    // Afficher une notification de succès
-                    showNotification('Abonnement réussi', 'Vous êtes maintenant abonné à ce flux.', 'success');
                 })
                 .catch(error => {
-                    // Restaurer le bouton
+                    // Erreur technique
                     buttonEl.innerHTML = originalHTML;
                     buttonEl.disabled = false;
 
-                    // Afficher une notification d'erreur
-                    showNotification('Erreur d\'abonnement', 'Impossible de s\'abonner à ce flux. Veuillez réessayer.', 'danger');
+                    showNotification('Erreur', 'Une erreur est survenue lors de l\'abonnement.', 'danger');
                     console.error('Erreur:', error);
                 });
             });
-        }
+        });
 
         // Système de notification
         function showNotification(title, message, type = 'info') {

@@ -74,8 +74,7 @@ final class UserFeedController extends AbstractController
             $pie->set_feed_url($feed->getUrl());
 
             if ($pie->init()) {
-                dump($pie->get_title());
-                dump($pie->get_description());
+                $feed->setBaseTitle($pie->get_title());
 
                 foreach ($pie->get_items() as $_item) {
                     $item = new Item();

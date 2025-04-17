@@ -20,6 +20,9 @@ class Feed
     #[ORM\Column(type: Types::TEXT, unique: true)]
     private ?string $url = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $baseTitle = null;
+
     /**
      * @var Collection<int, Item>
      */
@@ -54,6 +57,17 @@ class Feed
     public function setUrl(string $url): static
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getBaseTitle(): ?string
+    {
+        return $this->baseTitle;
+    }
+    public function setBaseTitle(string $baseTitle): static
+    {
+        $this->baseTitle = $baseTitle;
 
         return $this;
     }
