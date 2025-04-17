@@ -15,7 +15,7 @@ class FeedType extends AbstractType
     {
         $builder
             ->add('name', Type\TextType::class, [
-                'label' => 'Feed Name',
+                'label' => 'Nom du flux',
                 'attr' => [
                     'placeholder' => 'Enter feed name',
                     'class' => 'form-control',
@@ -26,7 +26,7 @@ class FeedType extends AbstractType
                 ],
             ])
             ->add('url', Type\UrlType::class, [
-                'label' => 'Feed URL',
+                'label' => 'URL du flux',
                 'attr' => [
                     'placeholder' => 'Enter feed URL',
                     'class' => 'form-control',

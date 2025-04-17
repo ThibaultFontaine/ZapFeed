@@ -414,44 +414,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     document.addEventListener('DOMContentLoaded', function() {
-        const tiltContainer = document.getElementById('tiltContainer');
-        const titleIcon = document.getElementById('titleIcon');
+        // const tiltContainer = document.getElementById('tiltContainer');
+        // const titleIcon = document.getElementById('titleIcon');
 
-        // Tilt effect on container
-        function handleMouseMove(e) {
-            const containerRect = tiltContainer.getBoundingClientRect();
-            const containerCenterX = containerRect.left + containerRect.width / 2;
-            const containerCenterY = containerRect.top + containerRect.height / 2;
+        // // Tilt effect on container
+        // function handleMouseMove(e) {
+        //     const containerRect = tiltContainer.getBoundingClientRect();
+        //     const containerCenterX = containerRect.left + containerRect.width / 2;
+        //     const containerCenterY = containerRect.top + containerRect.height / 2;
 
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
+        //     const mouseX = e.clientX;
+        //     const mouseY = e.clientY;
 
-            const angleX = (mouseY - containerCenterY) / 25;
-            const angleY = (mouseX - containerCenterX) / 25;
+        //     const angleX = (mouseY - containerCenterY) / 25;
+        //     const angleY = (mouseX - containerCenterX) / 25;
 
-            tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.3}deg) rotateY(${angleY * 0.3}deg) translateZ(10px)`;
+        //     tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.3}deg) rotateY(${angleY * 0.3}deg) translateZ(10px)`;
 
-            if (titleIcon) {
-                titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) translateZ(20px)`;
-            }
-        }
+        //     if (titleIcon) {
+        //         titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) translateZ(20px)`;
+        //     }
+        // }
 
-        tiltContainer.addEventListener('mousemove', handleMouseMove);
+        // tiltContainer.addEventListener('mousemove', handleMouseMove);
 
-        tiltContainer.addEventListener('mouseleave', function() {
-            tiltContainer.style.transition = 'transform 0.5s ease';
-            tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+        // tiltContainer.addEventListener('mouseleave', function() {
+        //     tiltContainer.style.transition = 'transform 0.5s ease';
+        //     tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
 
-            if (titleIcon) {
-                titleIcon.style.transition = 'transform 0.5s ease';
-                titleIcon.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
-            }
+        //     if (titleIcon) {
+        //         titleIcon.style.transition = 'transform 0.5s ease';
+        //         titleIcon.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+        //     }
 
-            setTimeout(() => {
-                tiltContainer.style.transition = '';
-                if (titleIcon) titleIcon.style.transition = '';
-            }, 500);
-        });
+        //     setTimeout(() => {
+        //         tiltContainer.style.transition = '';
+        //         if (titleIcon) titleIcon.style.transition = '';
+        //     }, 500);
+        // });
 
         // Enhance form elements
         const formControls = document.querySelectorAll('.form-control');

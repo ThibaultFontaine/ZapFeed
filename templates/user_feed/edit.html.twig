@@ -146,8 +146,8 @@
         </div>
 
         <div class="action-buttons">
-            <a href="{{ path('app_user_feed_index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Retour à la liste
+            <a href="{{ path('app_user_feed_show', {'id': user_feed.feed.id}) }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Retour
             </a>
         </div>
 
@@ -161,43 +161,43 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const tiltContainer = document.getElementById('tiltContainer');
-        const titleIcon = document.getElementById('titleIcon');
+        // const tiltContainer = document.getElementById('tiltContainer');
+        // const titleIcon = document.getElementById('titleIcon');
 
-        function handleMouseMove(e) {
-            const containerRect = tiltContainer.getBoundingClientRect();
-            const containerCenterX = containerRect.left + containerRect.width / 2;
-            const containerCenterY = containerRect.top + containerRect.height / 2;
+        // function handleMouseMove(e) {
+        //     const containerRect = tiltContainer.getBoundingClientRect();
+        //     const containerCenterX = containerRect.left + containerRect.width / 2;
+        //     const containerCenterY = containerRect.top + containerRect.height / 2;
 
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
+        //     const mouseX = e.clientX;
+        //     const mouseY = e.clientY;
 
-            const angleX = (mouseY - containerCenterY) / 30;
-            const angleY = (mouseX - containerCenterX) / 30;
+        //     const angleX = (mouseY - containerCenterY) / 30;
+        //     const angleY = (mouseX - containerCenterX) / 30;
 
-            tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.2}deg) rotateY(${angleY * 0.2}deg) scale(1.01)`;
+        //     tiltContainer.style.transform = `perspective(1000px) rotateX(${-angleX * 0.2}deg) rotateY(${angleY * 0.2}deg) scale(1.01)`;
 
-            if (titleIcon) {
-                titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) scale(1.1)`;
-            }
-        }
+        //     if (titleIcon) {
+        //         titleIcon.style.transform = `perspective(1000px) rotateX(${-angleX * 0.5}deg) rotateY(${angleY * 0.5}deg) scale(1.1)`;
+        //     }
+        // }
 
-        tiltContainer.addEventListener('mousemove', handleMouseMove);
+        // tiltContainer.addEventListener('mousemove', handleMouseMove);
 
-        tiltContainer.addEventListener('mouseleave', function() {
-            tiltContainer.style.transition = 'transform 0.5s ease';
-            tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        // tiltContainer.addEventListener('mouseleave', function() {
+        //     tiltContainer.style.transition = 'transform 0.5s ease';
+        //     tiltContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
 
-            if (titleIcon) {
-                titleIcon.style.transition = 'transform 0.5s ease';
-                titleIcon.style.transform = 'rotate(0) scale(1)';
-            }
+        //     if (titleIcon) {
+        //         titleIcon.style.transition = 'transform 0.5s ease';
+        //         titleIcon.style.transform = 'rotate(0) scale(1)';
+        //     }
 
-            setTimeout(() => {
-                tiltContainer.style.transition = '';
-                if (titleIcon) titleIcon.style.transition = '';
-            }, 500);
-        });
+        //     setTimeout(() => {
+        //         tiltContainer.style.transition = '';
+        //         if (titleIcon) titleIcon.style.transition = '';
+        //     }, 500);
+        // });
 
         // Animate buttons on hover
         const buttons = document.querySelectorAll('.btn');
