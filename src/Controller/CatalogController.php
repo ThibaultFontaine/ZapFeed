@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Feed;
+use App\Entity\Item;
 use App\Entity\UserFeed;
+use App\Entity\UserItem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -107,6 +109,26 @@ class CatalogController extends AbstractController
         $userFeed->setTitle($feed->getBaseTitle());
         $userFeed->setCreatedAt(new \DateTimeImmutable());
         $userFeed->setUpdatedAt(new \DateTime());
+
+        // Fetch the feed items and set them to the user feed
+        // GEt all items from the feed
+        $items = $this->entityManager->getRepository(Item::class)->findBy([
+            'feed' => $feed
+        ]);
+        dump($items);
+        foreach ($items as $item) {
+            // $userFeed->addItem($item);
+            $userItem = new UserItem();
+            $userItem->setUser($user);
+            $userItem->setItem($item);
+            $userItem->setHasBeenRead(false);
+            $userItem->setHasBeenLiked(false);
+            $userItem->setCreatedAt(new \DateTimeImmutable());
+            $userItem->setUpdatedAt(new \DateTime());
+            $this->entityManager->persist($userItem);
+            $this->entityManager->flush();
+        }
+
 
         $this->entityManager->persist($userFeed);
         $this->entityManager->flush();
