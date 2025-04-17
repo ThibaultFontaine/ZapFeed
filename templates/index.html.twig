@@ -111,6 +111,8 @@
         display: flex;
         align-items: center;
         transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
     }
 
     .feed-item:hover {
@@ -187,57 +189,57 @@
                 <div class="rss-feed-preview" id="feedPreview">
                     <div class="feed-header">
                         <div class="feed-title">Vos actualités du jour</div>
-                        <div class="feed-source">20 sources • Mis à jour il y a 5 minutes</div>
+                        <div class="feed-source">
+                            {% if recentItems|length > 0 %}
+                                {{ recentItems|length }} articles récents • De vos flux suivis
+                            {% else %}
+                                20 sources • Mis à jour il y a 5 minutes
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="feed-articles">
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-newspaper"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">Les dernières innovations en intelligence artificielle</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 35 min</span>
-                                    <span class="feed-item-source">Tech News</span>
+                        {% if recentItems|length > 0 %}
+                            {% for userItem in recentItems %}
+                                <a href="{{ path('app_user_item_show', {'feedId': userItem.item.feed.id, 'itemId': userItem.item.id}) }}" class="feed-item">
+                                    <div class="feed-item-icon">
+                                        <i class="bi bi-newspaper"></i>
+                                    </div>
+                                    <div class="feed-item-content">
+                                        <div class="feed-item-title">{{ userItem.item.title }}</div>
+                                        <div class="feed-item-meta">
+                                            <span class="feed-item-date">
+                                                {% if userItem.updatedAt %}
+                                                    Il y a {{ (date().timestamp - userItem.updatedAt.timestamp) / 60 < 60 
+                                                        ? ((date().timestamp - userItem.updatedAt.timestamp) / 60)|round ~ ' min' 
+                                                        : ((date().timestamp - userItem.updatedAt.timestamp) / 3600)|round ~ 'h' }}
+                                                {% else %}
+                                                    Récemment
+                                                {% endif %}
+                                            </span>
+                                            <span class="feed-item-source">
+                                                {% if userFeedsByFeedId[userItem.item.feed.id] is defined %}
+                                                    {{ userFeedsByFeedId[userItem.item.feed.id].title }}
+                                                {% else %}
+                                                    {{ userItem.item.feed.baseTitle }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="feed-item">
+                                <div class="feed-item-icon">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                </div>
+                                <div class="feed-item-content">
+                                    <div class="feed-item-title">Aucun article récent disponible</div>
+                                    <div class="feed-item-meta">
+                                        <span class="feed-item-source">Veuillez vérifier vos flux</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-graph-up"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">Les marchés financiers en hausse cette semaine</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 1h</span>
-                                    <span class="feed-item-source">Finance Mag</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-camera"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">10 photos spectaculaires de la nature sauvage</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 3h</span>
-                                    <span class="feed-item-source">Photo Journal</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="feed-item">
-                            <div class="feed-item-icon">
-                                <i class="bi bi-cup-hot"></i>
-                            </div>
-                            <div class="feed-item-content">
-                                <div class="feed-item-title">5 recettes de café pour booster votre productivité</div>
-                                <div class="feed-item-meta">
-                                    <span class="feed-item-date">Il y a 5h</span>
-                                    <span class="feed-item-source">Food & Drink</span>
-                                </div>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
